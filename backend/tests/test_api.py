@@ -361,3 +361,19 @@ def test_delete_observation_reviewer_override(client: TestClient) -> None:
         headers={"X-User-Id": REVIEWER_ID},
     )
     assert response.status_code == 204
+
+
+def test_analytics_returns_full_metric_shape(client: TestClient) -> None:
+    """The analytics endpoint aggregates all metrics in one round trip."""
+    _create_observation(client)
+
+    response = client.get("/api/v1/observations/analytics")
+    assert response.status_code == 200
+    body = response.json()
+
+    assert body["total_observations"] >= 1
+    assert set(body["signals"]) == {"normal", "watch", "investigate"}
+    assert sum(body["signals"].values()) == body["total_observations"]
+    assert 0 <= body["water_health_index"] <= 100
+    assert body["average_confidence"] >= 0
+    assert body["active_observers"] >= 1

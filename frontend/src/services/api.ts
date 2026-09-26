@@ -59,7 +59,7 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
 // Network helpers
 // ---------------------------------------------------------------------------
 
-async function apiFetch(path: string, options?: RequestInit, timeoutMs = 3000): Promise<Response> {
+async function apiFetch(path: string, options?: RequestInit, timeoutMs = 8000): Promise<Response> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
@@ -93,7 +93,7 @@ export async function fetchObservations(userId?: string, viewerId?: string): Pro
     const query = userId ? `/observations?limit=500&user_id=${encodeURIComponent(userId)}` : '/observations?limit=500'
     const headers: Record<string, string> = {}
     if (viewerId) headers['X-User-Id'] = viewerId
-    const res = await apiFetch(query, { headers })
+    const res = await apiFetch(query, { headers }, 10000)
     if (!res.ok) {
       return []
     }
@@ -303,7 +303,7 @@ export interface LiveAnalytics {
 
 export async function fetchLiveAnalytics(): Promise<LiveAnalytics | null> {
   try {
-    const res = await apiFetch('/observations/analytics')
+    const res = await apiFetch('/observations/analytics', undefined, 12000)
     if (res.ok) {
       return await res.json()
     }

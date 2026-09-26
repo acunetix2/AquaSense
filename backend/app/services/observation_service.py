@@ -390,61 +390,62 @@ class ObservationService:
 
     @staticmethod
     async def get_analytics(db: AsyncSession) -> dict:
-        """Compute real live analytics and metrics across all observations."""
+        """Compute live analytics in a single round trip (conditional aggregation).
+
+        The remote database has high per-query latency, so all metrics are
+        collected with one SELECT instead of one query per metric.
+        """
         from sqlalchemy import func, distinct
-        
-        # Total counts & status
-        total_res = await db.execute(select(func.count(Observation.id)))
-        total = total_res.scalar() or 0
 
-        verified_res = await db.execute(select(func.count(Observation.id)).where(Observation.status == "verified"))
-        verified = verified_res.scalar() or 0
+        row = (
+            await db.execute(
+                select(
+                    func.count(Observation.id).label("total"),
+                    func.count(Observation.id)
+                    .filter(Observation.status == "verified")
+                    .label("verified"),
+                    func.count(Observation.id)
+                    .filter(Observation.status == "pending")
+                    .label("pending"),
+                    func.count(Observation.id)
+                    .filter(Observation.status == "flagged")
+                    .label("flagged"),
+                    func.count(Observation.id)
+                    .filter(Observation.signal == "normal")
+                    .label("normal"),
+                    func.count(Observation.id)
+                    .filter(Observation.signal == "watch")
+                    .label("watch"),
+                    func.count(Observation.id)
+                    .filter(Observation.signal == "investigate")
+                    .label("investigate"),
+                    func.count(distinct(Observation.user_id)).label("observers"),
+                    func.count(distinct(Observation.site_name)).label("sites"),
+                    func.avg(Observation.confidence).label("avg_conf"),
+                    func.count(Observation.id)
+                    .filter(Observation.waste_visible == True)  # noqa: E712
+                    .label("waste"),
+                )
+            )
+        ).one()
 
-        pending_res = await db.execute(select(func.count(Observation.id)).where(Observation.status == "pending"))
-        pending = pending_res.scalar() or 0
-
-        flagged_res = await db.execute(select(func.count(Observation.id)).where(Observation.status == "flagged"))
-        flagged = flagged_res.scalar() or 0
-
-        # Signals
-        normal_res = await db.execute(select(func.count(Observation.id)).where(Observation.signal == "normal"))
-        normal = normal_res.scalar() or 0
-
-        watch_res = await db.execute(select(func.count(Observation.id)).where(Observation.signal == "watch"))
-        watch = watch_res.scalar() or 0
-
-        investigate_res = await db.execute(select(func.count(Observation.id)).where(Observation.signal == "investigate"))
-        investigate = investigate_res.scalar() or 0
-
-        # Unique observers & sites
-        observers_res = await db.execute(select(func.count(distinct(Observation.user_id))))
-        observers = observers_res.scalar() or 0
-
-        sites_res = await db.execute(select(func.count(distinct(Observation.site_name))))
-        sites = sites_res.scalar() or 0
-
-        # Avg confidence
-        avg_conf_res = await db.execute(select(func.avg(Observation.confidence)))
-        avg_conf = float(avg_conf_res.scalar() or 0.0)
-
-        # Waste visible count
-        waste_res = await db.execute(select(func.count(Observation.id)).where(Observation.waste_visible == True))
-        waste_count = waste_res.scalar() or 0
+        total = int(row.total or 0)
+        normal = int(row.normal or 0)
 
         return {
             "total_observations": total,
-            "verified_count": verified,
-            "pending_count": pending,
-            "flagged_count": flagged,
+            "verified_count": int(row.verified or 0),
+            "pending_count": int(row.pending or 0),
+            "flagged_count": int(row.flagged or 0),
             "signals": {
                 "normal": normal,
-                "watch": watch,
-                "investigate": investigate,
+                "watch": int(row.watch or 0),
+                "investigate": int(row.investigate or 0),
             },
-            "active_observers": observers,
-            "monitored_sites": sites,
-            "average_confidence": round(avg_conf, 2),
-            "waste_reported_count": waste_count,
+            "active_observers": int(row.observers or 0),
+            "monitored_sites": int(row.sites or 0),
+            "average_confidence": round(float(row.avg_conf or 0.0), 2),
+            "waste_reported_count": int(row.waste or 0),
             "water_health_index": round((normal / max(total, 1)) * 100, 1),
         }
 
