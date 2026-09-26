@@ -47,6 +47,9 @@ class ProfileRead(BaseModel):
     followers_count: int = 0
     following_count: int = 0
     likes_received: int = 0
+    # Viewer-relative state — computed when X-User-Id is supplied
+    is_following: bool = False
+    liked_by_me: bool = False
     created_at: datetime
     updated_at: datetime
 

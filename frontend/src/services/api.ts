@@ -1,4 +1,4 @@
-import type { Observation, SignalType, ConsistencyFlag, AiTrail } from '../types/observation'
+import type { Observation, SignalType, ConsistencyFlag, AiTrail, ObservationComment, LikeState } from '../types/observation'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -49,6 +49,9 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
     observer_avatar: (item.observer_avatar as string) || undefined,
     observer_location: (item.observer_location as string) || undefined,
     observer_role: (item.observer_role as string) || undefined,
+    like_count: (item.like_count as number) ?? 0,
+    comment_count: (item.comment_count as number) ?? 0,
+    liked_by_me: (item.liked_by_me as boolean) ?? false,
   }
 }
 
@@ -85,10 +88,12 @@ export async function checkBackendHealth(): Promise<boolean> {
   }
 }
 
-export async function fetchObservations(userId?: string): Promise<Observation[]> {
+export async function fetchObservations(userId?: string, viewerId?: string): Promise<Observation[]> {
   try {
     const query = userId ? `/observations?limit=500&user_id=${encodeURIComponent(userId)}` : '/observations?limit=500'
-    const res = await apiFetch(query)
+    const headers: Record<string, string> = {}
+    if (viewerId) headers['X-User-Id'] = viewerId
+    const res = await apiFetch(query, { headers })
     if (!res.ok) {
       return []
     }
@@ -341,12 +346,16 @@ export interface PublicProfileData {
   followers_count: number
   following_count: number
   likes_received: number
+  is_following?: boolean
+  liked_by_me?: boolean
   created_at: string
 }
 
-export async function fetchPublicProfile(userId: string): Promise<PublicProfileData | null> {
+export async function fetchPublicProfile(userId: string, viewerId?: string): Promise<PublicProfileData | null> {
   try {
-    const res = await apiFetch(`/profiles/${encodeURIComponent(userId)}`)
+    const headers: Record<string, string> = {}
+    if (viewerId) headers['X-User-Id'] = viewerId
+    const res = await apiFetch(`/profiles/${encodeURIComponent(userId)}`, { headers })
     if (res.ok) {
       return await res.json()
     }
@@ -386,16 +395,121 @@ export async function unfollowUserProfile(targetUserId: string, currentUserId: s
   return null
 }
 
-export async function likeUserProfile(targetUserId: string): Promise<PublicProfileData | null> {
+export async function likeUserProfile(targetUserId: string, currentUserId: string): Promise<PublicProfileData | null> {
   try {
     const res = await apiFetch(`/profiles/${encodeURIComponent(targetUserId)}/like`, {
       method: 'POST',
+      headers: { 'X-User-Id': currentUserId },
     })
     if (res.ok) {
       return await res.json()
     }
   } catch (err) {
     console.warn('Like profile notice:', err)
+  }
+  return null
+}
+
+export async function unlikeUserProfile(targetUserId: string, currentUserId: string): Promise<PublicProfileData | null> {
+  try {
+    const res = await apiFetch(`/profiles/${encodeURIComponent(targetUserId)}/like`, {
+      method: 'DELETE',
+      headers: { 'X-User-Id': currentUserId },
+    })
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Unlike profile notice:', err)
+  }
+  return null
+}
+
+// ---------------------------------------------------------------------------
+// Observation comments & likes
+// ---------------------------------------------------------------------------
+
+export async function fetchComments(observationId: number | string): Promise<ObservationComment[]> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/comments`, undefined, 5000)
+    if (!res.ok) return []
+    const data = await res.json()
+    return Array.isArray(data) ? data : []
+  } catch (err) {
+    console.warn('Comments fetch notice:', err)
+    return []
+  }
+}
+
+export async function createComment(
+  observationId: number | string,
+  body: string,
+  userId: string,
+): Promise<ObservationComment | null> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-User-Id': userId },
+      body: JSON.stringify({ body }),
+    }, 5000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Comment create notice:', err)
+  }
+  return null
+}
+
+export async function deleteComment(
+  observationId: number | string,
+  commentId: string,
+  userId: string,
+): Promise<boolean> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: { 'X-User-Id': userId },
+    }, 5000)
+    return res.ok || res.status === 204
+  } catch (err) {
+    console.warn('Comment delete notice:', err)
+    return false
+  }
+}
+
+export async function likeObservation(
+  observationId: number | string,
+  userId: string,
+): Promise<LikeState | null> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/like`, {
+      method: 'POST',
+      headers: { 'X-User-Id': userId },
+    }, 5000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Observation like notice:', err)
+  }
+  return null
+}
+
+export async function unlikeObservation(
+  observationId: number | string,
+  userId: string,
+): Promise<LikeState | null> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/like`, {
+      method: 'DELETE',
+      headers: { 'X-User-Id': userId },
+    }, 5000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Observation unlike notice:', err)
   }
   return null
 }

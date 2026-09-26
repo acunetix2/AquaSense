@@ -5,6 +5,7 @@ from app.core.permissions import is_reviewer_role
 from app.db.session import get_db
 from app.schemas.profile import ProfileRead, ProfileReadWithEmail, ProfileUpdate, ProfileUpsert
 from app.services.profile_service import ProfileService
+from app.services.social_service import SocialService
 
 router = APIRouter(prefix="/profiles", tags=["profiles"])
 
@@ -96,6 +97,7 @@ async def update_profile_by_user_id(
 @router.get("/{user_id}", response_model=ProfileRead)
 async def get_public_profile(
     user_id: str,
+    x_user_id: str | None = Header(None, description="Viewer id — enables is_following / liked_by_me."),
     db: AsyncSession = Depends(get_db),
 ) -> ProfileRead:
     """
@@ -108,7 +110,21 @@ async def get_public_profile(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Profile not found.",
         )
-    return ProfileRead.model_validate(profile)
+    result = ProfileRead.model_validate(profile)
+    if x_user_id and x_user_id != user_id:
+        result.is_following = await SocialService.is_following(db, x_user_id, user_id)
+        result.liked_by_me = await SocialService.has_liked_profile(db, x_user_id, user_id)
+    return result
+
+
+async def _with_viewer_state(
+    db: AsyncSession, profile: ProfileRead, viewer_id: str
+) -> ProfileRead:
+    """Annotate a target profile response with the acting viewer's follow/like state."""
+    if viewer_id != profile.user_id:
+        profile.is_following = await SocialService.is_following(db, viewer_id, profile.user_id)
+        profile.liked_by_me = await SocialService.has_liked_profile(db, viewer_id, profile.user_id)
+    return profile
 
 
 @router.post("/{user_id}/follow", response_model=ProfileRead)
@@ -117,7 +133,7 @@ async def follow_user(
     follower_id: str = Depends(_require_user),
     db: AsyncSession = Depends(get_db),
 ) -> ProfileRead:
-    """Follow a user profile (increments follower count)."""
+    """Follow a user profile (records an idempotent follow edge)."""
     if user_id == follower_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -126,7 +142,7 @@ async def follow_user(
     profile = await ProfileService.follow_profile(db, user_id, follower_id)
     if not profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found.")
-    return profile
+    return await _with_viewer_state(db, profile, follower_id)
 
 
 @router.delete("/{user_id}/follow", response_model=ProfileRead)
@@ -135,21 +151,40 @@ async def unfollow_user(
     follower_id: str = Depends(_require_user),
     db: AsyncSession = Depends(get_db),
 ) -> ProfileRead:
-    """Unfollow a user profile (decrements follower count)."""
+    """Unfollow a user profile (removes the follow edge, idempotent)."""
     profile = await ProfileService.unfollow_profile(db, user_id, follower_id)
     if not profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found.")
-    return profile
+    return await _with_viewer_state(db, profile, follower_id)
 
 
 @router.post("/{user_id}/like", response_model=ProfileRead)
 async def like_user(
     user_id: str,
+    liker_id: str = Depends(_require_user),
     db: AsyncSession = Depends(get_db),
 ) -> ProfileRead:
-    """Like a user profile (increments likes_received)."""
-    profile = await ProfileService.like_profile(db, user_id)
+    """Like a user profile (records an idempotent like edge)."""
+    if user_id == liker_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You cannot like your own profile.",
+        )
+    profile = await ProfileService.like_profile(db, user_id, liker_id)
     if not profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found.")
-    return profile
+    return await _with_viewer_state(db, profile, liker_id)
+
+
+@router.delete("/{user_id}/like", response_model=ProfileRead)
+async def unlike_user(
+    user_id: str,
+    liker_id: str = Depends(_require_user),
+    db: AsyncSession = Depends(get_db),
+) -> ProfileRead:
+    """Remove a like from a user profile (idempotent)."""
+    profile = await ProfileService.unlike_profile(db, user_id, liker_id)
+    if not profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found.")
+    return await _with_viewer_state(db, profile, liker_id)
 

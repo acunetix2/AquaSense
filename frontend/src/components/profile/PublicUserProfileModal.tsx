@@ -21,6 +21,7 @@ import {
   followUserProfile,
   unfollowUserProfile,
   likeUserProfile,
+  unlikeUserProfile,
   type PublicProfileData,
 } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
@@ -73,12 +74,14 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
     let isMounted = true
     if (userId) {
       setLoadingProfile(true)
-      fetchPublicProfile(userId)
+      fetchPublicProfile(userId, currentUser?.id)
         .then((data) => {
           if (isMounted && data) {
             setProfileData(data)
             setFollowersCount(data.followers_count || 0)
             setLikesCount(data.likes_received || 0)
+            setIsFollowing(Boolean(data.is_following))
+            setHasLiked(Boolean(data.liked_by_me))
           }
         })
         .finally(() => {
@@ -92,7 +95,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
     return () => {
       isMounted = false
     }
-  }, [userId, userObservations.length])
+  }, [userId, currentUser?.id, userObservations.length])
 
   // Real member since date
   const displayJoinedSince = React.useMemo(() => {
@@ -147,14 +150,16 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
   }
 
   const handleToggleLike = async () => {
-    if (hasLiked) return
-    setHasLiked(true)
-    setLikesCount((prev) => prev + 1)
+    if (!userId || !currentUser?.id) return
 
-    if (userId) {
-      const res = await likeUserProfile(userId)
-      if (res) setLikesCount(res.likes_received)
-    }
+    const next = !hasLiked
+    setHasLiked(next)
+    setLikesCount((prev) => Math.max(0, prev + (next ? 1 : -1)))
+
+    const res = next
+      ? await likeUserProfile(userId, currentUser.id)
+      : await unlikeUserProfile(userId, currentUser.id)
+    if (res) setLikesCount(res.likes_received)
   }
 
   const handleShareProfile = () => {
@@ -201,33 +206,37 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
               </span>
             </div>
 
-            {/* Follow & Like interactive buttons */}
-            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <button
-                type="button"
-                onClick={handleToggleFollow}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 ${
-                  isFollowing
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
-                    : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white shadow-[#0F4C81]/25'
-                }`}
-              >
-                <Users size={14} />
-                <span>{isFollowing ? 'Following' : 'Follow Observer'}</span>
-              </button>
+            {/* Follow & Like interactive buttons (hidden on your own profile) */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-wrap">
+              {(!currentUser?.id || currentUser.id !== userId) && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleToggleFollow}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 ${
+                      isFollowing
+                        ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
+                        : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white shadow-[#0F4C81]/25'
+                    }`}
+                  >
+                    <Users size={14} />
+                    <span>{isFollowing ? 'Following' : 'Follow Observer'}</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={handleToggleLike}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border active:scale-95 ${
-                  hasLiked
-                    ? 'bg-rose-50 text-rose-600 border-rose-200'
-                    : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
-                }`}
-              >
-                <Heart size={14} className={hasLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-400'} />
-                <span>{hasLiked ? 'Liked' : 'Like'}</span>
-              </button>
+                  <button
+                    type="button"
+                    onClick={handleToggleLike}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border active:scale-95 ${
+                      hasLiked
+                        ? 'bg-rose-50 text-rose-600 border-rose-200'
+                        : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    <Heart size={14} className={hasLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-400'} />
+                    <span>{hasLiked ? 'Liked' : 'Like'}</span>
+                  </button>
+                </>
+              )}
 
               <button
                 type="button"

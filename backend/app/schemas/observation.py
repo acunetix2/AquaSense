@@ -125,6 +125,10 @@ class ObservationRead(ObservationBase):
     reviewed_at: datetime | None = None
     updated_at: datetime | None = None
     created_at: datetime
+    # Social state — computed per request, not stored on the observation row
+    like_count: int = 0
+    comment_count: int = 0
+    liked_by_me: bool = False
 
 
 # ---------------------------------------------------------------------------

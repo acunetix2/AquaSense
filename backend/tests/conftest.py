@@ -5,6 +5,13 @@ Uses an in-memory SQLite database so tests run without any external
 database connection. The `TestClient` wraps the FastAPI app and drives
 the full request → middleware → route → service → database lifecycle.
 """
+import os
+
+# Force hermetic tests BEFORE importing the app: the app's lifespan and
+# health endpoint build their own engine from DATABASE_URL, which must not
+# point at the live Supabase instance (network-dependent, slow, non-hermetic).
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import StaticPool

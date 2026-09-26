@@ -154,7 +154,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     let isMounted = true
     async function load() {
       setIsLoading(true)
-      const data = await fetchObservations()
+      const data = await fetchObservations(undefined, user?.id)
       if (isMounted) {
         setObservations(data)
         setIsLoading(false)
@@ -177,7 +177,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [user?.id])
 
   // Keep the URL in sync with the active app view and support direct browser navigation.
   useEffect(() => {
@@ -224,7 +224,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const refreshObservations = async () => {
     setIsLoading(true)
-    const data = await fetchObservations()
+    const data = await fetchObservations(undefined, user?.id)
     setObservations(data)
     setIsLoading(false)
   }
@@ -269,7 +269,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const updated = await reviewObservationApi(id, action, reviewerName, notes, user?.id)
 
       if (updated) {
-        const refreshed = await fetchObservations()
+        const refreshed = await fetchObservations(undefined, user?.id)
         setObservations(refreshed)
         if (selectedObservation && String(selectedObservation.id) === String(id)) {
           const match = refreshed.find((o) => String(o.id) === String(id))

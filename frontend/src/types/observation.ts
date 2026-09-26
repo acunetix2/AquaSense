@@ -100,6 +100,26 @@ export interface Observation {
   observer_avatar?: string
   observer_location?: string
   observer_role?: string
+  // Social engagement (computed by the backend per request)
+  like_count?: number
+  comment_count?: number
+  liked_by_me?: boolean
+}
+
+export interface ObservationComment {
+  id: string
+  observation_id: string | number
+  user_id: string
+  author_name: string
+  author_avatar?: string | null
+  author_role?: string | null
+  body: string
+  created_at: string
+}
+
+export interface LikeState {
+  liked: boolean
+  like_count: number
 }
 
 export type ActiveView = 

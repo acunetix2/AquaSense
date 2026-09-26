@@ -1,8 +1,11 @@
-from sqlalchemy import select
+from sqlalchemy import delete, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.profile import Profile
+from app.models.social import ProfileFollow, ProfileLike
 from app.schemas.profile import ProfileRead, ProfileReadWithEmail, ProfileUpsert, ProfileUpdate
+from app.services.social_service import SocialService
 
 
 class ProfileService:
@@ -136,51 +139,108 @@ class ProfileService:
 
     @staticmethod
     async def follow_profile(db: AsyncSession, target_user_id: str, follower_user_id: str) -> ProfileRead | None:
-        """Increment follower count on target and following count on follower."""
+        """Record a follow edge (idempotent) and recompute both counters from the edge table."""
         res_target = await db.execute(select(Profile).where(Profile.user_id == target_user_id))
         target_profile = res_target.scalar_one_or_none()
         if not target_profile:
             return None
 
-        target_profile.followers_count = (target_profile.followers_count or 0) + 1
+        existing = await db.execute(
+            select(ProfileFollow).where(
+                ProfileFollow.follower_id == follower_user_id,
+                ProfileFollow.followee_id == target_user_id,
+            )
+        )
+        if existing.scalar_one_or_none() is None:
+            db.add(ProfileFollow(follower_id=follower_user_id, followee_id=target_user_id))
+            try:
+                await db.commit()
+            except IntegrityError:
+                await db.rollback()  # concurrent duplicate follow — already recorded
 
+        target_profile.followers_count = await SocialService.follower_count(db, target_user_id)
         res_follower = await db.execute(select(Profile).where(Profile.user_id == follower_user_id))
         follower_profile = res_follower.scalar_one_or_none()
         if follower_profile:
-            follower_profile.following_count = (follower_profile.following_count or 0) + 1
+            follower_profile.following_count = await SocialService.following_count(db, follower_user_id)
+            await db.commit()
 
-        await db.commit()
         await db.refresh(target_profile)
         return ProfileRead.model_validate(target_profile)
 
     @staticmethod
     async def unfollow_profile(db: AsyncSession, target_user_id: str, follower_user_id: str) -> ProfileRead | None:
-        """Decrement follower count on target and following count on follower."""
+        """Remove a follow edge (idempotent) and recompute both counters from the edge table."""
         res_target = await db.execute(select(Profile).where(Profile.user_id == target_user_id))
         target_profile = res_target.scalar_one_or_none()
         if not target_profile:
             return None
 
-        target_profile.followers_count = max(0, (target_profile.followers_count or 0) - 1)
+        await db.execute(
+            delete(ProfileFollow).where(
+                ProfileFollow.follower_id == follower_user_id,
+                ProfileFollow.followee_id == target_user_id,
+            )
+        )
+        await db.commit()
 
+        target_profile.followers_count = await SocialService.follower_count(db, target_user_id)
         res_follower = await db.execute(select(Profile).where(Profile.user_id == follower_user_id))
         follower_profile = res_follower.scalar_one_or_none()
         if follower_profile:
-            follower_profile.following_count = max(0, (follower_profile.following_count or 0) - 1)
+            follower_profile.following_count = await SocialService.following_count(db, follower_user_id)
+            await db.commit()
 
+        await db.refresh(target_profile)
+        return ProfileRead.model_validate(target_profile)
+
+    @staticmethod
+    async def like_profile(
+        db: AsyncSession, target_user_id: str, liker_user_id: str
+    ) -> ProfileRead | None:
+        """Record a profile like edge (idempotent) and recompute likes_received from the edge table."""
+        res_target = await db.execute(select(Profile).where(Profile.user_id == target_user_id))
+        target_profile = res_target.scalar_one_or_none()
+        if not target_profile:
+            return None
+
+        existing = await db.execute(
+            select(ProfileLike).where(
+                ProfileLike.target_id == target_user_id,
+                ProfileLike.liker_id == liker_user_id,
+            )
+        )
+        if existing.scalar_one_or_none() is None:
+            db.add(ProfileLike(target_id=target_user_id, liker_id=liker_user_id))
+            try:
+                await db.commit()
+            except IntegrityError:
+                await db.rollback()
+
+        target_profile.likes_received = await SocialService.profile_like_count(db, target_user_id)
         await db.commit()
         await db.refresh(target_profile)
         return ProfileRead.model_validate(target_profile)
 
     @staticmethod
-    async def like_profile(db: AsyncSession, target_user_id: str) -> ProfileRead | None:
-        """Increment likes_received on target profile."""
+    async def unlike_profile(
+        db: AsyncSession, target_user_id: str, liker_user_id: str
+    ) -> ProfileRead | None:
+        """Remove a profile like edge (idempotent) and recompute likes_received."""
         res_target = await db.execute(select(Profile).where(Profile.user_id == target_user_id))
         target_profile = res_target.scalar_one_or_none()
         if not target_profile:
             return None
 
-        target_profile.likes_received = (target_profile.likes_received or 0) + 1
+        await db.execute(
+            delete(ProfileLike).where(
+                ProfileLike.target_id == target_user_id,
+                ProfileLike.liker_id == liker_user_id,
+            )
+        )
+        await db.commit()
+
+        target_profile.likes_received = await SocialService.profile_like_count(db, target_user_id)
         await db.commit()
         await db.refresh(target_profile)
         return ProfileRead.model_validate(target_profile)

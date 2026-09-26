@@ -15,7 +15,7 @@ import { ReviewerQueue } from './components/reviewer/ReviewerQueue'
 import { DashboardView } from './components/dashboard/DashboardView'
 import { ObservationDetail } from './components/details/ObservationDetail'
 import { MyObservationsView } from './components/observations/MyObservationsView'
-import { ProfileSettingsPage } from './components/profile/ProfileSettingsPage'
+import { SettingsView } from './components/settings/SettingsView'
 import { ApiDocsView } from './components/docs/ApiDocsView'
 import { AppFooter } from './components/common/AppFooter'
 import { isReviewerRole } from './types/roles'
@@ -97,7 +97,7 @@ const MainContent: React.FC = () => {
         {activeView === 'reviewer-queue' && <ReviewerQueue />}
         {activeView === 'dashboard' && <DashboardView />}
         {activeView === 'my-observations' && <MyObservationsView />}
-        {activeView === 'profile' && <ProfileSettingsPage />}
+        {activeView === 'profile' && <SettingsView />}
         {activeView === 'api-docs' && <ApiDocsView />}
         {activeView === 'detail' && <ObservationDetail />}
       </main>

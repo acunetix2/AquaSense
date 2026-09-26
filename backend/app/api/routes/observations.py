@@ -15,11 +15,27 @@ from app.schemas.observation import (
     ObservationReview,
     ObservationUpdate,
 )
+from app.schemas.social import CommentCreate, CommentRead, LikeState
 from app.services.ai_service import analyze_image_with_groq, analyze_multiple_images_with_groq
 from app.services.observation_service import ObservationService
 from app.services.profile_service import ProfileService
+from app.services.social_service import SocialService
 
 router = APIRouter(prefix="/observations", tags=["observations"])
+
+
+async def _attach_social(
+    db: AsyncSession, observations: list[ObservationRead], viewer_id: str | None
+) -> None:
+    """Attach like/comment counts and the viewer's like state to a page of observations."""
+    counts = await SocialService.social_counts(
+        db, [o.id for o in observations], viewer_id=viewer_id
+    )
+    for obs in observations:
+        entry = counts.get(obs.id, {})
+        obs.like_count = int(entry.get("like_count", 0))  # type: ignore[arg-type]
+        obs.comment_count = int(entry.get("comment_count", 0))  # type: ignore[arg-type]
+        obs.liked_by_me = bool(entry.get("liked_by_me", False))
 
 
 # ---------------------------------------------------------------------------
@@ -124,6 +140,7 @@ async def list_observations(
     user_id: str | None = Query(None, description="Filter by observer user_id"),
     limit: int = Query(200, ge=1, le=500),
     offset: int = Query(0, ge=0),
+    x_user_id: str | None = Header(None, description="Viewer id — enables liked_by_me in the response."),
     db: AsyncSession = Depends(get_db),
 ) -> list[ObservationRead]:
     """List observations with optional filtering and pagination. observer_email is redacted."""
@@ -133,6 +150,7 @@ async def list_observations(
     # Redact email from all public-facing responses
     for obs in observations:
         obs.observer_email = None
+    await _attach_social(db, observations, viewer_id=x_user_id)
     return observations
 
 
@@ -153,6 +171,7 @@ async def create_observation(
 @router.get("/{observation_id}", response_model=ObservationRead)
 async def get_observation(
     observation_id: UUID,
+    x_user_id: str | None = Header(None, description="Viewer id — enables liked_by_me in the response."),
     db: AsyncSession = Depends(get_db),
 ) -> ObservationRead:
     """Retrieve a single observation by ID. observer_email is redacted."""
@@ -164,6 +183,7 @@ async def get_observation(
         )
     result = ObservationRead.model_validate(observation)
     result.observer_email = None
+    await _attach_social(db, [result], viewer_id=x_user_id)
     return result
 
 
@@ -266,4 +286,103 @@ async def delete_observation(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Observation {observation_id} not found.",
         )
+
+
+# ---------------------------------------------------------------------------
+# Social – comments and likes on an observation
+# ---------------------------------------------------------------------------
+
+@router.get("/{observation_id}/comments", response_model=list[CommentRead])
+async def list_comments(
+    observation_id: UUID,
+    db: AsyncSession = Depends(get_db),
+) -> list[CommentRead]:
+    """List comments on an observation (oldest first)."""
+    observation = await ObservationService.get_observation(db, observation_id)
+    if observation is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation {observation_id} not found.",
+        )
+    return await SocialService.list_comments(db, observation_id)
+
+
+@router.post("/{observation_id}/comments", response_model=CommentRead, status_code=status.HTTP_201_CREATED)
+async def create_comment(
+    observation_id: UUID,
+    payload: CommentCreate,
+    x_user_id: str = Header(..., description="User id of the commenter."),
+    db: AsyncSession = Depends(get_db),
+) -> CommentRead:
+    """Comment on an observation. Requires X-User-Id; author details come from the profile when available."""
+    profile = await ProfileService.get_profile_by_user_id(db, x_user_id)
+    comment = await SocialService.create_comment(
+        db,
+        observation_id,
+        x_user_id,
+        payload,
+        author_name=(profile.full_name if profile else None) or "Citizen Scientist",
+        author_avatar=(profile.avatar_url if profile else None),
+        author_role=(profile.role if profile else None),
+    )
+    if comment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation {observation_id} not found.",
+        )
+    return comment
+
+
+@router.delete("/{observation_id}/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_comment(
+    observation_id: UUID,
+    comment_id: UUID,
+    x_user_id: str = Header(..., description="User id of the commenter."),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Delete a comment. Only the comment's author may delete it."""
+    try:
+        deleted = await SocialService.delete_comment(db, comment_id, x_user_id)
+    except PermissionError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(exc),
+        ) from exc
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Comment {comment_id} not found.",
+        )
+
+
+@router.post("/{observation_id}/like", response_model=LikeState)
+async def like_observation(
+    observation_id: UUID,
+    x_user_id: str = Header(..., description="User id doing the liking."),
+    db: AsyncSession = Depends(get_db),
+) -> LikeState:
+    """Like an observation (idempotent)."""
+    state = await SocialService.like_observation(db, observation_id, x_user_id)
+    if state is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation {observation_id} not found.",
+        )
+    return state
+
+
+@router.delete("/{observation_id}/like", response_model=LikeState)
+async def unlike_observation(
+    observation_id: UUID,
+    x_user_id: str = Header(..., description="User id removing the like."),
+    db: AsyncSession = Depends(get_db),
+) -> LikeState:
+    """Remove a like from an observation (idempotent)."""
+    state = await SocialService.unlike_observation(db, observation_id, x_user_id)
+    if state is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation {observation_id} not found.",
+        )
+    return state
 

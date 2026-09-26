@@ -6,11 +6,15 @@ import {
   ArrowRight,
   ShieldCheck,
   Clock,
+  Heart,
+  MessageSquare,
 } from 'lucide-react'
 import { SignalBadge } from './SignalBadge'
 import type { Observation } from '../../types/observation'
 import { useApp } from '../../context/AppContext'
+import { useAuth } from '../../context/AuthContext'
 import { PublicUserProfileModal } from '../profile/PublicUserProfileModal'
+import { likeObservation, unlikeObservation } from '../../services/api'
 
 interface PublicObservationCardProps {
   observation: Observation
@@ -35,9 +39,44 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
   compact = false,
   showCategory = true,
 }) => {
-  const { openObservationDetail, observations } = useApp()
+  const { openObservationDetail, observations, showToast } = useApp()
+  const { user } = useAuth()
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [liked, setLiked] = useState(!!obs.liked_by_me)
+  const [likeCount, setLikeCount] = useState(obs.like_count ?? 0)
+  const [likeBusy, setLikeBusy] = useState(false)
   const primaryImage = obs.image_urls?.[0] || obs.image_url || ''
+
+  const handleToggleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (likeBusy) return
+    if (!user?.id) {
+      showToast('Sign in required', 'Please sign in to like this observation.', 'warning')
+      return
+    }
+
+    const next = !liked
+    setLiked(next)
+    setLikeCount((prev) => Math.max(0, prev + (next ? 1 : -1)))
+    setLikeBusy(true)
+    const result = next
+      ? await likeObservation(obs.id, user.id)
+      : await unlikeObservation(obs.id, user.id)
+    setLikeBusy(false)
+    if (result) {
+      setLiked(result.liked)
+      setLikeCount(result.like_count)
+    }
+  }
+
+  const handleCommentsClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (onSelect) {
+      onSelect(obs)
+    } else {
+      openObservationDetail(obs)
+    }
+  }
 
   const handleCardClick = () => {
     if (onSelect) {
@@ -210,6 +249,33 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
                 <span>{formatSubmittedTime(obs.created_at)}</span>
               </p>
             </div>
+          </div>
+
+          {/* Engagement — like & comments (never trigger the card click) */}
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              type="button"
+              onClick={handleToggleLike}
+              aria-pressed={liked}
+              className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer active:scale-95 ${
+                liked
+                  ? 'bg-rose-50 text-rose-600 border-rose-200'
+                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <Heart size={12} className={liked ? 'fill-rose-500 text-rose-500' : 'text-slate-400'} />
+              <span>{likeCount}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCommentsClick}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all cursor-pointer active:scale-95"
+              title="Open observation to read or add comments"
+            >
+              <MessageSquare size={12} className="text-slate-400" />
+              <span>{obs.comment_count ?? 0}</span>
+            </button>
           </div>
 
           {/* Quick Inspector Link */}
