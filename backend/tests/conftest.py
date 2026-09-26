@@ -60,6 +60,9 @@ def client():
     app.dependency_overrides[get_db] = override_get_db
 
     with TestClient(app) as c:
+        # Exposed so tests can seed/modify rows directly (e.g. legacy
+        # observations with a NULL user_id via FK SET NULL).
+        c.session_factory = TestingSessionLocal
         yield c
 
     app.dependency_overrides.clear()

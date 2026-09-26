@@ -175,12 +175,9 @@ export const ObservationDetail: React.FC = () => {
   const analystRole = obs.observer_role || (obs.reviewed_by ? 'Certified Reviewer' : 'Citizen Observer')
   const analysisTime = obs.reviewed_at || obs.created_at
 
-  // Only the authenticated owner may edit or delete a record.
-  const isOwner = !!user && (
-    (!!user.id && !!obs.user_id && obs.user_id === user.id) ||
-    (!!user.email && !!obs.observer_email && obs.observer_email.toLowerCase() === user.email.toLowerCase()) ||
-    (!!user.name && !!obs.observer_name && obs.observer_name.trim().toLowerCase() === user.name.trim().toLowerCase())
-  )
+  // Only the authenticated owner may edit or delete a record (strict user-id match;
+  // email is redacted server-side and display names are not unique).
+  const isOwner = !!user && !!user.id && !!obs.user_id && obs.user_id === user.id
 
   // Only reviewer-level roles may verify or flag; everyone else gets a read-only view.
   const isReviewer = isReviewerRole(user?.role)

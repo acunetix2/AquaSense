@@ -13,11 +13,10 @@ export const MyObservationsView: React.FC = () => {
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | string | null>(null)
 
   const myObs = observations.filter((obs) => {
-    const matchesCurrentUser = !!user && (
-      (!!user.id && !!obs.user_id && obs.user_id === user.id) ||
-      (!!user.email && !!obs.observer_email && obs.observer_email.toLowerCase() === user.email.toLowerCase()) ||
-      (!!user.name && !!obs.observer_name && obs.observer_name.trim().toLowerCase() === user.name.trim().toLowerCase())
-    )
+    // Strict owner match only — email is redacted server-side and display
+    // names are not unique, so name/email matching would leak other users'
+    // records into this view (with edit/delete controls).
+    const matchesCurrentUser = !!user && !!user.id && !!obs.user_id && obs.user_id === user.id
 
     if (user && !matchesCurrentUser) return false
     if (filter === 'verified' && obs.status !== 'verified') return false

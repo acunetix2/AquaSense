@@ -294,14 +294,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }
 
   const deleteObservation = async (id: number | string, userId?: string) => {
-    // Optimistically remove from local state
+    // Server-authoritative: only remove locally after the API confirms the
+    // delete (owner or reviewer role). Never fake a successful deletion.
+    let deleted = false
+    try {
+      deleted = await deleteObservationApi(id, userId)
+    } catch {
+      deleted = false
+    }
+    if (!deleted) {
+      showToast(
+        'Delete Failed',
+        'Only the observation owner or a certified reviewer can delete this record.',
+        'error'
+      )
+      return
+    }
+
     setObservations((prev) => prev.filter((o) => o.id !== id))
     if (selectedObservation && selectedObservation.id === id) {
       setSelectedObservation(null)
       setActiveView('my-observations')
     }
-    // Remove from local storage & API
-    await deleteObservationApi(id, userId)
     showToast('Observation Deleted', 'The record has been removed from your account.', 'info')
   }
 

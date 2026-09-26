@@ -36,12 +36,9 @@ export const DashboardView: React.FC = () => {
   }, [])
 
   const myObservations = user
-    ? observations.filter((obs) => {
-        const matchesUserId = !!user.id && !!obs.user_id && obs.user_id === user.id
-        const matchesEmail = !!user.email && !!obs.observer_email && obs.observer_email.toLowerCase() === user.email.toLowerCase()
-        const matchesName = !!user.name && !!obs.observer_name && obs.observer_name.trim().toLowerCase() === user.name.trim().toLowerCase()
-        return matchesUserId || matchesEmail || matchesName
-      })
+    ? observations.filter(
+        (obs) => !!user.id && !!obs.user_id && obs.user_id === user.id
+      )
     : []
 
   const total = liveStats?.total_observations ?? observations.length

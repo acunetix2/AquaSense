@@ -257,6 +257,7 @@ async def delete_observation(
     """
     Delete an observation by ID.
     Requires X-User-Id header matching the observation's owner or reviewer role.
+    Observations without an owner may only be deleted by a reviewer.
     """
     observation = await ObservationService.get_observation(db, observation_id)
     if observation is None:
@@ -265,20 +266,21 @@ async def delete_observation(
             detail=f"Observation {observation_id} not found.",
         )
 
-    if observation.user_id:
-        if not x_user_id:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="X-User-Id header is required to delete this observation.",
-            )
+    if not x_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="X-User-Id header is required to delete this observation.",
+        )
 
-        if observation.user_id != x_user_id:
-            requesting_profile = await ProfileService.get_profile_by_user_id(db, x_user_id)
-            if requesting_profile is None or not is_reviewer_role(requesting_profile.role):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="You do not have permission to delete this observation.",
-                )
+    is_owner = bool(observation.user_id) and observation.user_id == x_user_id
+    if not is_owner:
+        # Not the owner (or the record has no owner) — reviewer role required.
+        requesting_profile = await ProfileService.get_profile_by_user_id(db, x_user_id)
+        if requesting_profile is None or not is_reviewer_role(requesting_profile.role):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to delete this observation.",
+            )
 
     deleted = await ObservationService.delete_observation(db, observation_id)
     if not deleted:

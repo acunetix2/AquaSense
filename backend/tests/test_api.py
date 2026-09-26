@@ -363,6 +363,120 @@ def test_delete_observation_reviewer_override(client: TestClient) -> None:
     assert response.status_code == 204
 
 
+def test_delete_observation_requires_header(client: TestClient) -> None:
+    """Even the owner must present X-User-Id; anonymous DELETEs are rejected."""
+    created = _create_observation(client, site_name="Header Required", latitude=13.0, longitude=13.0)
+
+    response = client.delete(f"/api/v1/observations/{created['id']}")
+    assert response.status_code == 401
+
+    # Record still present
+    assert client.get(f"/api/v1/observations/{created['id']}").status_code == 200
+
+
+def test_delete_observation_ownerless_requires_reviewer(client: TestClient) -> None:
+    """
+    Observations whose owner is gone (FK SET NULL after profile deletion)
+    must not be deletable by arbitrary signed-in users — reviewers only.
+    """
+    import asyncio
+    from uuid import UUID as PyUUID
+
+    from sqlalchemy import update
+
+    from app.models import Observation
+
+    _create_profile(client, CITIZEN_ID, "citizen")
+    _create_profile(client, REVIEWER_ID, "reviewer")
+    created = _create_observation(client, site_name="Orphaned Site", latitude=14.0, longitude=14.0)
+    obs_id = PyUUID(created["id"])
+
+    async def _strip_owner() -> None:
+        async with client.session_factory() as session:
+            await session.execute(
+                update(Observation)
+                .where(Observation.id == obs_id)
+                .values(user_id=None)
+            )
+            await session.commit()
+
+    asyncio.run(_strip_owner())
+
+    # A citizen may not delete it
+    citizen_resp = client.delete(
+        f"/api/v1/observations/{created['id']}",
+        headers={"X-User-Id": CITIZEN_ID},
+    )
+    assert citizen_resp.status_code == 403
+
+    # Anonymous DELETE may not delete it
+    anon_resp = client.delete(f"/api/v1/observations/{created['id']}")
+    assert anon_resp.status_code == 401
+
+    # A reviewer may delete it
+    reviewer_resp = client.delete(
+        f"/api/v1/observations/{created['id']}",
+        headers={"X-User-Id": REVIEWER_ID},
+    )
+    assert reviewer_resp.status_code == 204
+
+
+# ---------------------------------------------------------------------------
+# Observations — update (owner-only PATCH)
+# ---------------------------------------------------------------------------
+
+
+def test_update_observation_owner_can_edit(client: TestClient) -> None:
+    created = _create_observation(client, site_name="Original Name", latitude=15.0, longitude=15.0)
+
+    response = client.patch(
+        f"/api/v1/observations/{created['id']}",
+        json={"site_name": "Renamed By Owner"},
+        headers={"X-User-Id": "test-observer-1"},
+    )
+    assert response.status_code == 200
+    assert response.json()["site_name"] == "Renamed By Owner"
+
+
+def test_update_observation_forbidden_for_other_user(client: TestClient) -> None:
+    """A different signed-in user may not edit someone else's record."""
+    _create_profile(client, CITIZEN_ID, "citizen")
+    created = _create_observation(client, site_name="Not Yours", latitude=16.0, longitude=16.0)
+
+    response = client.patch(
+        f"/api/v1/observations/{created['id']}",
+        json={"site_name": "Hijacked"},
+        headers={"X-User-Id": CITIZEN_ID},
+    )
+    assert response.status_code == 403
+
+    # Record unchanged
+    assert client.get(f"/api/v1/observations/{created['id']}").json()["site_name"] == "Not Yours"
+
+
+def test_update_observation_reviewer_cannot_edit_citizens_record(client: TestClient) -> None:
+    """Reviewers may flag/verify and delete, but editing notes is owner-only."""
+    _create_profile(client, REVIEWER_ID, "reviewer")
+    created = _create_observation(client, site_name="Citizen Record", latitude=17.0, longitude=17.0)
+
+    response = client.patch(
+        f"/api/v1/observations/{created['id']}",
+        json={"site_name": "Reviewer Edit"},
+        headers={"X-User-Id": REVIEWER_ID},
+    )
+    assert response.status_code == 403
+
+
+def test_update_observation_requires_header(client: TestClient) -> None:
+    created = _create_observation(client, site_name="Header Needed", latitude=18.0, longitude=18.0)
+
+    response = client.patch(
+        f"/api/v1/observations/{created['id']}",
+        json={"site_name": "No Header"},
+    )
+    assert response.status_code == 401
+
+
 def test_analytics_returns_full_metric_shape(client: TestClient) -> None:
     """The analytics endpoint aggregates all metrics in one round trip."""
     _create_observation(client)
