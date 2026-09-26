@@ -27,6 +27,7 @@ engine_kwargs = {
     "connect_args": {
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
+        "timeout": 15,  # fail fast on network drops instead of the 60s default
     },
 }
 if database_url.startswith("sqlite"):
