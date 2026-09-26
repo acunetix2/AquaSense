@@ -736,3 +736,69 @@ export async function fetchMyProfile(userId: string): Promise<PublicProfileData 
   }
   return null
 }
+// ---------------------------------------------------------------------------
+// Notification engine (in-app notifications)
+// ---------------------------------------------------------------------------
+
+export interface AppNotification {
+  id: string
+  type: string
+  title: string
+  body: string | null
+  observation_id: string | null
+  actor_name: string | null
+  read: boolean
+  created_at: string
+}
+
+export interface NotificationListResponse {
+  items: AppNotification[]
+  unread_count: number
+}
+
+export async function fetchNotifications(userId: string): Promise<NotificationListResponse | null> {
+  try {
+    const res = await apiFetch('/notifications', {
+      headers: { 'X-User-Id': userId },
+    }, 8000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Notifications fetch notice:', err)
+  }
+  return null
+}
+
+export async function markNotificationRead(
+  notificationId: string,
+  userId: string
+): Promise<AppNotification | null> {
+  try {
+    const res = await apiFetch(`/notifications/${notificationId}/read`, {
+      method: 'POST',
+      headers: { 'X-User-Id': userId },
+    }, 5000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Notification read notice:', err)
+  }
+  return null
+}
+
+export async function markAllNotificationsRead(userId: string): Promise<boolean> {
+  try {
+    const res = await apiFetch('/notifications/read-all', {
+      method: 'POST',
+      headers: { 'X-User-Id': userId },
+    }, 5000)
+    if (res.ok) {
+      return true
+    }
+  } catch (err) {
+    console.warn('Notifications read-all notice:', err)
+  }
+  return false
+}

@@ -11,7 +11,6 @@ import {
   FileText,
   BarChart2,
   BarChart3,
-  ChevronDown,
   LogOut,
   LogIn,
   Sparkles,
@@ -20,6 +19,7 @@ import {
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
 import { isReviewerRole } from '../../types/roles'
+import { NotificationCenter } from './NotificationCenter'
 import type { ActiveView } from '../../types/observation'
 
 export const Navbar: React.FC = () => {
@@ -86,10 +86,10 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center h-16 gap-2 sm:gap-4">
+          {/* Brand — pinned to the far-left corner */}
+          <div className="shrink-0">
             <button
               onClick={() => handleNavClick(isAuthenticated ? 'home' : 'landing')}
               className="flex items-center gap-3 focus:outline-hidden group text-left cursor-pointer"
@@ -109,8 +109,8 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          {/* Desktop Nav Links — centered between brand and actions */}
+          <nav className="hidden md:flex flex-1 items-center justify-center min-w-0 space-x-0.5 lg:space-x-2 px-2">
             {navLinks.map((item) => {
               const isActive = activeView === item.id
               const isReviewerLink = item.id === 'reviewer-queue'
@@ -141,54 +141,45 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Right Action buttons */}
-          <div className="hidden sm:flex items-center gap-4">
+          {/* Right actions — pushed to the far-right end so everything fits */}
+          <div className="hidden sm:flex items-center gap-2 lg:gap-3 shrink-0 ml-auto">
             {/* New Stream CTA Button */}
             <button
               onClick={handleStartCapture}
               data-tour="new-stream"
-              className="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-full text-white bg-[#0284c7] hover:bg-[#0369a1] shadow-xs hover:shadow-sm transition-all duration-150 cursor-pointer active:scale-98"
+              className="inline-flex items-center gap-2 px-3.5 lg:px-5 py-2 text-sm font-semibold rounded-full text-white bg-[#0284c7] hover:bg-[#0369a1] shadow-xs hover:shadow-sm transition-all duration-150 cursor-pointer active:scale-98"
             >
               <PlusCircle size={17} className="stroke-[2.3]" />
-              <span>New Stream</span>
+              <span className="hidden lg:inline">New Stream</span>
             </button>
 
+            {isAuthenticated && <NotificationCenter />}
+
             {isAuthenticated ? (
-              /* Authenticated User Menu */
+              /* Authenticated User Menu — avatar only, at the far right */
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   data-tour="user-profile"
-                  className="flex items-center gap-2.5 p-1 rounded-full hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="relative w-9 h-9 rounded-full hover:ring-2 hover:ring-slate-200 focus:outline-hidden transition-all cursor-pointer"
                   title="User Profile & Settings"
                 >
-                  <div className="relative w-9 h-9 rounded-full ring-2 ring-slate-100 shrink-0">
-                    {user?.avatar_url ? (
-                      <img
-                        src={user.avatar_url}
-                        alt={user.name}
-                        className="w-full h-full rounded-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold text-xs">
-                        <User size={16} />
-                      </div>
-                    )}
-                    {/* Active green status indicator */}
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white ring-1 ring-emerald-300" />
-                  </div>
-                  <div className="text-left hidden lg:block pr-0.5">
-                    <p className="text-xs sm:text-sm font-bold text-slate-800 leading-tight">
-                      {user?.name || 'Iddy Chesire'}
-                    </p>
-                    <p className="text-[11px] text-slate-400 capitalize font-medium leading-none mt-0.5">
-                      {user?.role || 'citizen'}
-                    </p>
-                  </div>
-                  <ChevronDown size={14} className="text-slate-400 ml-0.5" />
+                  {user?.avatar_url ? (
+                    <img
+                      src={user.avatar_url}
+                      alt={user.name || 'Profile'}
+                      className="w-full h-full rounded-full object-cover ring-2 ring-slate-100"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold text-xs ring-2 ring-slate-100">
+                      <User size={16} />
+                    </div>
+                  )}
+                  {/* Active green status indicator */}
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white ring-1 ring-emerald-300" />
                 </button>
 
                 {userDropdownOpen && (
@@ -277,7 +268,8 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-2 ml-auto shrink-0">
+            {isAuthenticated && <NotificationCenter className="sm:hidden" />}
             <button
               onClick={handleStartCapture}
               className="p-2 text-white bg-[#0F4C81] rounded-lg shadow-xs cursor-pointer"

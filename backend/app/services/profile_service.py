@@ -176,10 +176,12 @@ class ProfileService:
                 ProfileFollow.followee_id == target_user_id,
             )
         )
+        created = False
         if existing.scalar_one_or_none() is None:
             db.add(ProfileFollow(follower_id=follower_user_id, followee_id=target_user_id))
             try:
                 await db.commit()
+                created = True
             except IntegrityError:
                 await db.rollback()  # concurrent duplicate follow — already recorded
 
@@ -189,6 +191,20 @@ class ProfileService:
         if follower_profile:
             follower_profile.following_count = await SocialService.following_count(db, follower_user_id)
             await db.commit()
+
+        if created:
+            from app.services.notification_service import NotificationService
+
+            follower_name = follower_profile.full_name if follower_profile else follower_user_id
+            await NotificationService.notify(
+                db,
+                user_id=target_user_id,
+                type="follow",
+                title="New follower",
+                body=f"{follower_name} started following you.",
+                actor_id=follower_user_id,
+                actor_name=follower_name,
+            )
 
         await db.refresh(target_profile)
         return ProfileRead.model_validate(target_profile)

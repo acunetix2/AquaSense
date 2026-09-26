@@ -239,7 +239,7 @@ async def review_observation(
     """
     await require_reviewer(db, x_user_id)
 
-    updated = await ObservationService.review_observation(db, observation_id, review)
+    updated = await ObservationService.review_observation(db, observation_id, review, x_user_id)
     if updated is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

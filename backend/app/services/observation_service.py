@@ -353,6 +353,7 @@ class ObservationService:
         db: AsyncSession,
         observation_id: UUID,
         review: ObservationReview,
+        reviewer_user_id: str | None = None,
     ) -> ObservationRead | None:
         """
         Apply a reviewer decision (verified / flagged) to an observation.
@@ -372,7 +373,23 @@ class ObservationService:
 
         await db.commit()
         await db.refresh(observation)
-        return ObservationRead.model_validate(observation)
+        read_result = ObservationRead.model_validate(observation)
+
+        # Notify the owner of the review outcome (no self/ownerless notifications).
+        from app.services.notification_service import NotificationService
+
+        await NotificationService.notify(
+            db,
+            user_id=observation.user_id,
+            type="review",
+            title="Observation verified" if review.action == "verified" else "Observation flagged",
+            body=(review.notes or None)
+            or f"Your observation at {observation.site_name} was reviewed and marked {review.action}.",
+            observation_id=observation.id,
+            actor_id=reviewer_user_id,
+            actor_name=review.reviewer_name,
+        )
+        return read_result
 
     @staticmethod
     async def delete_observation(db: AsyncSession, observation_id: UUID) -> bool:

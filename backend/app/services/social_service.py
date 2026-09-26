@@ -43,7 +43,8 @@ class SocialService:
     ) -> CommentRead | None:
         """Add a comment. Returns None when the observation does not exist."""
         obs = await db.execute(select(Observation).where(Observation.id == observation_id))
-        if obs.scalar_one_or_none() is None:
+        observation = obs.scalar_one_or_none()
+        if observation is None:
             return None
 
         body = payload.body.strip()
@@ -58,7 +59,22 @@ class SocialService:
         db.add(comment)
         await db.commit()
         await db.refresh(comment)
-        return CommentRead.model_validate(comment)
+        comment_read = CommentRead.model_validate(comment)
+
+        # Notify the observation owner (NotificationService skips self-comments).
+        from app.services.notification_service import NotificationService
+
+        await NotificationService.notify(
+            db,
+            user_id=observation.user_id,
+            type="comment",
+            title=f"New comment on {observation.site_name}",
+            body=body,
+            observation_id=observation_id,
+            actor_id=user_id,
+            actor_name=author_name or "Citizen Scientist",
+        )
+        return comment_read
 
     @staticmethod
     async def delete_comment(db: AsyncSession, comment_id: UUID, requesting_user_id: str) -> bool:
@@ -100,9 +116,12 @@ class SocialService:
     @staticmethod
     async def like_observation(db: AsyncSession, observation_id: UUID, user_id: str) -> LikeState | None:
         """Idempotent like — returns None when the observation does not exist."""
-        if not await SocialService._observation_exists(db, observation_id):
+        obs = await db.execute(select(Observation).where(Observation.id == observation_id))
+        observation = obs.scalar_one_or_none()
+        if observation is None:
             return None
 
+        created = False
         existing = await db.execute(
             select(ObservationLike).where(
                 ObservationLike.observation_id == observation_id,
@@ -113,8 +132,28 @@ class SocialService:
             db.add(ObservationLike(observation_id=observation_id, user_id=user_id))
             try:
                 await db.commit()
+                created = True
             except IntegrityError:
                 await db.rollback()  # concurrent duplicate like — already recorded
+
+        if created:
+            # Notify the observation owner once, on the first like only.
+            from app.models.profile import Profile
+            from app.services.notification_service import NotificationService
+
+            actor_name = (
+                await db.execute(select(Profile.full_name).where(Profile.user_id == user_id))
+            ).scalar_one_or_none() or user_id
+            await NotificationService.notify(
+                db,
+                user_id=observation.user_id,
+                type="like",
+                title=f"New like on {observation.site_name}",
+                body=f"{actor_name} liked your observation.",
+                observation_id=observation_id,
+                actor_id=user_id,
+                actor_name=actor_name,
+            )
 
         return LikeState(liked=True, like_count=await SocialService._like_count(db, observation_id))
 
