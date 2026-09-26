@@ -6,6 +6,7 @@ import { LandingNavbar } from './components/landing/LandingNavbar'
 import { ToastContainer } from './components/common/Toast'
 import { AppLoader } from './components/common/AppLoader'
 import { OnboardingTour } from './components/common/OnboardingTour'
+import { BottomNav } from './components/common/BottomNav'
 import { LandingPage } from './components/landing/LandingPage'
 import { AuthPage } from './components/auth/AuthPage'
 import { HeroSection } from './components/home/HeroSection'
@@ -118,6 +119,12 @@ const MainContent: React.FC = () => {
 
       {/* Inside App Footer */}
       {!isLanding && <AppFooter />}
+
+      {/* Mobile bottom navigation (inside the app shell only) */}
+      {!isLanding && <BottomNav />}
+
+      {/* Clearance so the fixed bottom bar never covers the footer */}
+      {!isLanding && <div className="h-[76px] md:hidden shrink-0" aria-hidden />}
 
       {/* Global Toast Notification Container */}
       <ToastContainer />

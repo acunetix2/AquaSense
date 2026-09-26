@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import {
   Droplets,
   PlusCircle,
-  Menu,
-  X,
   ShieldCheck,
   User,
   Home,
@@ -25,8 +23,7 @@ import type { ActiveView } from '../../types/observation'
 
 export const Navbar: React.FC = () => {
   const { activeView, setActiveView, observations, showToast } = useApp()
-  const { user, isAuthenticated, signOut, signInWithGoogle, setUserRole } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user, isAuthenticated, signOut, signInWithGoogle } = useAuth()
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
 
   const isReviewer = isReviewerRole(user?.role)
@@ -64,7 +61,6 @@ export const Navbar: React.FC = () => {
 
   const handleNavClick = (view: ActiveView) => {
     setActiveView(view)
-    setMobileMenuOpen(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -79,7 +75,6 @@ export const Navbar: React.FC = () => {
 
   const handleSignOut = async () => {
     setUserDropdownOpen(false)
-    setMobileMenuOpen(false)
     await signOut()
     setActiveView('landing')
     showToast('Signed Out', 'You have been signed out successfully.', 'info')
@@ -270,109 +265,13 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="flex md:hidden items-center gap-2 ml-auto shrink-0">
+          {/* Mobile actions — navigation lives in the bottom bar (BottomNav) */}
+          <div className="flex md:hidden items-center gap-1.5 ml-auto shrink-0">
             {isAuthenticated && <NotificationCenter className="sm:hidden" />}
             <ThemeToggle className="sm:hidden" />
-            <button
-              onClick={handleStartCapture}
-              className="p-2 text-white bg-[#0F4C81] rounded-lg shadow-xs cursor-pointer"
-              title="Report an observation"
-            >
-              <PlusCircle size={18} />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
-          {navLinks.map((item) => {
-            const isActive = activeView === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-base font-medium cursor-pointer ${
-                  isActive
-                    ? 'text-[#0F4C81] bg-sky-50 dark:text-sky-300 dark:bg-sky-900/40 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon size={18} className={isActive ? 'text-[#0F4C81]' : 'text-slate-400'} />
-                  <span>{item.label}</span>
-                </div>
-                {item.id === 'reviewer-queue' && pendingReviewCount > 0 && (
-                  <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">
-                    {pendingReviewCount}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-
-          {isAuthenticated ? (
-            <div className="pt-3 mt-2 border-t border-slate-100 space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-slate-800">{user?.name}</p>
-                  <p className="text-[10px] text-slate-500">{user?.email}</p>
-                </div>
-                <div className="flex gap-1.5">
-                  <button
-                    onClick={() => setUserRole('citizen')}
-                    className={`text-xs px-2.5 py-1 rounded-md font-medium cursor-pointer ${
-                      !isReviewer ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-700'
-                    }`}
-                  >
-                    Citizen
-                  </button>
-                  <button
-                    onClick={() => setUserRole('reviewer')}
-                    className={`text-xs px-2.5 py-1 rounded-md font-medium cursor-pointer ${
-                      isReviewer ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-700'
-                    }`}
-                  >
-                    Reviewer
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={() => handleNavClick('profile')}
-                className="w-full py-2 px-3 text-left text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg flex items-center gap-2 cursor-pointer"
-              >
-                <User size={14} className="text-[#0F4C81]" />
-                <span>Profile & Account Settings</span>
-              </button>
-              <button
-                onClick={handleSignOut}
-                className="w-full py-2 text-center text-xs font-bold text-rose-600 bg-rose-50 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <LogOut size={14} />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          ) : (
-            <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
-              <button
-                onClick={() => handleNavClick('auth')}
-                className="w-full py-2.5 rounded-lg bg-[#0F4C81] text-white font-bold text-sm text-center cursor-pointer"
-              >
-                Continue with Google
-              </button>
-            </div>
-          )}
-        </div>
-      )}
     </header>
   )
 }
