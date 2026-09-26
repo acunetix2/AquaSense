@@ -5,7 +5,7 @@ from app.db.session import check_database_connection
 router = APIRouter(tags=["health"])
 
 
-@router.get("/health")
+@router.api_route("/health", methods=["GET", "HEAD"])
 async def health_check() -> dict[str, str]:
     db_ok = await check_database_connection()
     return {
