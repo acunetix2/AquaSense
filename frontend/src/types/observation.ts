@@ -103,6 +103,7 @@ export interface Observation {
   // Social engagement (computed by the backend per request)
   like_count?: number
   comment_count?: number
+  views_count?: number
   liked_by_me?: boolean
 }
 

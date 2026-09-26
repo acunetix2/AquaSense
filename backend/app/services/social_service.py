@@ -6,7 +6,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.observation import Observation
-from app.models.social import ObservationComment, ObservationLike, ProfileFollow, ProfileLike
+from app.models.social import (
+    ObservationComment,
+    ObservationLike,
+    ObservationView,
+    ProfileFollow,
+    ProfileLike,
+)
 from app.schemas.social import CommentCreate, CommentRead, LikeState
 
 
@@ -126,13 +132,51 @@ class SocialService:
         await db.commit()
         return LikeState(liked=False, like_count=await SocialService._like_count(db, observation_id))
 
+    # ------------------------------------------------------------------
+    # Views (unique per viewer)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    async def record_view(db: AsyncSession, observation_id: UUID, viewer_id: str) -> int | None:
+        """
+        Record a view of an observation by a viewer (idempotent — one row per
+        viewer). Returns the total unique view count, or None when the
+        observation does not exist.
+        """
+        if not await SocialService._observation_exists(db, observation_id):
+            return None
+
+        existing = await db.execute(
+            select(ObservationView.id).where(
+                ObservationView.observation_id == observation_id,
+                ObservationView.viewer_id == viewer_id,
+            )
+        )
+        if existing.scalar_one_or_none() is None:
+            db.add(ObservationView(observation_id=observation_id, viewer_id=viewer_id))
+            try:
+                await db.commit()
+            except IntegrityError:
+                await db.rollback()  # concurrent duplicate view — already recorded
+
+        return await SocialService._view_count(db, observation_id)
+
+    @staticmethod
+    async def _view_count(db: AsyncSession, observation_id: UUID) -> int:
+        result = await db.execute(
+            select(func.count())
+            .select_from(ObservationView)
+            .where(ObservationView.observation_id == observation_id)
+        )
+        return int(result.scalar() or 0)
+
     @staticmethod
     async def social_counts(
         db: AsyncSession, observation_ids: list[UUID], viewer_id: str | None = None
     ) -> dict[UUID, dict[str, int | bool]]:
         """
-        Bulk-compute like/comment counts and the viewer's like state
-        for a page of observations (3 queries total, regardless of page size).
+        Bulk-compute like/comment/view counts and the viewer's like state
+        for a page of observations (4 queries total, regardless of page size).
         """
         if not observation_ids:
             return {}
@@ -147,6 +191,11 @@ class SocialService:
             .where(ObservationComment.observation_id.in_(observation_ids))
             .group_by(ObservationComment.observation_id)
         )
+        views_result = await db.execute(
+            select(ObservationView.observation_id, func.count())
+            .where(ObservationView.observation_id.in_(observation_ids))
+            .group_by(ObservationView.observation_id)
+        )
 
         liked_ids: set[UUID] = set()
         if viewer_id:
@@ -159,13 +208,15 @@ class SocialService:
             liked_ids = set(liked_result.scalars().all())
 
         counts: dict[UUID, dict[str, int | bool]] = {
-            oid: {"like_count": 0, "comment_count": 0, "liked_by_me": oid in liked_ids}
+            oid: {"like_count": 0, "comment_count": 0, "view_count": 0, "liked_by_me": oid in liked_ids}
             for oid in observation_ids
         }
         for oid, n in likes_result.all():
             counts[oid]["like_count"] = int(n)
         for oid, n in comments_result.all():
             counts[oid]["comment_count"] = int(n)
+        for oid, n in views_result.all():
+            counts[oid]["view_count"] = int(n)
         return counts
 
     # ------------------------------------------------------------------
@@ -216,5 +267,31 @@ class SocialService:
             select(func.count())
             .select_from(ProfileLike)
             .where(ProfileLike.target_id == target_id)
+        )
+        return int(result.scalar() or 0)
+
+    # ------------------------------------------------------------------
+    # Profile engagement aggregates (across the user's observations)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    async def comments_received(db: AsyncSession, user_id: str) -> int:
+        """Total comments left on this user's observations."""
+        result = await db.execute(
+            select(func.count())
+            .select_from(ObservationComment)
+            .join(Observation, ObservationComment.observation_id == Observation.id)
+            .where(Observation.user_id == user_id)
+        )
+        return int(result.scalar() or 0)
+
+    @staticmethod
+    async def views_received(db: AsyncSession, user_id: str) -> int:
+        """Total unique views across this user's observations."""
+        result = await db.execute(
+            select(func.count())
+            .select_from(ObservationView)
+            .join(Observation, ObservationView.observation_id == Observation.id)
+            .where(Observation.user_id == user_id)
         )
         return int(result.scalar() or 0)

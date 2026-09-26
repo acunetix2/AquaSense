@@ -15,7 +15,7 @@ from app.schemas.observation import (
     ObservationReview,
     ObservationUpdate,
 )
-from app.schemas.social import CommentCreate, CommentRead, LikeState
+from app.schemas.social import CommentCreate, CommentRead, LikeState, ViewCount
 from app.services.ai_service import analyze_image_with_groq, analyze_multiple_images_with_groq
 from app.services.observation_service import ObservationService
 from app.services.profile_service import ProfileService
@@ -27,7 +27,7 @@ router = APIRouter(prefix="/observations", tags=["observations"])
 async def _attach_social(
     db: AsyncSession, observations: list[ObservationRead], viewer_id: str | None
 ) -> None:
-    """Attach like/comment counts and the viewer's like state to a page of observations."""
+    """Attach like/comment/view counts and the viewer's like state to a page of observations."""
     counts = await SocialService.social_counts(
         db, [o.id for o in observations], viewer_id=viewer_id
     )
@@ -35,6 +35,7 @@ async def _attach_social(
         entry = counts.get(obs.id, {})
         obs.like_count = int(entry.get("like_count", 0))  # type: ignore[arg-type]
         obs.comment_count = int(entry.get("comment_count", 0))  # type: ignore[arg-type]
+        obs.views_count = int(entry.get("view_count", 0))  # type: ignore[arg-type]
         obs.liked_by_me = bool(entry.get("liked_by_me", False))
 
 
@@ -387,4 +388,23 @@ async def unlike_observation(
             detail=f"Observation {observation_id} not found.",
         )
     return state
+
+
+@router.post("/{observation_id}/view", response_model=ViewCount)
+async def record_observation_view(
+    observation_id: UUID,
+    x_user_id: str = Header(..., description="Viewer id — views are deduplicated per viewer."),
+    db: AsyncSession = Depends(get_db),
+) -> ViewCount:
+    """
+    Record that a signed-in user viewed an observation.
+    One row per (observation, viewer) — repeat views do not inflate the count.
+    """
+    view_count = await SocialService.record_view(db, observation_id, x_user_id)
+    if view_count is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Observation {observation_id} not found.",
+        )
+    return ViewCount(view_count=view_count)
 

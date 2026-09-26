@@ -8,6 +8,9 @@ import {
   updateObservation as updateObservationApi,
   reviewObservation as reviewObservationApi,
   deleteObservation as deleteObservationApi,
+  getCachedObservations,
+  isObservationsCacheFresh,
+  setObservationsCache,
 } from '../services/api'
 
 export interface ToastMessage {
@@ -149,28 +152,48 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }
 
-  // Load initial observations
+  // Load initial observations (cache-first, stale-while-revalidate)
   useEffect(() => {
     let isMounted = true
+
+    const resolveSharedLink = (data: typeof observations) => {
+      // Check if user navigated to a shared link
+      const hash = window.location.hash
+      const search = window.location.search
+      const match = hash.match(/#observation[-/](\w+)/) || search.match(/[?&]obs=(\w+)/)
+      if (match && match[1]) {
+        const targetId = match[1]
+        const found = data.find((o) => String(o.id) === targetId)
+        if (found) {
+          setSelectedObservation(found)
+          setActiveView('detail')
+        }
+      }
+    }
+
     async function load() {
+      const cached = getCachedObservations(undefined, user?.id)
+      if (cached) {
+        // Instant paint from cache — no spinner, no waiting on the network
+        setObservations(cached)
+        setIsLoading(false)
+        resolveSharedLink(cached)
+        if (!isObservationsCacheFresh(undefined, user?.id)) {
+          const fresh = await fetchObservations(undefined, user?.id, { force: true })
+          if (isMounted) {
+            setObservations(fresh)
+            resolveSharedLink(fresh)
+          }
+        }
+        return
+      }
+
       setIsLoading(true)
       const data = await fetchObservations(undefined, user?.id)
       if (isMounted) {
         setObservations(data)
         setIsLoading(false)
-
-        // Check if user navigated to a shared link
-        const hash = window.location.hash
-        const search = window.location.search
-        const match = hash.match(/#observation[-/](\w+)/) || search.match(/[?&]obs=(\w+)/)
-        if (match && match[1]) {
-          const targetId = match[1]
-          const found = data.find((o) => String(o.id) === targetId)
-          if (found) {
-            setSelectedObservation(found)
-            setActiveView('detail')
-          }
-        }
+        resolveSharedLink(data)
       }
     }
     load()
@@ -224,14 +247,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const refreshObservations = async () => {
     setIsLoading(true)
-    const data = await fetchObservations(undefined, user?.id)
+    const data = await fetchObservations(undefined, user?.id, { force: true })
     setObservations(data)
     setIsLoading(false)
   }
 
   const addNewObservation = async (payload: any): Promise<Observation> => {
     const created = await createObservation(payload)
-    setObservations((prev) => [created, ...prev])
+    const next = [created, ...observations]
+    setObservations(next)
+    setObservationsCache(next, undefined, user?.id)
     setSelectedObservation(created)
     showToast('Observation Submitted', 'Your observation has been saved and added to the regional registry.')
     return created
@@ -244,7 +269,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   ): Promise<Observation | null> => {
     const updated = await updateObservationApi(id, updates, userId)
     if (updated) {
-      setObservations((prev) => prev.map((o) => (o.id === id ? updated : o)))
+      const next = observations.map((o) => (o.id === id ? updated : o))
+      setObservations(next)
+      setObservationsCache(next, undefined, user?.id)
       if (selectedObservation && selectedObservation.id === id) {
         setSelectedObservation(updated)
       }
@@ -269,7 +296,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const updated = await reviewObservationApi(id, action, reviewerName, notes, user?.id)
 
       if (updated) {
-        const refreshed = await fetchObservations(undefined, user?.id)
+        const refreshed = await fetchObservations(undefined, user?.id, { force: true })
         setObservations(refreshed)
         if (selectedObservation && String(selectedObservation.id) === String(id)) {
           const match = refreshed.find((o) => String(o.id) === String(id))
@@ -311,7 +338,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return
     }
 
-    setObservations((prev) => prev.filter((o) => o.id !== id))
+    setObservations((prev) => {
+      const next = prev.filter((o) => o.id !== id)
+      setObservationsCache(next, undefined, user?.id)
+      return next
+    })
     if (selectedObservation && selectedObservation.id === id) {
       setSelectedObservation(null)
       setActiveView('my-observations')

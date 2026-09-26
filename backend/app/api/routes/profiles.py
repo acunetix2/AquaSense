@@ -44,7 +44,10 @@ async def get_my_profile(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Profile not found. Please sign in again to create one.",
         )
-    return ProfileReadWithEmail.model_validate(profile)
+    result = ProfileReadWithEmail.model_validate(profile)
+    result.comments_received = await SocialService.comments_received(db, user_id)
+    result.views_received = await SocialService.views_received(db, user_id)
+    return result
 
 
 @router.patch("/me", response_model=ProfileReadWithEmail)
@@ -111,6 +114,8 @@ async def get_public_profile(
             detail="Profile not found.",
         )
     result = ProfileRead.model_validate(profile)
+    result.comments_received = await SocialService.comments_received(db, user_id)
+    result.views_received = await SocialService.views_received(db, user_id)
     if x_user_id and x_user_id != user_id:
         result.is_following = await SocialService.is_following(db, x_user_id, user_id)
         result.liked_by_me = await SocialService.has_liked_profile(db, x_user_id, user_id)

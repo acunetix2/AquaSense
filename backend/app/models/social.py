@@ -65,3 +65,19 @@ class ProfileLike(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, nullable=False
     )
+
+
+class ObservationView(Base):
+    """Unique view of an observation by a viewer (deduplicated per viewer)."""
+
+    __tablename__ = "observation_views"
+    __table_args__ = (UniqueConstraint("observation_id", "viewer_id", name="uq_observation_view"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    observation_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid, ForeignKey("observations.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    viewer_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )

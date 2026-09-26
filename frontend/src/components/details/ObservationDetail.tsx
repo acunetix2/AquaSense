@@ -21,6 +21,7 @@ import {
   UserPlus,
   UserCheck,
   Send,
+  Users,
 } from 'lucide-react'
 
 import { useApp } from '../../context/AppContext'
@@ -31,6 +32,7 @@ import { ConfidenceBar } from '../common/ConfidenceBar'
 import { FhirExportModal } from './FhirExportModal'
 import { ReviewModal } from '../reviewer/ReviewModal'
 import { AiDecisionTrail } from './AiDecisionTrail'
+import { ObservationMap } from './ObservationMap'
 import type { Observation, ObservationComment } from '../../types/observation'
 import {
   fetchComments,
@@ -41,6 +43,8 @@ import {
   fetchPublicProfile,
   followUserProfile,
   unfollowUserProfile,
+  recordObservationView,
+  type PublicProfileData,
 } from '../../services/api'
 
 export const ObservationDetail: React.FC = () => {
@@ -89,6 +93,8 @@ export const ObservationDetail: React.FC = () => {
   const [isPostingComment, setIsPostingComment] = useState(false)
   const [isFollowingObserver, setIsFollowingObserver] = useState(false)
   const [socialBusy, setSocialBusy] = useState(false)
+  const [observerProfile, setObserverProfile] = useState<PublicProfileData | null>(null)
+  const [viewsCount, setViewsCount] = useState(selectedObservation?.views_count ?? 0)
 
   // Sync edit state when obs changes
   React.useEffect(() => {
@@ -117,6 +123,7 @@ export const ObservationDetail: React.FC = () => {
     setComments([])
     setCommentsLoaded(false)
     setIsFollowingObserver(false)
+    setObserverProfile(null)
 
     if (!obs?.id) return
     let mounted = true
@@ -128,12 +135,31 @@ export const ObservationDetail: React.FC = () => {
       }
     })
 
-    if (obs.user_id && user?.id && obs.user_id !== user.id) {
-      fetchPublicProfile(obs.user_id, user.id).then((profile) => {
-        if (mounted && profile) setIsFollowingObserver(Boolean(profile.is_following))
+    // Observer public profile — followers / likes / comments / views stats
+    if (obs.user_id) {
+      fetchPublicProfile(obs.user_id, user?.id).then((profile) => {
+        if (mounted && profile) {
+          setObserverProfile(profile)
+          if (user?.id && obs.user_id !== user.id) {
+            setIsFollowingObserver(Boolean(profile.is_following))
+          }
+        }
       })
     }
 
+    return () => {
+      mounted = false
+    }
+  }, [obs, user?.id])
+
+  // Record this viewer's visit (deduplicated server-side) and track the count
+  React.useEffect(() => {
+    setViewsCount(obs?.views_count ?? 0)
+    if (!obs?.id || !user?.id) return
+    let mounted = true
+    recordObservationView(obs.id, user.id).then((count) => {
+      if (mounted && count !== null) setViewsCount(count)
+    })
     return () => {
       mounted = false
     }
@@ -518,6 +544,35 @@ export const ObservationDetail: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Observer engagement stats — followers, likes, comments, views */}
+        {observerProfile && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {(
+              [
+                { icon: Users, label: 'Followers', value: observerProfile.followers_count },
+                { icon: Heart, label: 'Profile Likes', value: observerProfile.likes_received },
+                { icon: MessageSquare, label: 'Comments', value: observerProfile.comments_received ?? 0 },
+                { icon: Eye, label: 'Views', value: observerProfile.views_received ?? 0 },
+              ] as const
+            ).map(({ icon: StatIcon, label, value }) => (
+              <div
+                key={label}
+                className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100"
+              >
+                <div className="w-8 h-8 rounded-xl bg-[#0F4C81]/10 flex items-center justify-center shrink-0">
+                  <StatIcon size={15} className="text-[#0F4C81]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-extrabold text-slate-900 leading-none">{value}</p>
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-1">
+                    {label}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ── SOCIAL BAR: like · comment · share · follow ── */}
@@ -562,6 +617,16 @@ export const ObservationDetail: React.FC = () => {
             <Share2 size={15} className="text-slate-400" />
             <span>Share</span>
           </button>
+
+          <span
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-500 border border-slate-200"
+            title="Unique views of this observation"
+          >
+            <Eye size={15} className="text-slate-400" />
+            <span>
+              {viewsCount} {viewsCount === 1 ? 'View' : 'Views'}
+            </span>
+          </span>
 
           {/* Follow the observer (hidden on your own observations) */}
           {obs.user_id && viewerId && obs.user_id !== viewerId && (
@@ -856,19 +921,27 @@ export const ObservationDetail: React.FC = () => {
                 Latitude: {obs.latitude.toFixed(6)}, Longitude: {obs.longitude.toFixed(6)}
               </p>
             </div>
+            <button
+              onClick={() => setActiveView('map')}
+              className="text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer shrink-0"
+            >
+              Open in Fullscreen Map View →
+            </button>
           </div>
 
-          <div className="h-64 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden relative flex items-center justify-center">
-            <div className="text-center p-6 space-y-2">
-              <MapPin size={32} className="mx-auto text-[#0F4C81] animate-bounce" />
-              <p className="font-bold text-slate-800 text-sm">{obs.site_name}</p>
-              <p className="text-xs text-slate-500">{obs.location_address}</p>
-              <button
-                onClick={() => setActiveView('map')}
-                className="mt-2 text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
-              >
-                Open in Fullscreen Map View →
-              </button>
+          <ObservationMap
+            latitude={obs.latitude}
+            longitude={obs.longitude}
+            siteName={obs.site_name}
+            address={obs.location_address || undefined}
+            className="h-64 sm:h-80"
+          />
+
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+            <MapPin size={16} className="text-[#0F4C81] shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-slate-800">{obs.site_name}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{obs.location_address || 'No address recorded for this site.'}</p>
             </div>
           </div>
         </div>

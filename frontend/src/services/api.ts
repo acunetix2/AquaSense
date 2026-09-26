@@ -51,6 +51,7 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
     observer_role: (item.observer_role as string) || undefined,
     like_count: (item.like_count as number) ?? 0,
     comment_count: (item.comment_count as number) ?? 0,
+    views_count: (item.views_count as number) ?? 0,
     liked_by_me: (item.liked_by_me as boolean) ?? false,
   }
 }
@@ -88,25 +89,103 @@ export async function checkBackendHealth(): Promise<boolean> {
   }
 }
 
-export async function fetchObservations(userId?: string, viewerId?: string): Promise<Observation[]> {
+// ---------------------------------------------------------------------------
+// Observations cache — memory + sessionStorage (stale-while-revalidate)
+// ---------------------------------------------------------------------------
+
+const OBSERVATIONS_TTL_MS = 60_000
+const OBSERVATIONS_CACHE_KEY = 'aquasense_obs_cache_v1'
+
+interface ObservationsCacheEntry {
+  key: string
+  ts: number
+  data: Observation[]
+}
+
+let observationsMemoryCache: ObservationsCacheEntry | null = null
+
+function observationsCacheKey(userId?: string, viewerId?: string): string {
+  return `${userId ?? '*'}|${viewerId ?? '-'}`
+}
+
+export function getCachedObservations(
+  userId?: string,
+  viewerId?: string
+): Observation[] | null {
+  const key = observationsCacheKey(userId, viewerId)
+  if (observationsMemoryCache && observationsMemoryCache.key === key) {
+    return observationsMemoryCache.data
+  }
+  try {
+    const raw = sessionStorage.getItem(OBSERVATIONS_CACHE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as ObservationsCacheEntry
+      if (parsed && parsed.key === key && Array.isArray(parsed.data)) {
+        observationsMemoryCache = parsed
+        return parsed.data
+      }
+    }
+  } catch {
+    // corrupted cache — ignore
+  }
+  return null
+}
+
+export function isObservationsCacheFresh(userId?: string, viewerId?: string): boolean {
+  const entry = observationsMemoryCache
+  if (!entry || entry.key !== observationsCacheKey(userId, viewerId)) return false
+  return Date.now() - entry.ts < OBSERVATIONS_TTL_MS
+}
+
+export function setObservationsCache(
+  data: Observation[],
+  userId?: string,
+  viewerId?: string
+): void {
+  const entry: ObservationsCacheEntry = {
+    key: observationsCacheKey(userId, viewerId),
+    ts: Date.now(),
+    data,
+  }
+  observationsMemoryCache = entry
+  try {
+    sessionStorage.setItem(OBSERVATIONS_CACHE_KEY, JSON.stringify(entry))
+  } catch {
+    // storage full/unavailable — memory cache still works
+  }
+}
+
+export async function fetchObservations(
+  userId?: string,
+  viewerId?: string,
+  options?: { force?: boolean }
+): Promise<Observation[]> {
+  // Serve fresh cache without hitting the network unless a force is requested
+  if (!options?.force && isObservationsCacheFresh(userId, viewerId)) {
+    const cached = getCachedObservations(userId, viewerId)
+    if (cached) return cached
+  }
+
   try {
     const query = userId ? `/observations?limit=500&user_id=${encodeURIComponent(userId)}` : '/observations?limit=500'
     const headers: Record<string, string> = {}
     if (viewerId) headers['X-User-Id'] = viewerId
     const res = await apiFetch(query, { headers }, 10000)
-    if (!res.ok) {
-      return []
+    if (res.ok) {
+      const apiData = await res.json()
+      if (Array.isArray(apiData)) {
+        const adapted = apiData.map(adaptApiObservation)
+        setObservationsCache(adapted, userId, viewerId)
+        return adapted
+      }
     }
-
-    const apiData = await res.json()
-    if (!Array.isArray(apiData)) {
-      return []
-    }
-
-    return apiData.map(adaptApiObservation)
   } catch {
-    return []
+    // fall through to stale cache below
   }
+
+  // Network failed or returned an error — fall back to any cached copy
+  const stale = getCachedObservations(userId, viewerId)
+  return stale ?? []
 }
 
 function sanitizeStoredImage(value?: string): string | undefined {
@@ -346,6 +425,8 @@ export interface PublicProfileData {
   followers_count: number
   following_count: number
   likes_received: number
+  comments_received?: number
+  views_received?: number
   is_following?: boolean
   liked_by_me?: boolean
   created_at: string
@@ -515,3 +596,39 @@ export async function unlikeObservation(
 }
 
 
+// ---------------------------------------------------------------------------
+// Observation views & own profile (engagement)
+// ---------------------------------------------------------------------------
+
+export async function recordObservationView(
+  observationId: number | string,
+  viewerId: string,
+): Promise<number | null> {
+  try {
+    const res = await apiFetch(`/observations/${observationId}/view`, {
+      method: 'POST',
+      headers: { 'X-User-Id': viewerId },
+    }, 5000)
+    if (res.ok) {
+      const data = (await res.json()) as { view_count?: number }
+      return data.view_count ?? null
+    }
+  } catch {
+    // view tracking is best-effort; never block the detail page
+  }
+  return null
+}
+
+export async function fetchMyProfile(userId: string): Promise<PublicProfileData | null> {
+  try {
+    const res = await apiFetch(`/profiles/me`, {
+      headers: { 'X-User-Id': userId },
+    })
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('My profile fetch notice:', err)
+  }
+  return null
+}

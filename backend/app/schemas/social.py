@@ -27,3 +27,8 @@ class LikeState(BaseModel):
     """Result of a like/unlike action."""
     liked: bool
     like_count: int
+
+
+class ViewCount(BaseModel):
+    """Result of recording an observation view (unique per viewer)."""
+    view_count: int

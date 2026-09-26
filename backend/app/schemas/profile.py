@@ -47,6 +47,9 @@ class ProfileRead(BaseModel):
     followers_count: int = 0
     following_count: int = 0
     likes_received: int = 0
+    # Engagement aggregates across this user's observations
+    comments_received: int = 0
+    views_received: int = 0
     # Viewer-relative state — computed when X-User-Id is supplied
     is_following: bool = False
     liked_by_me: bool = False

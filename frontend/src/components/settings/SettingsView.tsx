@@ -13,20 +13,23 @@ import {
   BookOpen,
   ExternalLink,
   Droplets,
+  BarChart3,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useApp } from '../../context/AppContext'
 import { getRoleDefinition } from '../../types/roles'
 import { ProfileSettingsPage } from '../profile/ProfileSettingsPage'
 import { VisionAuditLogs } from './VisionAuditLogs'
+import { EngagementDashboard } from './EngagementDashboard'
 import { SignOutModal } from '../common/SignOutModal'
 import { OnboardingTour } from '../common/OnboardingTour'
 
-type SettingsSection = 'profile' | 'account' | 'vision' | 'privacy' | 'about'
+type SettingsSection = 'profile' | 'account' | 'engagement' | 'vision' | 'privacy' | 'about'
 
 const SECTIONS: { id: SettingsSection; label: string; icon: React.ElementType; blurb: string }[] = [
   { id: 'profile', label: 'Profile', icon: User, blurb: 'Manage your public identity on AquaSense' },
   { id: 'account', label: 'Account', icon: BadgeCheck, blurb: 'Sign-in details, role, and session controls' },
+  { id: 'engagement', label: 'Engagement', icon: BarChart3, blurb: 'Your followers, likes, comments, and views at a glance' },
   { id: 'vision', label: 'Vision Audit Logs', icon: Cpu, blurb: 'Every vision model run on your observations' },
   { id: 'privacy', label: 'Privacy & Quality', icon: ShieldCheck, blurb: 'How data is handled and how signals are quality-assured' },
   { id: 'about', label: 'About & API', icon: Info, blurb: 'Product information and developer resources' },
@@ -152,6 +155,8 @@ export const SettingsView: React.FC = () => {
             </div>
 
             {activeSection === 'profile' && <ProfileSettingsPage embedded />}
+
+            {activeSection === 'engagement' && <EngagementDashboard />}
 
             {activeSection === 'account' && (
               <div className="space-y-5">

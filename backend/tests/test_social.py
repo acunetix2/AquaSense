@@ -302,3 +302,92 @@ def test_self_like_400(client: TestClient) -> None:
         f"{API}/profiles/self-liker/like", headers={"X-User-Id": "self-liker"}
     )
     assert response.status_code == 400
+
+
+# ---------------------------------------------------------------------------
+# Views (deduplicated per viewer)
+# ---------------------------------------------------------------------------
+
+
+def test_record_view_requires_viewer_header(client: TestClient) -> None:
+    obs = _create_observation(client)
+    response = client.post(f"{API}/observations/{obs['id']}/view")
+    assert response.status_code == 422
+
+
+def test_record_view_unknown_observation_404(client: TestClient) -> None:
+    response = client.post(
+        f"{API}/observations/00000000-0000-0000-0000-000000000000/view",
+        headers={"X-User-Id": "viewer-0"},
+    )
+    assert response.status_code == 404
+
+
+def test_record_view_is_deduplicated_per_viewer(client: TestClient) -> None:
+    obs = _create_observation(client)
+
+    first = client.post(
+        f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-1"}
+    )
+    assert first.status_code == 200
+    assert first.json()["view_count"] == 1
+
+    # Repeat view by the same viewer must not inflate the count
+    repeat = client.post(
+        f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-1"}
+    )
+    assert repeat.json()["view_count"] == 1
+
+    # A second viewer increments it
+    second = client.post(
+        f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-2"}
+    )
+    assert second.json()["view_count"] == 2
+
+    # views_count is exposed on detail and list responses
+    detail = client.get(f"{API}/observations/{obs['id']}")
+    assert detail.json()["views_count"] == 2
+    listed = client.get(f"{API}/observations")
+    assert listed.json()[0]["views_count"] == 2
+
+
+def test_record_view_does_not_count_other_people_views_as_yours(client: TestClient) -> None:
+    _create_profile(client, "test-observer-1", "citizen")
+    obs = _create_observation(client)
+
+    client.post(f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-a"})
+    client.post(f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-b"})
+
+    profile = client.get(f"{API}/profiles/test-observer-1")
+    assert profile.status_code == 200
+    assert profile.json()["views_received"] == 2
+    assert profile.json()["comments_received"] == 0
+
+
+# ---------------------------------------------------------------------------
+# Profile engagement aggregates (comments / views received)
+# ---------------------------------------------------------------------------
+
+
+def test_profile_engagement_aggregates(client: TestClient) -> None:
+    _create_profile(client, "test-observer-1", "citizen")
+    obs = _create_observation(client, site_name="Engagement Site", latitude=33.0, longitude=33.0)
+
+    client.post(
+        f"{API}/observations/{obs['id']}/comments",
+        json={"body": "Great clarity on the sample."},
+        headers={"X-User-Id": "commenter-eng"},
+    )
+    client.post(
+        f"{API}/observations/{obs['id']}/view", headers={"X-User-Id": "viewer-eng"}
+    )
+
+    public = client.get(f"{API}/profiles/test-observer-1")
+    assert public.status_code == 200
+    assert public.json()["comments_received"] == 1
+    assert public.json()["views_received"] == 1
+
+    mine = client.get(f"{API}/profiles/me", headers={"X-User-Id": "test-observer-1"})
+    assert mine.status_code == 200
+    assert mine.json()["comments_received"] == 1
+    assert mine.json()["views_received"] == 1
