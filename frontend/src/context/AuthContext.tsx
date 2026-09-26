@@ -18,11 +18,15 @@ export interface AuthUserProfile {
   verified_count?: number
 }
 
+// Why the full-screen loader is showing (drives the context-aware AppLoader)
+export type AuthLoadingReason = 'boot' | 'signin' | 'signup' | 'oauth' | 'signout' | 'reset' | 'password'
+
 interface AuthContextType {
   user: AuthUserProfile | null
   session: Session | null
   isAuthenticated: boolean
   isLoading: boolean
+  loadingReason: AuthLoadingReason
   authError: string | null
   emailNeedsVerification: boolean
   verificationEmail: string | null
@@ -51,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState<AuthUserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [loadingReason, setLoadingReason] = useState<AuthLoadingReason>('boot')
   const [authError, setAuthError] = useState<string | null>(null)
   const [emailNeedsVerification, setEmailNeedsVerification] = useState(false)
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null)
@@ -249,6 +254,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithGoogle = async () => {
     try {
       setIsLoading(true)
+      setLoadingReason('oauth')
       setAuthError(null)
 
       const redirectUrl = window.location.origin
@@ -286,6 +292,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ) => {
     try {
       setIsLoading(true)
+      setLoadingReason('signup')
       setAuthError(null)
 
       const signupEmail = email.trim().toLowerCase()
@@ -369,6 +376,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithEmail = async (email: string, password: string) => {
     try {
       setIsLoading(true)
+      setLoadingReason('signin')
       setAuthError(null)
 
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -479,6 +487,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     setIsLoading(true)
+    setLoadingReason('signout')
     try {
       await supabase.auth.signOut()
     } catch (err) {
@@ -601,6 +610,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const sendPasswordResetEmail = async (email: string) => {
     try {
       setIsLoading(true)
+      setLoadingReason('reset')
       setAuthError(null)
       const redirectUrl = `${window.location.origin}/#type=recovery`
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
@@ -619,6 +629,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateUserPassword = async (password: string) => {
     try {
       setIsLoading(true)
+      setLoadingReason('password')
       setAuthError(null)
       const { error } = await supabase.auth.updateUser({ password })
       if (error) {
@@ -641,6 +652,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         session,
         isAuthenticated: !!user,
         isLoading,
+        loadingReason,
         authError,
         emailNeedsVerification,
         verificationEmail,

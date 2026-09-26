@@ -150,6 +150,202 @@
   color: #7dd3fc;
 }
 
+/* Map tiles + popups in Uber-dark */
+.dark .leaflet-container .leaflet-tile {
+  filter: brightness(0.72) saturate(0.85) contrast(1.05);
+}
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  background: var(--as-surface);
+  color: #e2e8f0;
+}
+.dark .leaflet-popup-content {
+  color: #e2e8f0;
+}
+.dark .leaflet-popup-close-button {
+  color: #94a0b4 !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Uber-dark consistency layer — icons, brand hexes, tinted chips, rings.
+ * Tailwind utilities compile to literal colors, so they need explicit dark
+ * remaps: deep brand foregrounds go light, light tinted chips go deep, and
+ * accent -600/700/800 text goes to its light -300 step.
+ * ------------------------------------------------------------------------- */
+
+/* Brand deep-blue foregrounds (icons, links, labels) → light azure */
+.dark .text-\[\#0F4C81\],
+.dark .hover\:text-\[\#0F4C81\]:hover,
+.dark .text-\[\#0284c7\] {
+  color: #7dd3fc;
+}
+.dark .group:hover .group-hover\:text-\[\#0F4C81\],
+.dark .group\/prof:hover .group-hover\/prof\:text-\[\#0F4C81\] {
+  color: #7dd3fc;
+}
+.dark .hover\:text-\[\#0c3c66\]:hover,
+.dark .hover\:text-\[\#0b3b64\]:hover {
+  color: #bae6fd;
+}
+
+/* Brand deep-blue borders and focus rings → azure */
+.dark .border-\[\#0F4C81\],
+.dark .hover\:border-\[\#0F4C81\]:hover,
+.dark .focus\:border-\[\#0F4C81\]:focus {
+  border-color: #7dd3fc;
+}
+.dark .border-\[\#0F4C81\]\/20,
+.dark .border-\[\#0F4C81\]\/30,
+.dark .border-\[\#0F4C81\]\/35,
+.dark .hover\:border-\[\#0F4C81\]\/30:hover,
+.dark .hover\:border-\[\#0F4C81\]\/40:hover {
+  border-color: color-mix(in srgb, #7dd3fc 40%, transparent);
+}
+.dark .ring-\[\#0F4C81\],
+.dark .ring-\[\#0284c7\] {
+  --tw-ring-color: #7dd3fc;
+}
+.dark .focus\:ring-\[\#0F4C81\]:focus {
+  --tw-ring-color: #7dd3fc;
+}
+.dark .ring-offset-white {
+  --tw-ring-offset-color: #0a0d13;
+}
+
+/* Tinted chips (bg-*-50/100/200 + hovers) → deep tints so pills don't glare */
+.dark .bg-sky-50,
+.dark .hover\:bg-sky-50:hover { background-color: #0b1e30; }
+.dark .bg-sky-100,
+.dark .hover\:bg-sky-100:hover { background-color: #102c46; }
+.dark .bg-sky-200 { background-color: #1c4a6b; }
+.dark .bg-teal-50,
+.dark .hover\:bg-teal-50:hover { background-color: #042522; }
+.dark .bg-teal-100 { background-color: #0a3733; }
+.dark .bg-teal-200 { background-color: #115e59; }
+.dark .bg-emerald-50,
+.dark .hover\:bg-emerald-50:hover { background-color: #06281f; }
+.dark .bg-emerald-100,
+.dark .hover\:bg-emerald-100:hover { background-color: #0a3a2c; }
+.dark .bg-emerald-200,
+.dark .hover\:bg-emerald-200:hover { background-color: #145c47; }
+.dark .bg-amber-50 { background-color: #291d05; }
+.dark .bg-amber-100,
+.dark .hover\:bg-amber-100:hover { background-color: #3a2a08; }
+.dark .bg-amber-200 { background-color: #5c3d0d; }
+.dark .bg-rose-50,
+.dark .hover\:bg-rose-50:hover { background-color: #2c0f16; }
+.dark .bg-rose-100,
+.dark .hover\:bg-rose-100:hover { background-color: #3f151d; }
+.dark .bg-rose-200,
+.dark .hover\:bg-rose-200:hover { background-color: #7f1d2f; }
+.dark .bg-red-50 { background-color: #2b0d0d; }
+.dark .bg-red-100 { background-color: #3f1212; }
+.dark .bg-red-200 { background-color: #7f1d1d; }
+.dark .bg-orange-50,
+.dark .hover\:bg-orange-50:hover { background-color: #2a1505; }
+.dark .bg-orange-100 { background-color: #3d1e08; }
+.dark .bg-orange-200 { background-color: #7c3a10; }
+.dark .bg-indigo-50 { background-color: #14163a; }
+.dark .bg-indigo-100 { background-color: #1b1f4f; }
+.dark .bg-indigo-200 { background-color: #312e81; }
+.dark .bg-violet-50 { background-color: #1e1435; }
+.dark .bg-violet-100 { background-color: #2a1c4a; }
+.dark .bg-violet-200 { background-color: #4c2a80; }
+.dark .bg-lime-100 { background-color: #1c2e0e; }
+.dark .bg-lime-200 { background-color: #3f6212; }
+
+/* Translucent tinted panels → deep equivalents */
+.dark .bg-sky-50\/30,
+.dark .hover\:bg-sky-50\/30:hover,
+.dark .bg-sky-50\/40,
+.dark .hover\:bg-sky-50\/40:hover,
+.dark .bg-sky-50\/50,
+.dark .hover\:bg-sky-50\/50:hover,
+.dark .bg-sky-50\/60,
+.dark .hover\:bg-sky-50\/60:hover,
+.dark .bg-sky-50\/70,
+.dark .bg-sky-50\/80 {
+  background-color: color-mix(in srgb, #0b1e30 80%, transparent);
+}
+.dark .bg-sky-100\/90 { background-color: color-mix(in srgb, #102c46 90%, transparent); }
+.dark .bg-emerald-50\/70 { background-color: color-mix(in srgb, #06281f 85%, transparent); }
+.dark .hover\:bg-emerald-50\/50:hover { background-color: color-mix(in srgb, #06281f 75%, transparent); }
+.dark .hover\:bg-orange-50\/50:hover { background-color: color-mix(in srgb, #2a1505 75%, transparent); }
+.dark .bg-sky-200\/20 { background-color: color-mix(in srgb, #1c4a6b 45%, transparent); }
+.dark .bg-teal-200\/20 { background-color: color-mix(in srgb, #115e59 45%, transparent); }
+
+/* Accent foregrounds -600/700/800 (text, icons) → light -300 step */
+.dark .text-sky-600,
+.dark .text-sky-700,
+.dark .text-sky-800,
+.dark .hover\:text-sky-700:hover { color: #7dd3fc; }
+.dark .text-teal-600,
+.dark .text-teal-700,
+.dark .text-teal-800,
+.dark .hover\:text-teal-700:hover { color: #5eead4; }
+.dark .group:hover .group-hover\:text-teal-600 { color: #5eead4; }
+.dark .text-emerald-600,
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .hover\:text-emerald-700:hover { color: #6ee7b7; }
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800 { color: #fcd34d; }
+.dark .text-rose-600,
+.dark .text-rose-700,
+.dark .text-rose-800,
+.dark .hover\:text-rose-600:hover { color: #fda4af; }
+.dark .text-red-600,
+.dark .text-red-700,
+.dark .text-red-800 { color: #fca5a5; }
+.dark .text-orange-600,
+.dark .text-orange-700,
+.dark .text-orange-800,
+.dark .hover\:text-orange-700:hover { color: #fdba74; }
+.dark .text-indigo-600,
+.dark .text-indigo-700,
+.dark .text-indigo-800 { color: #a5b4fc; }
+.dark .text-violet-600,
+.dark .text-violet-700,
+.dark .text-violet-800 { color: #c4b5fd; }
+.dark .text-lime-600,
+.dark .text-lime-700,
+.dark .text-lime-800 { color: #d9f99d; }
+
+/* Chip borders -100/-200 → deep tints (pair with the darkened chip fills) */
+.dark .border-sky-100,
+.dark .hover\:border-sky-200:hover { border-color: #102c46; }
+.dark .border-sky-200 { border-color: #1c4a6b; }
+.dark .border-teal-100,
+.dark .hover\:border-teal-200:hover { border-color: #0a3733; }
+.dark .border-teal-200 { border-color: #115e59; }
+.dark .border-emerald-100 { border-color: #0a3a2c; }
+.dark .border-emerald-200 { border-color: #145c47; }
+.dark .border-amber-100 { border-color: #3a2a08; }
+.dark .border-amber-200 { border-color: #5c3d0d; }
+.dark .border-rose-100 { border-color: #3f151d; }
+.dark .border-rose-200 { border-color: #7f1d2f; }
+.dark .border-red-100 { border-color: #3f1212; }
+.dark .border-red-200 { border-color: #7f1d1d; }
+.dark .border-orange-100 { border-color: #3d1e08; }
+.dark .border-orange-200 { border-color: #7c3a10; }
+.dark .border-indigo-100 { border-color: #1b1f4f; }
+.dark .border-indigo-200 { border-color: #312e81; }
+.dark .border-violet-200 { border-color: #4c2a80; }
+.dark .border-lime-100 { border-color: #1c2e0e; }
+.dark .border-lime-200 { border-color: #3f6212; }
+
+/* Arbitrary light hex surfaces → dark equivalents */
+.dark .bg-\[\#F8FAFC\] { background-color: #0d1117; }
+.dark .bg-\[\#E8F5F1\] { background-color: #0a2b24; }
+.dark .hover\:bg-\[\#d4efe8\]:hover { background-color: #0c2f27; }
+
+/* Loader shimmer */
+@keyframes loader-slide {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(330%); }
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 5px;

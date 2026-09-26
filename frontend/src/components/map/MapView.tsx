@@ -199,8 +199,19 @@ export const MapView: React.FC = () => {
         year: 'numeric',
       })
 
-      // Rich popup showing uploader profile, name, date, location, signal
-      const popupHtml = `
+      // Rich popup showing uploader profile, name, date, location, signal.
+      // Built at open time so Uber-dark colors stay in sync with the theme.
+      const buildPopupHtml = () => {
+        const dark = document.documentElement.classList.contains('dark')
+        const titleColor = dark ? '#f1f5f9' : '#0f172a'
+        const subColor = dark ? '#94a0b4' : '#64748b'
+        const bodyColor = dark ? '#cbd5e1' : '#334155'
+        const boxBg = dark ? '#161b24' : '#f8fafc'
+        const boxBorder = dark ? '#262e3c' : '#e2e8f0'
+        const divider = dark ? '#232a37' : '#f1f5f9'
+        const nameColor = dark ? '#e2e8f0' : '#1e293b'
+        const dateColor = dark ? '#94a0b4' : '#94a3b8'
+        return `
         <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 240px; padding: 2px;">
           <!-- River Image -->
           <div style="width: 100%; height: 95px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; position: relative;">
@@ -223,30 +234,31 @@ export const MapView: React.FC = () => {
           </div>
 
           <!-- Site Info -->
-          <div style="font-weight: 800; font-size: 14px; color: #0f172a; margin-bottom: 2px;">
+          <div style="font-weight: 800; font-size: 14px; color: ${titleColor}; margin-bottom: 2px;">
             ${obs.site_name}
           </div>
-          <div style="font-size: 11px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+          <div style="font-size: 11px; color: ${subColor}; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
             <span>📍 ${obs.location_address || 'Regional Watershed'}</span>
           </div>
 
           <!-- AI Summary -->
-          <div style="font-size: 11px; color: #334155; line-height: 1.4; margin-bottom: 8px; background: #f8fafc; padding: 6px; border-radius: 6px; border: 1px solid #e2e8f0;">
+          <div style="font-size: 11px; color: ${bodyColor}; line-height: 1.4; margin-bottom: 8px; background: ${boxBg}; padding: 6px; border-radius: 6px; border: 1px solid ${boxBorder};">
             "${obs.ai_summary.slice(0, 110)}..."
           </div>
 
           <!-- Uploader Attribution in Popup -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 6px; font-size: 11px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid ${divider}; padding-top: 6px; font-size: 11px;">
             <div style="display: flex; align-items: center; gap: 6px;">
               <img src="${observerAvatar}" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;" />
-              <span style="font-weight: 600; color: #1e293b;">${observerName}</span>
+              <span style="font-weight: 600; color: ${nameColor};">${observerName}</span>
             </div>
-            <span style="color: #94a3b8; font-size: 10px;">${formattedDate}</span>
+            <span style="color: ${dateColor}; font-size: 10px;">${formattedDate}</span>
           </div>
         </div>
       `
+      }
 
-      marker.bindPopup(popupHtml, { maxWidth: 280 })
+      marker.bindPopup(buildPopupHtml, { maxWidth: 280 })
 
       marker.on('click', () => {
         setActiveObservation(obs)

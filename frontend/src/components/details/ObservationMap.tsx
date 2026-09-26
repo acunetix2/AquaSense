@@ -35,9 +35,15 @@ export const ObservationMap: React.FC<ObservationMapProps> = ({
   useEffect(() => {
     if (!containerRef.current) return
 
-    const popupHtml = `<div style="font-family:inherit"><p style="font-weight:700;color:#0f172a;margin:0 0 2px">${siteName.replace(/</g, '&lt;')}</p>${
-      address ? `<p style="color:#64748b;font-size:11px;margin:0">${address.replace(/</g, '&lt;')}</p>` : ''
-    }</div>`
+    // Built at open time so Uber-dark colors stay in sync with the theme
+    const buildPopupHtml = () => {
+      const dark = document.documentElement.classList.contains('dark')
+      const titleColor = dark ? '#f1f5f9' : '#0f172a'
+      const subColor = dark ? '#94a0b4' : '#64748b'
+      return `<div style="font-family:inherit"><p style="font-weight:700;color:${titleColor};margin:0 0 2px">${siteName.replace(/</g, '&lt;')}</p>${
+        address ? `<p style="color:${subColor};font-size:11px;margin:0">${address.replace(/</g, '&lt;')}</p>` : ''
+      }</div>`
+    }
 
     try {
       if (!mapRef.current) {
@@ -55,12 +61,12 @@ export const ObservationMap: React.FC<ObservationMapProps> = ({
         mapRef.current = map
         markerRef.current = L.marker([latitude, longitude], { icon: createPinIcon() })
           .addTo(map)
-          .bindPopup(popupHtml)
+          .bindPopup(buildPopupHtml)
       } else {
         mapRef.current.setView([latitude, longitude], mapRef.current.getZoom())
         if (markerRef.current) {
           markerRef.current.setLatLng([latitude, longitude])
-          markerRef.current.setPopupContent(popupHtml)
+          markerRef.current.setPopupContent(buildPopupHtml())
         }
       }
       // Leaflet sizes itself on init; ensure tiles render inside the tab layout

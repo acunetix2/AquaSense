@@ -26,6 +26,7 @@ interface AppContextType {
   setActiveView: (view: ActiveView) => void
   observations: Observation[]
   isLoading: boolean
+  isInitialLoad: boolean
   selectedObservation: Observation | null
   setSelectedObservation: (obs: Observation | null) => void
   openObservationDetail: (obs: Observation) => void
@@ -126,6 +127,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeView, setActiveViewState] = useState<ActiveView>(initialView)
   const [observations, setObservations] = useState<Observation[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
   const [selectedObservation, setSelectedObservation] = useState<Observation | null>(null)
 
   // Filter states
@@ -191,11 +193,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     async function load() {
-      const cached = getCachedObservations(undefined, user?.id)
-      if (cached) {
-        // Instant paint from cache — no spinner, no waiting on the network
-        setObservations(cached)
-        setIsLoading(false)
+    const cached = getCachedObservations(undefined, user?.id)
+    if (cached) {
+      // Instant paint from cache — no spinner, no waiting on the network
+      setObservations(cached)
+      setIsLoading(false)
+      setIsInitialLoad(false)
         void resolveSharedLink(cached)
         if (!isObservationsCacheFresh(undefined, user?.id)) {
           const fresh = await fetchObservations(undefined, user?.id, { force: true })
@@ -207,13 +210,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return
       }
 
-      setIsLoading(true)
-      const data = await fetchObservations(undefined, user?.id)
-      if (isMounted) {
-        setObservations(data)
-        setIsLoading(false)
-        void resolveSharedLink(data)
-      }
+    setIsLoading(true)
+    const data = await fetchObservations(undefined, user?.id)
+    if (isMounted) {
+      setObservations(data)
+      setIsLoading(false)
+      setIsInitialLoad(false)
+      void resolveSharedLink(data)
+    }
     }
     load()
     return () => {
@@ -413,6 +417,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveView,
         observations,
         isLoading,
+        isInitialLoad,
         selectedObservation,
         setSelectedObservation,
         openObservationDetail,

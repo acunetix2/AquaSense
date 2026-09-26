@@ -92,7 +92,7 @@ export const LandingNavbar: React.FC = () => {
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             >
               <BarChart2 size={15} className="text-[#0F4C81]" />
-              <span>How It Works</span>
+              <span>Steps</span>
             </button>
 
             <button
@@ -100,7 +100,7 @@ export const LandingNavbar: React.FC = () => {
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             >
               <Waves size={15} className="text-[#0F4C81]" />
-              <span>River Monitoring</span>
+              <span>Rivers</span>
             </button>
 
             <button
@@ -162,14 +162,14 @@ export const LandingNavbar: React.FC = () => {
             className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
           >
             <BarChart2 size={17} className="text-[#0F4C81]" />
-            How It Works
+            Steps
           </button>
           <button
             onClick={() => scrollToSection('featured-rivers')}
             className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
           >
             <Waves size={17} className="text-[#0F4C81]" />
-            River Monitoring
+            Rivers
           </button>
           <button
             onClick={() => handleNavClick('map')}

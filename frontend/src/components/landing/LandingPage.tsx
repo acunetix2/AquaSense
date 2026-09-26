@@ -233,7 +233,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 2. GLOBAL WATERWAYS EXPLORER (Worldwide Rivers & Lakes Across Continents) */}
-      <section className="space-y-6">
+      <section id="featured-rivers" className="space-y-6 scroll-mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1.5 text-left">
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
@@ -388,7 +388,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 4. PLATFORM CAPABILITIES */}
-      <section className="space-y-8">
+      <section id="how-it-works" className="space-y-8 scroll-mt-24">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-semibold text-[#0F4C81]">
             The AquaSense Platform

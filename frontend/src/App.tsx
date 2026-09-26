@@ -23,8 +23,8 @@ import { AppFooter } from './components/common/AppFooter'
 import { isReviewerRole } from './types/roles'
 
 const MainContent: React.FC = () => {
-  const { activeView, setActiveView, showToast } = useApp()
-  const { isAuthenticated, isLoading, user } = useAuth()
+  const { activeView, setActiveView, showToast, isInitialLoad } = useApp()
+  const { isAuthenticated, isLoading, loadingReason, user } = useAuth()
   const isReviewer = isReviewerRole(user?.role)
 
   // Auto transition to home when user signs in from landing or auth
@@ -71,9 +71,10 @@ const MainContent: React.FC = () => {
   const isLanding = activeView === 'landing'
   const isAuth = activeView === 'auth' || activeView === 'signup'
 
-  // Branded full-screen loader while auth state resolves
+  // Context-aware full-screen loader while auth state resolves
+  // (session restore, sign-in, sign-out, Google redirect, password reset…)
   if (isLoading) {
-    return <AppLoader />
+    return <AppLoader key={loadingReason} context={loadingReason} />
   }
 
   // Full-bleed edge-to-edge layout — login and signup are separate pages
@@ -87,6 +88,11 @@ const MainContent: React.FC = () => {
         <ToastContainer />
       </div>
     )
+  }
+
+  // First observations fetch on deep links / reloads (not on the landing page)
+  if (isInitialLoad && !isLanding) {
+    return <AppLoader key="data" context="data" />
   }
 
   return (
