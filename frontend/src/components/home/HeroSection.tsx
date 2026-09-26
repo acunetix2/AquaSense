@@ -106,14 +106,14 @@ export const HeroSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Headlines & CTA */}
           <div className="lg:col-span-7 space-y-5 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/90 text-[#0F4C81] text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/90 text-[#0284C7] text-xs font-semibold">
               <Sparkles size={14} className="text-[#1FB8A6]" />
               <span>Continuous River & Watershed Monitoring</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.12]">
               Healthier Freshwater.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0284C7] to-[#1FB8A6]">
                 Stronger Communities.
               </span>
             </h1>
@@ -126,7 +126,7 @@ export const HeroSection: React.FC = () => {
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button
                 onClick={() => setActiveView('capture')}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-md shadow-sky-900/10 hover:shadow-lg transition-all cursor-pointer active:scale-98"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-md shadow-sky-900/10 hover:shadow-lg transition-all cursor-pointer active:scale-98"
               >
                 <Camera size={16} />
                 <span>Assess a Stream</span>
@@ -137,7 +137,7 @@ export const HeroSection: React.FC = () => {
                 onClick={() => setActiveView('map')}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
               >
-                <Layers size={16} className="text-[#0F4C81]" />
+                <Layers size={16} className="text-[#0284C7]" />
                 <span>Explore Basin Map</span>
               </button>
             </div>
@@ -191,7 +191,7 @@ export const HeroSection: React.FC = () => {
               placeholder="Search river, observer, location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81] focus:border-[#0F4C81] shadow-2xs placeholder:text-slate-400"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] focus:border-[#0284C7] shadow-2xs placeholder:text-slate-400"
             />
             {searchQuery && (
               <button
@@ -212,7 +212,7 @@ export const HeroSection: React.FC = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === category
-                  ? 'bg-[#0F4C81] text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
                   : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
               }`}
             >
@@ -290,7 +290,7 @@ export const HeroSection: React.FC = () => {
         {/* 3. OBSERVATION CARDS GRID */}
         {filteredObservations.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-[#0F4C81] flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center mx-auto">
               <Search size={24} />
             </div>
             <div className="space-y-1">
@@ -305,7 +305,7 @@ export const HeroSection: React.FC = () => {
                 setSelectedSignal('all')
                 setSearchQuery('')
               }}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
             >
               Reset Filters
             </button>
@@ -324,7 +324,7 @@ export const HeroSection: React.FC = () => {
       </section>
 
       {/* 4. ONE HEALTH / ECOSYSTEM SCIENTIFIC SECTION */}
-      <section className="bg-gradient-to-r from-slate-900 via-[#0F4C81] to-slate-900 text-white rounded-3xl p-8 sm:p-10 shadow-xl">
+      <section className="bg-gradient-to-r from-slate-900 via-[#0284C7] to-slate-900 text-white rounded-3xl p-8 sm:p-10 shadow-xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-400/20 text-teal-300 text-xs font-semibold tracking-wide">
@@ -342,7 +342,7 @@ export const HeroSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row md:flex-col gap-3 justify-center items-stretch md:items-end">
             <button
               onClick={() => setActiveView('dashboard')}
-              className="px-5 py-3 rounded-xl bg-white text-[#0F4C81] font-bold text-sm hover:bg-sky-50 shadow-md transition-all cursor-pointer text-center"
+              className="px-5 py-3 rounded-xl bg-white text-[#0284C7] font-bold text-sm hover:bg-sky-50 shadow-md transition-all cursor-pointer text-center"
             >
               Explore Impact Dashboard
             </button>

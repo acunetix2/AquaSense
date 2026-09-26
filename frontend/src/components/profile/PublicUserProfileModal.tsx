@@ -178,7 +178,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
         className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-left flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200"
       >
         {/* Profile Top Banner */}
-        <div className="relative h-28 sm:h-32 bg-gradient-to-r from-[#0F4C81] via-teal-700 to-sky-600 p-4">
+        <div className="relative h-28 sm:h-32 bg-gradient-to-r from-[#0284C7] via-teal-700 to-sky-600 p-4">
           <button
             onClick={onClose}
             aria-label="Close dialog"
@@ -216,7 +216,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
                     className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 ${
                       isFollowing
                         ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
-                        : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white shadow-[#0F4C81]/25'
+                        : 'bg-[#0284C7] hover:bg-[#0369A1] text-white shadow-[#0284C7]/25'
                     }`}
                   >
                     <Users size={14} />
@@ -254,7 +254,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
               <h2 id="public-profile-title" className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 {displayName}
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-sky-50 text-[#0F4C81] border border-sky-200/80 text-xs font-bold">
+              <span className="px-2.5 py-0.5 rounded-full bg-sky-50 text-[#0284C7] border border-sky-200/80 text-xs font-bold">
                 {displayRole}
               </span>
               {loadingProfile && <Loader2 size={14} className="animate-spin text-slate-400" />}
@@ -279,7 +279,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
           {/* 4 CORE STATS (Real DB Data: Followers, Likes, Observations, Joined Since) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
             <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 text-center">
-              <div className="flex items-center justify-center gap-1 text-[#0F4C81] mb-1">
+              <div className="flex items-center justify-center gap-1 text-[#0284C7] mb-1">
                 <Users size={16} />
               </div>
               <p className="text-lg sm:text-xl font-black text-slate-900">
@@ -332,7 +332,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
         <div className="px-6 sm:px-8 py-4 border-t border-slate-100 flex-1 overflow-y-auto space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <Award size={16} className="text-[#0F4C81]" />
+              <Award size={16} className="text-[#0284C7]" />
               <span>Public Stream Observations ({userObservations.length})</span>
             </h3>
             <span className="text-[11px] text-slate-400">Verified field logs</span>
@@ -340,7 +340,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
 
           {userObservations.length === 0 ? (
             <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-              <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center shadow-md shadow-sky-900/15 mb-2">
+              <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center shadow-md shadow-sky-900/15 mb-2">
                 <Droplets size={24} className="text-white" />
               </div>
               <p className="text-xs text-slate-600 font-medium">
@@ -358,7 +358,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
                       onClose()
                     }
                   }}
-                  className="group p-3 bg-white hover:bg-sky-50/50 rounded-2xl border border-slate-200/80 hover:border-[#0F4C81]/30 transition-all cursor-pointer flex gap-3 items-center text-left"
+                  className="group p-3 bg-white hover:bg-sky-50/50 rounded-2xl border border-slate-200/80 hover:border-[#0284C7]/30 transition-all cursor-pointer flex gap-3 items-center text-left"
                 >
                   <img
                     src={obs.image_url}
@@ -376,7 +376,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
                         {new Date(obs.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-xs font-bold text-slate-800 truncate group-hover:text-[#0F4C81] transition-colors">
+                    <p className="text-xs font-bold text-slate-800 truncate group-hover:text-[#0284C7] transition-colors">
                       {obs.site_name}
                     </p>
                     <p className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-0.5">
@@ -384,7 +384,7 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
                       <span>{obs.location_address || 'Watershed site'}</span>
                     </p>
                   </div>
-                  <ExternalLink size={14} className="text-slate-300 group-hover:text-[#0F4C81] shrink-0" />
+                  <ExternalLink size={14} className="text-slate-300 group-hover:text-[#0284C7] shrink-0" />
                 </div>
               ))}
             </div>

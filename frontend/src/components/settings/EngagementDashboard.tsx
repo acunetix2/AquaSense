@@ -45,7 +45,7 @@ export const EngagementDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-10 flex items-center justify-center gap-3 text-slate-400">
-        <Loader2 size={18} className="animate-spin text-[#0F4C81]" />
+        <Loader2 size={18} className="animate-spin text-[#0284C7]" />
         <span className="text-sm font-semibold">Loading your engagement stats…</span>
       </div>
     )
@@ -82,7 +82,7 @@ export const EngagementDashboard: React.FC = () => {
             className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-4 sm:p-5"
           >
             <div className="flex items-center gap-2 text-slate-400">
-              <Icon size={14} className="text-[#0F4C81]" />
+              <Icon size={14} className="text-[#0284C7]" />
               <p className="text-[10px] font-bold uppercase tracking-wider">{label}</p>
             </div>
             <p className="text-2xl font-extrabold text-slate-900 mt-2 tracking-tight">{value}</p>
@@ -94,7 +94,7 @@ export const EngagementDashboard: React.FC = () => {
       {/* Top observations by engagement */}
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-          <TrendingUp size={16} className="text-[#0F4C81]" />
+          <TrendingUp size={16} className="text-[#0284C7]" />
           <h3 className="text-sm font-bold text-slate-900">Your Top Observations</h3>
           <span className="ml-auto text-[11px] text-slate-400 font-semibold">by engagement</span>
         </div>

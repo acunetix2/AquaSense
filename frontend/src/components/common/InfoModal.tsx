@@ -41,7 +41,7 @@ export const InfoModal: React.FC<InfoModalProps> = ({ open, title, children, onC
         <button
           type="button"
           onClick={onClose}
-          className="w-full px-5 py-2.5 rounded-xl font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors cursor-pointer text-sm"
+          className="w-full px-5 py-2.5 rounded-xl font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer text-sm"
         >
           Close
         </button>

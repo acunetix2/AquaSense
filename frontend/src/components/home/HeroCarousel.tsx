@@ -88,7 +88,7 @@ export const HeroCarousel: React.FC = () => {
                 key={idx}
                 onClick={() => setCurrent(idx)}
                 className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  current === idx ? 'w-6 bg-[#0F4C81]' : 'w-2 bg-slate-300 hover:bg-slate-400'
+                  current === idx ? 'w-6 bg-[#0284C7]' : 'w-2 bg-slate-300 hover:bg-slate-400'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

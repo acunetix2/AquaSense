@@ -60,11 +60,11 @@ export const LandingNavbar: React.FC = () => {
             onClick={() => handleNavClick('landing')}
             className="flex items-center gap-3 focus:outline-none group cursor-pointer shrink-0"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
               <Droplets size={22} className="stroke-[2.2]" />
             </div>
             <div className="text-left">
-              <span className="text-xl font-black tracking-tight text-[#0F4C81] block leading-none">
+              <span className="text-xl font-black tracking-tight text-[#0284C7] block leading-none">
                 Aqua<span className="text-[#1FB8A6]">Sense</span>
               </span>
               <span className="block text-[11px] text-slate-500 font-normal -mt-0.5 tracking-wide">
@@ -79,7 +79,7 @@ export const LandingNavbar: React.FC = () => {
             {/* Home — pill active state */}
             <button
               onClick={() => handleNavClick('landing')}
-              className="relative flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-[#0F4C81] bg-[#E8F5F1] hover:bg-[#d4efe8] transition-colors cursor-pointer group"
+              className="relative flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-[#0284C7] bg-[#E8F5F1] hover:bg-[#d4efe8] transition-colors cursor-pointer group"
             >
               <Home size={15} className="text-[#1FB8A6]" />
               <span>Home</span>
@@ -91,7 +91,7 @@ export const LandingNavbar: React.FC = () => {
               onClick={() => scrollToSection('how-it-works')}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             >
-              <BarChart2 size={15} className="text-[#0F4C81]" />
+              <BarChart2 size={15} className="text-[#0284C7]" />
               <span>Steps</span>
             </button>
 
@@ -99,7 +99,7 @@ export const LandingNavbar: React.FC = () => {
               onClick={() => scrollToSection('featured-rivers')}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             >
-              <Waves size={15} className="text-[#0F4C81]" />
+              <Waves size={15} className="text-[#0284C7]" />
               <span>Rivers</span>
             </button>
 
@@ -107,7 +107,7 @@ export const LandingNavbar: React.FC = () => {
               onClick={() => handleNavClick('map')}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             >
-              <MapPin size={15} className="text-[#0F4C81]" />
+              <MapPin size={15} className="text-[#0284C7]" />
               <span>Public Basin Map</span>
             </button>
           </nav>
@@ -117,7 +117,7 @@ export const LandingNavbar: React.FC = () => {
             {isAuthenticated ? (
               <button
                 onClick={() => handleNavClick('home')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] hover:opacity-90 shadow-md shadow-sky-900/15 transition-all cursor-pointer active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] hover:opacity-90 shadow-md shadow-sky-900/15 transition-all cursor-pointer active:scale-[0.98]"
               >
                 <span>Go to App</span>
                 <ArrowRight size={15} />
@@ -125,7 +125,7 @@ export const LandingNavbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => handleNavClick('signup')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] hover:opacity-90 shadow-md shadow-sky-900/15 transition-all cursor-pointer active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] hover:opacity-90 shadow-md shadow-sky-900/15 transition-all cursor-pointer active:scale-[0.98]"
               >
                 <Rocket size={15} className="shrink-0" />
                 <span>Get Started</span>
@@ -152,7 +152,7 @@ export const LandingNavbar: React.FC = () => {
         <div className="md:hidden border-t border-slate-200 bg-white px-5 pt-4 pb-6 space-y-2 shadow-xl">
           <button
             onClick={() => handleNavClick('landing')}
-            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-[#0F4C81] bg-[#E8F5F1] flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-[#0284C7] bg-[#E8F5F1] flex items-center gap-2"
           >
             <Home size={17} className="text-[#1FB8A6]" />
             Home
@@ -161,21 +161,21 @@ export const LandingNavbar: React.FC = () => {
             onClick={() => scrollToSection('how-it-works')}
             className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
           >
-            <BarChart2 size={17} className="text-[#0F4C81]" />
+            <BarChart2 size={17} className="text-[#0284C7]" />
             Steps
           </button>
           <button
             onClick={() => scrollToSection('featured-rivers')}
             className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
           >
-            <Waves size={17} className="text-[#0F4C81]" />
+            <Waves size={17} className="text-[#0284C7]" />
             Rivers
           </button>
           <button
             onClick={() => handleNavClick('map')}
             className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
           >
-            <MapPin size={17} className="text-[#0F4C81]" />
+            <MapPin size={17} className="text-[#0284C7]" />
             Public Basin Map
           </button>
 
@@ -183,7 +183,7 @@ export const LandingNavbar: React.FC = () => {
             {isAuthenticated ? (
               <button
                 onClick={() => handleNavClick('home')}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Go to App Workspace ({user?.name})</span>
                 <ArrowRight size={15} />
@@ -191,7 +191,7 @@ export const LandingNavbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => handleNavClick('signup')}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <Rocket size={16} />
                 <span>Get Started — Sign In / Sign Up</span>

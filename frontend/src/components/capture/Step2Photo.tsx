@@ -244,7 +244,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                 activeMode === id
-                  ? 'bg-white text-[#0F4C81] shadow-sm'
+                  ? 'bg-white text-[#0284C7] shadow-sm'
                   : 'text-slate-500 hover:text-slate-700'
               }`}
             >
@@ -256,7 +256,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
 
         <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">
           <span>Photos:</span>
-          <span className={`px-2 py-0.5 rounded-lg ${imageUrls.length > 0 ? 'bg-[#0F4C81] text-white' : 'bg-slate-200 text-slate-600'}`}>
+          <span className={`px-2 py-0.5 rounded-lg ${imageUrls.length > 0 ? 'bg-[#0284C7] text-white' : 'bg-slate-200 text-slate-600'}`}>
             {imageUrls.length} / {MAX_IMAGES}
           </span>
           {imageUrls.length > 0 && (
@@ -287,12 +287,12 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                 imageUrls.length >= MAX_IMAGES
                   ? 'opacity-60 border-slate-200 bg-slate-50 cursor-not-allowed'
                   : isDragging
-                  ? 'border-[#0F4C81] bg-sky-50/60 scale-[1.01] cursor-pointer'
-                  : 'border-slate-300 hover:border-[#0F4C81] hover:bg-sky-50/30 bg-white/70 cursor-pointer'
+                  ? 'border-[#0284C7] bg-sky-50/60 scale-[1.01] cursor-pointer'
+                  : 'border-slate-300 hover:border-[#0284C7] hover:bg-sky-50/30 bg-white/70 cursor-pointer'
               }`}
             >
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${
-                isDragging ? 'bg-[#0F4C81] text-white' : 'bg-sky-50 text-[#0F4C81] group-hover:bg-[#0F4C81] group-hover:text-white'
+                isDragging ? 'bg-[#0284C7] text-white' : 'bg-sky-50 text-[#0284C7] group-hover:bg-[#0284C7] group-hover:text-white'
               }`}>
                 <UploadCloud size={24} />
               </div>
@@ -333,13 +333,13 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                     onKeyDown={e => e.key === 'Enter' && handleUrlSubmit()}
                     placeholder="https://images.unsplash.com/photo-..."
                     disabled={imageUrls.length >= MAX_IMAGES}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0F4C81] focus:border-transparent transition-all disabled:opacity-50"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:border-transparent transition-all disabled:opacity-50"
                   />
                   <button
                     type="button"
                     onClick={handleUrlSubmit}
                     disabled={urlLoading || !urlInput.trim() || imageUrls.length >= MAX_IMAGES}
-                    className="px-4 py-2.5 rounded-xl bg-[#0F4C81] text-white text-sm font-semibold hover:bg-[#0c3c66] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-[#0284C7] text-white text-sm font-semibold hover:bg-[#0369A1] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
                     {urlLoading ? 'Fetching...' : 'Load'}
                   </button>
@@ -386,7 +386,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                           setUrlLoading(false)
                         }
                       }}
-                      className="group flex flex-col items-center gap-1 p-1.5 rounded-xl border border-slate-200 hover:border-[#0F4C81] hover:bg-sky-50/50 transition-all text-left cursor-pointer disabled:opacity-50"
+                      className="group flex flex-col items-center gap-1 p-1.5 rounded-xl border border-slate-200 hover:border-[#0284C7] hover:bg-sky-50/50 transition-all text-left cursor-pointer disabled:opacity-50"
                     >
                       <img src={sample.url} alt={sample.label} className="w-full h-12 rounded-lg object-cover" />
                       <span className="text-[10px] font-medium text-slate-700 truncate w-full text-center">{sample.label}</span>
@@ -400,7 +400,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
           {/* Camera mode message */}
           {activeMode === 'camera' && (
             <div className="rounded-2xl border border-slate-200 bg-sky-50/30 p-6 text-center">
-              <Camera size={32} className="mx-auto text-[#0F4C81] mb-3" />
+              <Camera size={32} className="mx-auto text-[#0284C7] mb-3" />
               <p className="text-sm font-semibold text-slate-800 mb-1">Camera capture ready</p>
               <p className="text-xs text-slate-500 mb-4">
                 {imageUrls.length < MAX_IMAGES
@@ -411,7 +411,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                 type="button"
                 disabled={imageUrls.length >= MAX_IMAGES}
                 onClick={() => cameraInputRef.current?.click()}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F4C81] text-white text-sm font-bold hover:bg-[#0c3c66] transition-colors cursor-pointer disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0284C7] text-white text-sm font-bold hover:bg-[#0369A1] transition-colors cursor-pointer disabled:opacity-50"
               >
                 <Camera size={16} />
                 Open Camera
@@ -436,7 +436,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-xs text-[#0F4C81] font-semibold hover:underline cursor-pointer"
+                    className="text-xs text-[#0284C7] font-semibold hover:underline cursor-pointer"
                   >
                     + Add photo
                   </button>
@@ -448,7 +448,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                     key={idx}
                     onClick={() => setSelectedIndex(idx)}
                     className={`relative group rounded-xl overflow-hidden border-2 cursor-pointer transition-all ${
-                      selectedIndex === idx ? 'border-[#0F4C81] ring-2 ring-sky-200' : 'border-slate-200 opacity-80 hover:opacity-100'
+                      selectedIndex === idx ? 'border-[#0284C7] ring-2 ring-sky-200' : 'border-slate-200 opacity-80 hover:opacity-100'
                     }`}
                   >
                     <img src={url} alt={`Photo ${idx + 1}`} className="w-full h-16 object-cover" />
@@ -472,7 +472,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 hover:border-[#0F4C81] hover:bg-sky-50/40 text-slate-400 hover:text-[#0F4C81] h-16 transition-all cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 hover:border-[#0284C7] hover:bg-sky-50/40 text-slate-400 hover:text-[#0284C7] h-16 transition-all cursor-pointer"
                   >
                     <span className="text-lg font-bold leading-none">+</span>
                     <span className="text-[10px] font-semibold mt-0.5">Add</span>
@@ -540,7 +540,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsExpanded(v => !v)}
-                  className="p-1.5 rounded-lg bg-slate-900/70 hover:bg-[#0F4C81] text-white shadow-md transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg bg-slate-900/70 hover:bg-[#0284C7] text-white shadow-md transition-colors cursor-pointer"
                   title={isExpanded ? 'Collapse' : 'Expand'}
                 >
                   <Maximize2 size={14} />
@@ -599,8 +599,8 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
 
       {/* AI Preview Banner when images are ready */}
       {hasImages && (
-        <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-[#0F4C81]/8 to-[#1FB8A6]/8 border border-[#0F4C81]/20">
-          <div className="w-8 h-8 rounded-lg bg-[#0F4C81] flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-[#0284C7]/8 to-[#1FB8A6]/8 border border-[#0284C7]/20">
+          <div className="w-8 h-8 rounded-lg bg-[#0284C7] flex items-center justify-center shrink-0">
             <ScanLine size={16} className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
@@ -638,7 +638,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
           disabled={!hasImages}
           className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all cursor-pointer ${
             hasImages
-              ? 'bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm'
+              ? 'bg-[#0284C7] hover:bg-[#0369A1] shadow-sm'
               : 'bg-slate-300 cursor-not-allowed opacity-70'
           }`}
         >

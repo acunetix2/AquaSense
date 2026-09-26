@@ -284,7 +284,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
         <div className="bg-white rounded-3xl border border-slate-200/80 shadow-2xl p-8 sm:p-12 max-w-md w-full text-center space-y-6">
           {/* Animated mail icon */}
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center shadow-xl shadow-sky-900/15">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center shadow-xl shadow-sky-900/15">
               <Mail size={36} className="text-white" />
             </div>
           </div>
@@ -295,7 +295,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
             </h1>
             <p className="text-sm text-slate-500 mt-2 leading-relaxed">
               We sent a confirmation link to{' '}
-              <span className="font-bold text-[#0F4C81]">{verificationEmail}</span>.
+              <span className="font-bold text-[#0284C7]">{verificationEmail}</span>.
               Click the link in the email to activate your account.
             </p>
           </div>
@@ -330,10 +330,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                   setResendLoading(false)
                 }
               }}
-              className="w-full py-3 rounded-xl text-sm font-bold text-[#0F4C81] border border-[#0F4C81]/30 hover:bg-sky-50 transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3 rounded-xl text-sm font-bold text-[#0284C7] border border-[#0284C7]/30 hover:bg-sky-50 transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {resendLoading ? (
-                <><div className="w-4 h-4 border-2 border-[#0F4C81] border-t-transparent rounded-full animate-spin" /><span>Sending…</span></>
+                <><div className="w-4 h-4 border-2 border-[#0284C7] border-t-transparent rounded-full animate-spin" /><span>Sending…</span></>
               ) : (
                 'Resend Confirmation Email'
               )}
@@ -346,7 +346,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               clearVerificationNotice()
               showSignIn()
             }}
-            className="w-full py-3 rounded-xl font-bold text-sm text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-md transition-colors cursor-pointer"
+            className="w-full py-3 rounded-xl font-bold text-sm text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-md transition-colors cursor-pointer"
           >
             Back to Sign In
           </button>
@@ -360,7 +360,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] text-slate-900 selection:bg-[#0F4C81] selection:text-white">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] text-slate-900 selection:bg-[#0284C7] selection:text-white">
       
       {/* ══════════════ LEFT SIDE: FULL-PAGE FORM PANEL ══════════════ */}
       <div className="w-full lg:w-[48%] xl:w-[44%] min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 relative z-10 bg-white border-r border-slate-200/80 shadow-[10px_0_30px_rgba(15,23,42,0.03)] text-left">
@@ -372,11 +372,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
             onClick={() => setActiveView('landing')}
             className="inline-flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
               <Droplets size={22} className="stroke-[2.2]" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight text-[#0F4C81] block leading-none">
+              <span className="text-xl font-black tracking-tight text-[#0284C7] block leading-none">
                 AquaSense
               </span>
               <span className="text-[10px] text-slate-500 font-semibold tracking-wide">
@@ -388,7 +388,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
           <button
             type="button"
             onClick={() => setActiveView('landing')}
-            className="text-xs font-semibold text-slate-500 hover:text-[#0F4C81] transition-colors flex items-center gap-1 cursor-pointer"
+            className="text-xs font-semibold text-slate-500 hover:text-[#0284C7] transition-colors flex items-center gap-1 cursor-pointer"
           >
             <ArrowLeft size={13} />
             <span>Back to Home</span>
@@ -400,7 +400,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
           
           {/* Header titles */}
           <div className="mb-6">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 text-[#0F4C81] text-xs font-semibold mb-3 border border-sky-100">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 text-[#0284C7] text-xs font-semibold mb-3 border border-sky-100">
               <Sparkles size={12} className="text-[#1FB8A6]" />
               <span>
                 {mode === 'forgot'
@@ -490,7 +490,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                           setEmail(e.target.value)
                           if (errors.email) setErrors((prev) => ({ ...prev, email: '' }))
                         }}
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                           errors.email ? 'border-red-500 focus:ring-red-500/20' : ''
                         }`}
                       />
@@ -505,7 +505,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                   <button
                     type="submit"
                     disabled={forgotLoading}
-                    className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                    className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {forgotLoading ? (
                       <div className="flex items-center gap-2">
@@ -548,7 +548,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                       setNewPassword(e.target.value)
                       if (errors.newPassword) setErrors((prev) => ({ ...prev, newPassword: '' }))
                     }}
-                    className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                    className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                       errors.newPassword ? 'border-red-500 focus:ring-red-500/20' : ''
                     }`}
                   />
@@ -581,7 +581,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                       setConfirmPassword(e.target.value)
                       if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }))
                     }}
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                    className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                       errors.confirmPassword ? 'border-red-500 focus:ring-red-500/20' : ''
                     }`}
                   />
@@ -596,7 +596,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               <button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
               >
                 {resetLoading ? (
                   <div className="flex items-center gap-2">
@@ -669,7 +669,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                           setFullName(e.target.value)
                           if (errors.name) setErrors((prev) => ({ ...prev, name: '' }))
                         }}
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                           errors.name ? 'border-red-500 focus:ring-red-500/20' : ''
                         }`}
                       />
@@ -714,14 +714,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                               setRoleDropdownOpen(false)
                             }}
                             className={`w-full text-left px-3.5 py-2 hover:bg-sky-50 transition-colors flex items-center justify-between cursor-pointer ${
-                              role === opt.value ? 'bg-sky-50/80 font-bold text-[#0F4C81]' : 'text-slate-700'
+                              role === opt.value ? 'bg-sky-50/80 font-bold text-[#0284C7]' : 'text-slate-700'
                             }`}
                           >
                             <div>
                               <p className="text-xs font-bold">{opt.label}</p>
                               <p className="text-[10px] text-slate-500">{opt.desc}</p>
                             </div>
-                            {role === opt.value && <ShieldCheck size={14} className="text-[#0F4C81]" />}
+                            {role === opt.value && <ShieldCheck size={14} className="text-[#0284C7]" />}
                           </button>
                         ))}
                       </div>
@@ -744,7 +744,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setEmail(e.target.value)
                         if (errors.email) setErrors((prev) => ({ ...prev, email: '' }))
                       }}
-                      className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                      className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                         errors.email ? 'border-red-500 focus:ring-red-500/20' : ''
                       }`}
                     />
@@ -771,7 +771,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setPassword(e.target.value)
                         if (errors.password) setErrors((prev) => ({ ...prev, password: '' }))
                       }}
-                      className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0F4C81] focus:ring-2 focus:ring-[#0F4C81]/20 ${
+                      className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                         errors.password ? 'border-red-500 focus:ring-red-500/20' : ''
                       }`}
                     />
@@ -797,7 +797,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-[#0F4C81] focus:ring-[#0F4C81]"
+                      className="h-4 w-4 rounded border-slate-300 text-[#0284C7] focus:ring-[#0284C7]"
                     />
                     <span className="text-xs text-slate-600 font-medium">Remember me</span>
                   </label>
@@ -810,7 +810,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setErrors({})
                         clearAuthError()
                       }}
-                      className="text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                      className="text-xs font-semibold text-[#0284C7] hover:underline cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -821,7 +821,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full mt-2 h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -856,7 +856,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               <button
                 type="button"
                 onClick={() => setActiveView('signup')}
-                className="font-bold text-[#0F4C81] hover:underline cursor-pointer"
+                className="font-bold text-[#0284C7] hover:underline cursor-pointer"
               >
                 Create an account
               </button>
@@ -868,7 +868,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               <button
                 type="button"
                 onClick={() => setActiveView('auth')}
-                className="font-bold text-[#0F4C81] hover:underline cursor-pointer"
+                className="font-bold text-[#0284C7] hover:underline cursor-pointer"
               >
                 Sign in
               </button>

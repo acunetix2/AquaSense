@@ -206,13 +206,13 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                   <div className="flex gap-2 text-xs">
                     <button
                       onClick={() => setAvatarMode('url')}
-                      className={`flex-1 py-1.5 rounded-lg font-semibold cursor-pointer transition-colors ${avatarMode === 'url' ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      className={`flex-1 py-1.5 rounded-lg font-semibold cursor-pointer transition-colors ${avatarMode === 'url' ? 'bg-[#0284C7] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                     >
                       URL
                     </button>
                     <button
                       onClick={() => setAvatarMode('upload')}
-                      className={`flex-1 py-1.5 rounded-lg font-semibold cursor-pointer transition-colors ${avatarMode === 'upload' ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      className={`flex-1 py-1.5 rounded-lg font-semibold cursor-pointer transition-colors ${avatarMode === 'upload' ? 'bg-[#0284C7] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                     >
                       Upload
                     </button>
@@ -226,7 +226,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                         setForm((p) => ({ ...p, avatar_url: e.target.value }))
                         setAvatarPreview(e.target.value)
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0F4C81]"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
                     />
                   ) : (
                     <button
@@ -263,10 +263,10 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                   <button
                     type="button"
                     onClick={() => setRoleDropdownOpen((o) => !o)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl hover:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20 transition-all cursor-pointer"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl hover:border-[#0284C7] focus:outline-none focus:ring-2 focus:ring-[#0284C7]/20 transition-all cursor-pointer"
                   >
                     <span className="flex items-center gap-2 min-w-0">
-                      <Briefcase size={13} className="text-[#0F4C81] shrink-0" />
+                      <Briefcase size={13} className="text-[#0284C7] shrink-0" />
                       <span className="truncate font-medium text-slate-800">
                         {currentRoleDef.label.split('/')[0].trim()}
                       </span>
@@ -295,12 +295,12 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                             }`}
                           >
                             <div className="flex-1 min-w-0">
-                              <p className={`text-xs font-semibold truncate ${isSelected ? 'text-[#0F4C81]' : 'text-slate-800'}`}>
+                              <p className={`text-xs font-semibold truncate ${isSelected ? 'text-[#0284C7]' : 'text-slate-800'}`}>
                                 {opt.label}
                               </p>
                               <p className="text-[10px] text-slate-400 truncate mt-0.5">{opt.desc}</p>
                             </div>
-                            {isSelected && <Shield size={13} className="text-[#0F4C81] shrink-0 mt-0.5" />}
+                            {isSelected && <Shield size={13} className="text-[#0284C7] shrink-0 mt-0.5" />}
                           </button>
                         )
                       })}
@@ -315,7 +315,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
           {/* RIGHT: Edit Form */}
           <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 sm:p-8 space-y-6">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Edit3 size={18} className="text-[#0F4C81]" />
+              <Edit3 size={18} className="text-[#0284C7]" />
               Edit Profile Information
             </h2>
 
@@ -332,7 +332,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                     value={form.name}
                     onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                     placeholder="Your full name"
-                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81] focus:border-[#0F4C81]"
+                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:border-[#0284C7]"
                   />
                 </div>
               </div>
@@ -362,7 +362,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                     value={form.location}
                     onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
                     placeholder="e.g. Nairobi, Kenya"
-                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
                   />
                 </div>
               </div>
@@ -377,7 +377,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                     value={form.website}
                     onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
                     placeholder="https://yoursite.com"
-                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
                   />
                 </div>
               </div>
@@ -394,7 +394,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                   rows={4}
                   maxLength={280}
                   placeholder="Tell the community about yourself and your environmental interests…"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81] resize-none leading-relaxed"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7] resize-none leading-relaxed"
                 />
                 <p className="text-[11px] text-slate-400 mt-1 text-right">{form.bio.length}/280</p>
               </div>
@@ -410,7 +410,7 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
                     ? 'bg-emerald-600 text-white'
                     : isSaving
                     ? 'bg-slate-400 text-white cursor-not-allowed'
-                    : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white hover:shadow-md'
+                    : 'bg-[#0284C7] hover:bg-[#0369A1] text-white hover:shadow-md'
                 }`}
               >
                 {isSaving ? (

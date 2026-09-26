@@ -47,10 +47,10 @@ export const Sidebar: React.FC = () => {
           onClick={() => handleNav('home')}
           className="flex items-center gap-2.5 group cursor-pointer focus:outline-hidden"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
             <Droplets size={18} className="stroke-[2.2]" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-[#0F4C81]">AquaSense</span>
+          <span className="text-lg font-bold tracking-tight text-[#0284C7]">AquaSense</span>
         </button>
       </div>
 
@@ -58,7 +58,7 @@ export const Sidebar: React.FC = () => {
       <div className="p-4">
         <button
           onClick={() => handleNav('capture')}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm hover:shadow-md transition-all duration-150 cursor-pointer active:scale-98"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-sm hover:shadow-md transition-all duration-150 cursor-pointer active:scale-98"
         >
           <PlusCircle size={16} />
           <span>Assess a Stream</span>
@@ -77,14 +77,14 @@ export const Sidebar: React.FC = () => {
               onClick={() => handleNav(item.id)}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 cursor-pointer ${
                 isActive
-                  ? 'bg-sky-50 text-[#0F4C81] font-semibold shadow-xs'
+                  ? 'bg-sky-50 text-[#0284C7] font-semibold shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <div className="flex items-center gap-3">
                 <item.icon
                   size={18}
-                  className={`transition-colors ${isActive ? 'text-[#0F4C81]' : 'text-slate-400'}`}
+                  className={`transition-colors ${isActive ? 'text-[#0284C7]' : 'text-slate-400'}`}
                 />
                 <span>{item.label}</span>
               </div>

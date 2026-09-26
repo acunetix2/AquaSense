@@ -63,7 +63,7 @@ export const ObservationAnalyticsPanel: React.FC<{ observationId: number | strin
       {/* Engagement */}
       <section aria-label="Engagement analytics" className={card}>
         <div className="flex items-center gap-2 mb-4">
-          <Activity size={16} className="text-[#0F4C81]" />
+          <Activity size={16} className="text-[#0284C7]" />
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
             Observation Analytics
           </h3>
@@ -75,7 +75,7 @@ export const ObservationAnalyticsPanel: React.FC<{ observationId: number | strin
             { label: 'Comments', value: data.engagement.comments, icon: MessageSquare },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="text-center rounded-2xl bg-slate-50 border border-slate-100 py-4">
-              <Icon size={16} className="mx-auto text-[#0F4C81]" />
+              <Icon size={16} className="mx-auto text-[#0284C7]" />
               <p className="text-xl font-extrabold text-slate-900 mt-1.5">{value}</p>
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 {label}
@@ -114,7 +114,7 @@ export const ObservationAnalyticsPanel: React.FC<{ observationId: number | strin
       {data.region && (
         <section aria-label="Regional context" className={card}>
           <div className="flex items-center gap-2 mb-4">
-            <MapPin size={16} className="text-[#0F4C81]" />
+            <MapPin size={16} className="text-[#0284C7]" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               Regional Context — {data.region.site_name}
             </h3>
@@ -169,7 +169,7 @@ export const ObservationAnalyticsPanel: React.FC<{ observationId: number | strin
       <div className="grid md:grid-cols-2 gap-4">
         <section aria-label="Trusted source context" className={card}>
           <div className="flex items-center gap-2 mb-3">
-            <Database size={16} className="text-[#0F4C81]" />
+            <Database size={16} className="text-[#0284C7]" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               Trusted Source Baseline
             </h3>
@@ -203,7 +203,7 @@ export const ObservationAnalyticsPanel: React.FC<{ observationId: number | strin
 
         <section aria-label="AI decision meta" className={card}>
           <div className="flex items-center gap-2 mb-3">
-            <User size={16} className="text-[#0F4C81]" />
+            <User size={16} className="text-[#0284C7]" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               How This Signal Was Produced
             </h3>

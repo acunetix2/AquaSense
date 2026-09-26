@@ -124,7 +124,7 @@ export const SettingsView: React.FC = () => {
                     aria-current={isActive ? 'page' : undefined}
                     className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer text-left ${
                       isActive
-                        ? 'bg-[#0F4C81] text-white shadow-sm'
+                        ? 'bg-[#0284C7] text-white shadow-sm'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
@@ -137,8 +137,8 @@ export const SettingsView: React.FC = () => {
 
             {/* Account chip */}
             <div className="mt-3 bg-slate-50 rounded-3xl border border-slate-200/80 p-4 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#0F4C81]/10 flex items-center justify-center shrink-0">
-                <Droplets size={16} className="text-[#0F4C81]" />
+              <div className="w-9 h-9 rounded-full bg-[#0284C7]/10 flex items-center justify-center shrink-0">
+                <Droplets size={16} className="text-[#0284C7]" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-slate-800 truncate">{user.name}</p>
@@ -162,7 +162,7 @@ export const SettingsView: React.FC = () => {
               <div className="space-y-5">
                 <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 space-y-4">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <BadgeCheck size={16} className="text-[#0F4C81]" />
+                    <BadgeCheck size={16} className="text-[#0284C7]" />
                     Sign-in Details
                   </h3>
 
@@ -221,7 +221,7 @@ export const SettingsView: React.FC = () => {
 
                 <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 space-y-4">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Calendar size={16} className="text-[#0F4C81]" />
+                    <Calendar size={16} className="text-[#0284C7]" />
                     Session & Onboarding
                   </h3>
                   <div className="flex flex-wrap items-center gap-3">
@@ -336,7 +336,7 @@ export const SettingsView: React.FC = () => {
 
                 <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 space-y-4">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <BookOpen size={16} className="text-[#0F4C81]" />
+                    <BookOpen size={16} className="text-[#0284C7]" />
                     Developer Resources
                   </h3>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -347,7 +347,7 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setActiveView('api-docs')}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
                     >
                       <BookOpen size={15} />
                       API Documentation

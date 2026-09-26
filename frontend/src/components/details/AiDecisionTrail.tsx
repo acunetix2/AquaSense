@@ -143,8 +143,8 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
         className="w-full flex items-center justify-between gap-3 px-6 py-5 text-left hover:bg-slate-50/70 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-3 min-w-0">
-          <span className="w-9 h-9 rounded-xl bg-[#0F4C81]/10 flex items-center justify-center shrink-0">
-            <Bot size={17} className="text-[#0F4C81]" />
+          <span className="w-9 h-9 rounded-xl bg-[#0284C7]/10 flex items-center justify-center shrink-0">
+            <Bot size={17} className="text-[#0284C7]" />
           </span>
           <div className="min-w-0">
             <p className="font-bold text-sm text-slate-900">AI Decision Trail</p>

@@ -128,7 +128,7 @@ export const CaptureWizard: React.FC = () => {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 ${
                     isActive
-                      ? 'bg-[#0F4C81] text-white ring-4 ring-sky-100 shadow-sm'
+                      ? 'bg-[#0284C7] text-white ring-4 ring-sky-100 shadow-sm'
                       : isCompleted
                       ? 'bg-emerald-600 text-white'
                       : 'bg-slate-200 text-slate-500'
@@ -139,7 +139,7 @@ export const CaptureWizard: React.FC = () => {
                 <span
                   className={`text-xs sm:text-sm font-semibold transition-colors hidden sm:block ${
                     isActive
-                      ? 'text-[#0F4C81]'
+                      ? 'text-[#0284C7]'
                       : isCompleted
                       ? 'text-slate-800'
                       : 'text-slate-400'

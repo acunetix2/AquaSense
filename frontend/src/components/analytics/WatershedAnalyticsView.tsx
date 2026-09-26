@@ -153,7 +153,7 @@ export const WatershedAnalyticsView: React.FC = () => {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <Waves size={24} className="text-[#0F4C81]" />
+            <Waves size={24} className="text-[#0284C7]" />
             Watershed Analytics
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -166,7 +166,7 @@ export const WatershedAnalyticsView: React.FC = () => {
       {/* ── 1. Platform overview ── */}
       <section aria-label="Platform overview" className={card}>
         <div className="flex items-center gap-2 mb-4">
-          <Activity size={17} className="text-[#0F4C81]" />
+          <Activity size={17} className="text-[#0284C7]" />
           <h2 className={sectionTitle}>Observation Overview</h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -182,7 +182,7 @@ export const WatershedAnalyticsView: React.FC = () => {
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Icon size={14} className="text-[#0F4C81]" />
+                <Icon size={14} className="text-[#0284C7]" />
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   {label}
                 </p>
@@ -232,7 +232,7 @@ export const WatershedAnalyticsView: React.FC = () => {
       {/* ── 2. Per-location rollups (citizen observations) ── */}
       <section aria-label="Observations by location" className={card}>
         <div className="flex items-center gap-2 mb-1">
-          <MapPin size={17} className="text-[#0F4C81]" />
+          <MapPin size={17} className="text-[#0284C7]" />
           <h2 className={sectionTitle}>Citizen Observations by Location</h2>
         </div>
         <p className="text-xs text-slate-400 mb-4">
@@ -303,7 +303,7 @@ export const WatershedAnalyticsView: React.FC = () => {
                       <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                         <div
                           style={{ width: `${Math.min(100, loc.avg_confidence)}%` }}
-                          className="h-full bg-[#0F4C81] rounded-full"
+                          className="h-full bg-[#0284C7] rounded-full"
                         />
                       </div>
                     </div>
@@ -341,7 +341,7 @@ export const WatershedAnalyticsView: React.FC = () => {
                             key={String(obs.id)}
                             type="button"
                             onClick={() => openObservationDetail(obs)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-[#0F4C81]/40 transition-colors cursor-pointer text-left"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-[#0284C7]/40 transition-colors cursor-pointer text-left"
                           >
                             <SignalBadge signal={obs.signal} size="sm" />
                             <div className="min-w-0 flex-1">
@@ -371,7 +371,7 @@ export const WatershedAnalyticsView: React.FC = () => {
       {/* ── 3. Trusted sources (scraped, sectionized by basin) ── */}
       <section aria-label="Trusted monitoring sources" className={card}>
         <div className="flex items-center gap-2 mb-1">
-          <Database size={17} className="text-[#0F4C81]" />
+          <Database size={17} className="text-[#0284C7]" />
           <h2 className={sectionTitle}>Trusted Monitoring Sources</h2>
         </div>
         <p className="text-xs text-slate-400 mb-4">
@@ -391,7 +391,7 @@ export const WatershedAnalyticsView: React.FC = () => {
           <div className="space-y-5">
             {regions?.trusted_sections.map((section) => (
               <div key={section.basin_name}>
-                <p className="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">
+                <p className="text-xs font-extrabold uppercase tracking-wider text-[#0284C7] mb-2">
                   {section.basin_name}
                 </p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -430,7 +430,7 @@ export const WatershedAnalyticsView: React.FC = () => {
       {/* ── 4. Regional basin trend ── */}
       <section aria-label="Regional basin trend" className={card}>
         <div className="flex items-center gap-2 mb-1">
-          <TrendingUp size={17} className="text-[#0F4C81]" />
+          <TrendingUp size={17} className="text-[#0284C7]" />
           <h2 className={sectionTitle}>Regional Basin Trend</h2>
         </div>
         <p className="text-xs text-slate-400 mb-4">
@@ -453,7 +453,7 @@ export const WatershedAnalyticsView: React.FC = () => {
                 <p className="text-2xl font-extrabold text-slate-900 mb-1">
                   {latestSnapshot?.health_index_score ?? '–'}
                 </p>
-                <TrendLine values={healthValues} color="#0F4C81" />
+                <TrendLine values={healthValues} color="#0284C7" />
               </div>
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">

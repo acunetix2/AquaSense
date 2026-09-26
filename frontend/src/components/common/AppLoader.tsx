@@ -41,12 +41,12 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, context
     <div className="flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto select-none">
       {/* Concentric animated water ripples */}
       <div className="relative flex items-center justify-center w-28 h-28 mb-6">
-        <div className="absolute inset-0 rounded-full bg-[#0F4C81]/10 animate-ping opacity-75" />
+        <div className="absolute inset-0 rounded-full bg-[#0284C7]/10 animate-ping opacity-75" />
         <div className="absolute -inset-3 rounded-full bg-teal-500/10 animate-pulse duration-1000" />
         <div className="absolute -inset-6 rounded-full border border-sky-400/20 animate-spin" style={{ animationDuration: '6s' }} />
 
         {/* Central glowing droplet orb */}
-        <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#0F4C81] via-teal-600 to-sky-400 p-0.5 shadow-xl shadow-sky-900/20 flex items-center justify-center">
+        <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#0284C7] via-teal-600 to-sky-400 p-0.5 shadow-xl shadow-sky-900/20 flex items-center justify-center">
           <div className="w-full h-full rounded-2xl bg-slate-900/40 backdrop-blur-xs flex items-center justify-center text-white">
             <Droplets className="w-8 h-8 text-sky-200 animate-bounce" style={{ animationDuration: '1.8s' }} />
           </div>
@@ -55,7 +55,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, context
 
       {/* Brand title */}
       <span className="text-xl font-black tracking-tight text-slate-900 mb-3">
-        Aqua<span className="text-[#0F4C81]">Sense</span>
+        Aqua<span className="text-[#0284C7]">Sense</span>
       </span>
 
       {/* Single status line — context-aware */}
@@ -65,7 +65,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, context
           {[0, 120, 240].map((delay) => (
             <span
               key={delay}
-              className="w-1 h-1 rounded-full bg-[#0F4C81] animate-bounce"
+              className="w-1 h-1 rounded-full bg-[#0284C7] animate-bounce"
               style={{ animationDelay: `${delay}ms`, animationDuration: '900ms' }}
             />
           ))}
@@ -75,7 +75,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, context
       {/* Indeterminate shimmer bar */}
       <div className="w-44 h-1.5 bg-slate-100 rounded-full mt-4 overflow-hidden relative">
         <div
-          className="h-full w-1/3 bg-gradient-to-r from-[#0F4C81] via-teal-500 to-sky-400 rounded-full"
+          className="h-full w-1/3 bg-gradient-to-r from-[#0284C7] via-teal-500 to-sky-400 rounded-full"
           style={{ animation: 'loader-slide 1.1s ease-in-out infinite' }}
         />
       </div>

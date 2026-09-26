@@ -15,7 +15,7 @@ interface ObservationMapProps {
 const createPinIcon = (): L.DivIcon =>
   L.divIcon({
     className: '',
-    html: `<div style="width:18px;height:18px;border-radius:50% 50% 50% 0;background:#0F4C81;transform:rotate(-45deg);border:2px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></div>`,
+    html: `<div style="width:18px;height:18px;border-radius:50% 50% 50% 0;background:#0284C7;transform:rotate(-45deg);border:2px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></div>`,
     iconSize: [18, 18],
     iconAnchor: [9, 18],
     popupAnchor: [0, -16],

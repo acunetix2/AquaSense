@@ -67,7 +67,7 @@ export const ReviewerQueue: React.FC = () => {
             onClick={() => setActiveTab('all')}
             className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'all'
-                ? 'bg-[#0F4C81] text-white shadow-xs'
+                ? 'bg-[#0284C7] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
@@ -116,7 +116,7 @@ export const ReviewerQueue: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by location..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
           />
         </div>
       </div>
@@ -156,7 +156,7 @@ export const ReviewerQueue: React.FC = () => {
                           />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-bold text-slate-900 group-hover:text-[#0F4C81] transition-colors truncate">
+                          <p className="font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors truncate">
                             {obs.site_name}
                           </p>
                           <p className="text-xs text-slate-400 truncate">
@@ -202,7 +202,7 @@ export const ReviewerQueue: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => setModalObs({ obs, action: 'verify' })}
-                              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#0F4C81] hover:text-white bg-sky-50 hover:bg-[#0F4C81] border border-sky-200 transition-colors cursor-pointer"
+                              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#0284C7] hover:text-white bg-sky-50 hover:bg-[#0284C7] border border-sky-200 transition-colors cursor-pointer"
                             >
                               Verify
                             </button>

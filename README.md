@@ -200,7 +200,7 @@ Current baseline: **86 backend tests passing**, `tsc` clean, oxlint 0 errors.
 ## 🎨 Design system
 
 - **Surfaces** — `#F5F9FC` page background, white cards with `slate` borders; Uber-dark mode re-tokens the neutral scale (`.dark` class on `<html>`).
-- **Brand** — deep blue `#0F4C81`, teal `#1FB8A6`, live accent `#0284c7`.
+- **Brand** — deep blue `#0284C7`, teal `#1FB8A6`, live accent `#0284c7`.
 - **Signals** — Normal (emerald), Watch (amber), Investigate (rose) — always shown with a text label, never color alone.
 - **Type** — DM Sans; 15px base; sentence-case section labels.
 - **Spacing/radii** — Supabase-inspired tokens (`--radius-sm/md/lg/xl`, 6–16px).

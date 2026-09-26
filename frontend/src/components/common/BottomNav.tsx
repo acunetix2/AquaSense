@@ -118,7 +118,7 @@ export const BottomNav: React.FC = () => {
             className="flex-1 flex flex-col items-center justify-center pb-1.5 cursor-pointer group"
           >
             <span
-              className={`w-12 h-12 -mt-6 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] text-white shadow-lg shadow-sky-900/30 ring-4 ring-white dark:ring-[#0e1117] flex items-center justify-center transition-transform group-active:scale-95 ${
+              className={`w-12 h-12 -mt-6 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] text-white shadow-lg shadow-sky-900/30 ring-4 ring-white dark:ring-[#0e1117] flex items-center justify-center transition-transform group-active:scale-95 ${
                 activeView === 'capture' ? 'scale-105' : ''
               }`}
             >
@@ -170,7 +170,7 @@ export const BottomNav: React.FC = () => {
                   onClick={() => go(item.id)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-colors ${
                     activeView === item.id
-                      ? 'text-[#0F4C81] bg-sky-50 dark:text-sky-300 dark:bg-sky-900/40 font-semibold'
+                      ? 'text-[#0284C7] bg-sky-50 dark:text-sky-300 dark:bg-sky-900/40 font-semibold'
                       : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -198,7 +198,7 @@ export const BottomNav: React.FC = () => {
                     <button
                       onClick={() => setUserRole('citizen')}
                       className={`text-xs px-2.5 py-1 rounded-md font-medium cursor-pointer ${
-                        !isReviewer ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                        !isReviewer ? 'bg-[#0284C7] text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
                       Citizen
@@ -206,7 +206,7 @@ export const BottomNav: React.FC = () => {
                     <button
                       onClick={() => setUserRole('reviewer')}
                       className={`text-xs px-2.5 py-1 rounded-md font-medium cursor-pointer ${
-                        isReviewer ? 'bg-[#0F4C81] text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                        isReviewer ? 'bg-[#0284C7] text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
                       Reviewer
@@ -217,7 +217,7 @@ export const BottomNav: React.FC = () => {
                   onClick={() => go('profile')}
                   className="w-full py-2.5 px-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 cursor-pointer"
                 >
-                  <User size={15} className="text-[#0F4C81]" />
+                  <User size={15} className="text-[#0284C7]" />
                   <span>Profile &amp; Account Settings</span>
                 </button>
                 <button
@@ -232,7 +232,7 @@ export const BottomNav: React.FC = () => {
               <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
                 <button
                   onClick={() => go('auth')}
-                  className="w-full py-2.5 rounded-xl bg-[#0F4C81] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-xl bg-[#0284C7] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
                 >
                   <LogIn size={15} />
                   <span>Log In</span>
@@ -246,7 +246,7 @@ export const BottomNav: React.FC = () => {
                       go('auth')
                     }
                   }}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer"
                 >
                   Continue with Google
                 </button>

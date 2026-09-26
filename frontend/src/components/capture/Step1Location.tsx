@@ -370,12 +370,12 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                 onChange={handleSearchChange}
                 onFocus={() => searchResults.length > 0 && setShowResults(true)}
                 placeholder="Search location..."
-                className="w-full pl-10 pr-9 py-2.5 bg-white rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20 focus:border-[#0F4C81] shadow-2xs transition-all"
+                className="w-full pl-10 pr-9 py-2.5 bg-white rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7] shadow-2xs transition-all"
               />
               {isSearching && (
                 <Loader2
                   size={15}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#0F4C81] animate-spin"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#0284C7] animate-spin"
                 />
               )}
               {searchQuery && !isSearching && (
@@ -403,7 +403,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                     onClick={() => selectResult(r)}
                     className="w-full text-left px-4 py-2.5 text-sm hover:bg-sky-50/60 transition-colors cursor-pointer flex items-start gap-2.5"
                   >
-                    <MapPin size={15} className="text-[#0F4C81] shrink-0 mt-0.5" />
+                    <MapPin size={15} className="text-[#0284C7] shrink-0 mt-0.5" />
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-slate-800 truncate">
                         {r.name || r.display_name.split(',')[0]}
@@ -452,13 +452,13 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                 type="button"
                 onClick={handleGeolocate}
                 disabled={isGeolocating}
-                className="flex items-center gap-1.5 px-3 py-2 bg-white/95 backdrop-blur-md rounded-lg shadow-md border border-slate-200 text-xs font-medium text-slate-700 hover:text-[#0F4C81] hover:border-[#0F4C81] transition-all cursor-pointer disabled:opacity-60"
+                className="flex items-center gap-1.5 px-3 py-2 bg-white/95 backdrop-blur-md rounded-lg shadow-md border border-slate-200 text-xs font-medium text-slate-700 hover:text-[#0284C7] hover:border-[#0284C7] transition-all cursor-pointer disabled:opacity-60"
                 title="Pin my current GPS location"
               >
                 {isGeolocating ? (
-                  <Loader2 size={14} className="animate-spin text-[#0F4C81]" />
+                  <Loader2 size={14} className="animate-spin text-[#0284C7]" />
                 ) : (
-                  <Crosshair size={14} className="text-[#0F4C81]" />
+                  <Crosshair size={14} className="text-[#0284C7]" />
                 )}
                 <span>Pin my location</span>
               </button>
@@ -478,7 +478,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
             {isReverting && (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[400]">
                 <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-slate-200 px-4 py-2.5 flex items-center gap-2.5 text-xs font-medium text-slate-700">
-                  <Loader2 size={16} className="animate-spin text-[#0F4C81]" />
+                  <Loader2 size={16} className="animate-spin text-[#0284C7]" />
                   Resolving waterway address...
                 </div>
               </div>
@@ -504,7 +504,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
             {hasPin ? (
               <div className="space-y-2 pt-1">
                 <div className="flex items-center gap-2 text-sm font-bold text-slate-800 font-mono">
-                  <Crosshair size={16} className="text-[#0F4C81] shrink-0" />
+                  <Crosshair size={16} className="text-[#0284C7] shrink-0" />
                   <span>
                     {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
                   </span>
@@ -521,7 +521,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                     type="button"
                     onClick={handleGeolocate}
                     disabled={isGeolocating}
-                    className="w-full text-left text-xs font-medium text-[#0F4C81] hover:text-[#0b3b64] hover:underline cursor-pointer flex items-center gap-1.5"
+                    className="w-full text-left text-xs font-medium text-[#0284C7] hover:text-[#0b3b64] hover:underline cursor-pointer flex items-center gap-1.5"
                   >
                     <Crosshair size={12} />
                     <span>Update to current GPS location</span>
@@ -546,7 +546,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
               </div>
             ) : (
               <div className="py-6 text-center space-y-2">
-                <div className="w-10 h-10 rounded-full bg-sky-100 text-[#0F4C81] flex items-center justify-center mx-auto">
+                <div className="w-10 h-10 rounded-full bg-sky-100 text-[#0284C7] flex items-center justify-center mx-auto">
                   <MapPin size={18} />
                 </div>
                 <p className="text-xs font-medium text-slate-600">
@@ -560,7 +560,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                     type="button"
                     onClick={handleGeolocate}
                     disabled={isGeolocating}
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0F4C81] bg-white border border-[#0F4C81]/30 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0284C7] bg-white border border-[#0284C7]/30 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer"
                   >
                     {isGeolocating ? (
                       <Loader2 size={13} className="animate-spin" />
@@ -579,7 +579,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
             <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-2xs">
               <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                <Camera size={15} className="text-[#0F4C81]" />
+                <Camera size={15} className="text-[#0284C7]" />
                 <span>Recent Location Photos from Web</span>
               </div>
               </div>
@@ -590,7 +590,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
 
               {loadingImages ? (
                 <div className="py-6 flex flex-col items-center justify-center gap-2 text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                  <Loader2 size={18} className="animate-spin text-[#0F4C81]" />
+                  <Loader2 size={18} className="animate-spin text-[#0284C7]" />
                   <span>Scanning web and geo registries for photos...</span>
                 </div>
               ) : recentImages.length > 0 ? (
@@ -600,7 +600,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                       <div
                         key={img.id}
                         onClick={() => setPreviewImage(img)}
-                        className="group relative aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200 cursor-pointer shadow-2xs hover:border-[#0F4C81] transition-all"
+                        className="group relative aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200 cursor-pointer shadow-2xs hover:border-[#0284C7] transition-all"
                       >
                         <img
                           src={img.thumbUrl}
@@ -633,13 +633,13 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                   href={`https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-[#0F4C81] border border-slate-200 hover:border-sky-200 transition-all text-[11px] font-medium group"
+                  className="inline-flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-[#0284C7] border border-slate-200 hover:border-sky-200 transition-all text-[11px] font-medium group"
                 >
                   <span className="flex items-center gap-1.5">
                     <MapPin size={13} className="text-red-500" />
                     <span>View on Google Maps & Street View</span>
                   </span>
-                  <ExternalLink size={12} className="text-slate-400 group-hover:text-[#0F4C81]" />
+                  <ExternalLink size={12} className="text-slate-400 group-hover:text-[#0284C7]" />
                 </a>
 
                 <a
@@ -661,7 +661,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
           {/* Global Waterways Quick Picker (Continents & Rivers) */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3.5 shadow-2xs">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-              <Globe size={15} className="text-[#0F4C81]" />
+              <Globe size={15} className="text-[#0284C7]" />
               <span>Or choose from global waterways</span>
             </div>
 
@@ -711,7 +711,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
           disabled={!canProceed}
           className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all cursor-pointer ${
             canProceed
-              ? 'bg-[#0F4C81] hover:bg-[#0b3b64] shadow-sm hover:shadow active:scale-[0.99]'
+              ? 'bg-[#0284C7] hover:bg-[#0b3b64] shadow-sm hover:shadow active:scale-[0.99]'
               : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
@@ -770,7 +770,7 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
                   )}
                   <button
                     onClick={() => setPreviewImage(null)}
-                    className="px-4 py-1.5 rounded-xl bg-[#0F4C81] text-white font-semibold cursor-pointer hover:bg-[#0c3c66]"
+                    className="px-4 py-1.5 rounded-xl bg-[#0284C7] text-white font-semibold cursor-pointer hover:bg-[#0369A1]"
                   >
                     Close
                   </button>

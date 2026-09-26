@@ -77,16 +77,16 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
                   onClick={() => update('waterClarity', opt.id)}
                   className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-[#0F4C81] bg-sky-50 ring-1 ring-[#0F4C81]'
+                      ? 'border-[#0284C7] bg-sky-50 ring-1 ring-[#0284C7]'
                       : 'border-slate-200 bg-white hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className={`text-sm font-medium ${isSelected ? 'text-[#0F4C81]' : 'text-slate-800'}`}>
+                    <span className={`text-sm font-medium ${isSelected ? 'text-[#0284C7]' : 'text-slate-800'}`}>
                       {opt.label}
                     </span>
                     {isSelected && (
-                      <div className="w-4 h-4 rounded-full bg-[#0F4C81] flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full bg-[#0284C7] flex items-center justify-center">
                         <Check size={10} className="text-white stroke-[3]" />
                       </div>
                     )}
@@ -115,7 +115,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
                     onClick={() => update('noticeableOdor', opt.id)}
                     className={`py-2 px-3 rounded-lg border text-sm font-medium text-center transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#0F4C81] bg-sky-50 text-[#0F4C81] ring-1 ring-[#0F4C81]'
+                        ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
                         : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                     }`}
                   >
@@ -141,7 +141,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
                     onClick={() => update('unusualColor', opt.id)}
                     className={`py-2 px-3 rounded-lg border text-sm font-medium text-center transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#0F4C81] bg-sky-50 text-[#0F4C81] ring-1 ring-[#0F4C81]'
+                        ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
                         : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                     }`}
                   >
@@ -164,7 +164,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
               onClick={() => update('wasteVisible', false)}
               className={`py-2 px-3 rounded-lg border text-sm font-medium text-center transition-all cursor-pointer ${
                 answers.wasteVisible === false
-                  ? 'border-[#0F4C81] bg-sky-50 text-[#0F4C81] ring-1 ring-[#0F4C81]'
+                  ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
                   : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
               }`}
             >
@@ -199,7 +199,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
                   onClick={() => update('flowRate', opt.id)}
                   className={`py-2 px-3 rounded-lg border text-sm font-medium text-center transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-[#0F4C81] bg-sky-50 text-[#0F4C81] ring-1 ring-[#0F4C81]'
+                      ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
                       : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                   }`}
                 >
@@ -220,7 +220,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
             onChange={(e) => update('additionalNotes', e.target.value)}
             rows={3}
             placeholder="Describe any other conditions: wildlife seen, water depth, weather, nearby activities, etc."
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0F4C81] focus:border-[#0F4C81] transition-all resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0284C7] focus:border-[#0284C7] transition-all resize-none"
           />
         </div>
       </div>
@@ -239,7 +239,7 @@ export const Step3Assessment: React.FC<Step3AssessmentProps> = ({
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
         >
           Continue
           <ArrowRight size={14} />

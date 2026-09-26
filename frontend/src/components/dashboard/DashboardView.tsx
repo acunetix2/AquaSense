@@ -164,7 +164,7 @@ export const DashboardView: React.FC = () => {
             <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-500">Total Observations</span>
-                <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#0F4C81] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#0284C7] flex items-center justify-center">
                   <Droplets size={16} />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export const DashboardView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setActiveView('my-observations')}
-                  className="text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                  className="text-xs font-semibold text-[#0284C7] hover:underline cursor-pointer"
                 >
                   View All →
                 </button>
@@ -394,7 +394,7 @@ export const DashboardView: React.FC = () => {
           {/* Community Challenge Banner */}
           <div className="rounded-2xl border border-slate-200/90 dark:border-[#262e3c] bg-gradient-to-r from-sky-50 dark:from-sky-900/50 via-teal-50/30 dark:via-teal-900/20 to-white dark:to-[#0e1117] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0284C7]">
                 <Award size={14} className="text-[#1FB8A6]" />
                 <span>Active Community Challenge</span>
               </div>
@@ -407,11 +407,11 @@ export const DashboardView: React.FC = () => {
               <div className="pt-2 max-w-md">
                 <div className="flex justify-between text-xs font-medium text-slate-600 mb-1">
                   <span>Your Progress: {completed} verified of {total} total</span>
-                  <span className="font-bold text-[#0F4C81]">{total > 0 ? Math.round((completed / total) * 100) : 0}%</span>
+                  <span className="font-bold text-[#0284C7]">{total > 0 ? Math.round((completed / total) * 100) : 0}%</span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] rounded-full transition-all duration-700"
+                    className="h-full bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] rounded-full transition-all duration-700"
                     style={{ width: `${total > 0 ? Math.round((completed / total) * 100) : 0}%` }}
                   />
                 </div>
@@ -419,7 +419,7 @@ export const DashboardView: React.FC = () => {
             </div>
             <button
               onClick={() => setActiveView('capture')}
-              className="shrink-0 px-6 py-3 rounded-xl bg-[#0F4C81] text-white font-bold text-sm hover:bg-[#0c3c66] shadow-sm transition-all cursor-pointer whitespace-nowrap"
+              className="shrink-0 px-6 py-3 rounded-xl bg-[#0284C7] text-white font-bold text-sm hover:bg-[#0369A1] shadow-sm transition-all cursor-pointer whitespace-nowrap"
             >
               Submit Observation
             </button>

@@ -161,7 +161,7 @@ export const NotificationCenter: React.FC<{ className?: string }> = ({ className
                 <button
                   type="button"
                   onClick={handleMarkAll}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0F4C81] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0284C7] hover:underline cursor-pointer"
                 >
                   <CheckCheck size={13} />
                   Mark all read

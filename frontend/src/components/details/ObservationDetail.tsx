@@ -173,7 +173,7 @@ export const ObservationDetail: React.FC = () => {
         <p>No observation selected.</p>
         <button
           onClick={() => setActiveView('map')}
-          className="mt-4 px-4 py-2 bg-[#0F4C81] text-white rounded-xl text-sm font-semibold cursor-pointer"
+          className="mt-4 px-4 py-2 bg-[#0284C7] text-white rounded-xl text-sm font-semibold cursor-pointer"
         >
           Return to Map
         </button>
@@ -301,7 +301,7 @@ export const ObservationDetail: React.FC = () => {
             <>
               <button
                 onClick={() => setShowEditModal(true)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-[#0F4C81] bg-sky-50 hover:bg-sky-100 border border-sky-200 transition-colors cursor-pointer flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-[#0284C7] bg-sky-50 hover:bg-sky-100 border border-sky-200 transition-colors cursor-pointer flex items-center gap-1.5"
               >
                 <Pencil size={13} />
                 Edit Observation
@@ -381,7 +381,7 @@ export const ObservationDetail: React.FC = () => {
                     type="button"
                     onClick={() => setActiveHeroImageIndex(idx)}
                     className={`h-12 w-16 rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
-                      activeHeroImageIndex === idx ? 'border-[#0F4C81] ring-2 ring-sky-200' : 'border-slate-200 opacity-70 hover:opacity-100'
+                      activeHeroImageIndex === idx ? 'border-[#0284C7] ring-2 ring-sky-200' : 'border-slate-200 opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={imgUrl} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
@@ -458,7 +458,7 @@ export const ObservationDetail: React.FC = () => {
                 <div className="min-w-0 flex-1">
                   <p className="font-bold text-slate-900 text-sm truncate">{analystName}</p>
                   <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                    <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                    <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
                       <Droplets size={8} className="text-white" />
                     </span>
                     <span>{analystRole}</span>
@@ -491,7 +491,7 @@ export const ObservationDetail: React.FC = () => {
       {/* ── OBSERVATION SOURCE SECTION ── */}
       <section className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 sm:p-7 space-y-5">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-          <User size={18} className="text-[#0F4C81]" />
+          <User size={18} className="text-[#0284C7]" />
           <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
             Observation Submitted By
           </h3>
@@ -564,8 +564,8 @@ export const ObservationDetail: React.FC = () => {
                 key={label}
                 className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100"
               >
-                <div className="w-8 h-8 rounded-xl bg-[#0F4C81]/10 flex items-center justify-center shrink-0">
-                  <StatIcon size={15} className="text-[#0F4C81]" />
+                <div className="w-8 h-8 rounded-xl bg-[#0284C7]/10 flex items-center justify-center shrink-0">
+                  <StatIcon size={15} className="text-[#0284C7]" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-extrabold text-slate-900 leading-none">{value}</p>
@@ -640,7 +640,7 @@ export const ObservationDetail: React.FC = () => {
               className={`ml-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border active:scale-95 ${
                 isFollowingObserver
                   ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-                  : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white border-transparent shadow-sm'
+                  : 'bg-[#0284C7] hover:bg-[#0369A1] text-white border-transparent shadow-sm'
               }`}
             >
               {isFollowingObserver ? <UserCheck size={15} /> : <UserPlus size={15} />}
@@ -663,7 +663,7 @@ export const ObservationDetail: React.FC = () => {
             onClick={() => setActiveTab(tab)}
             className={`pb-3 border-b-2 transition-colors cursor-pointer capitalize whitespace-nowrap ${
               activeTab === tab
-                ? 'border-[#0F4C81] text-[#0F4C81]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -692,7 +692,7 @@ export const ObservationDetail: React.FC = () => {
               <div className="space-y-2.5">
                 {(obs.key_evidence || ['Observation recorded', 'Assessment completed']).map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                    <span className="w-4 h-4 rounded-full bg-sky-100 text-[#0F4C81] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                    <span className="w-4 h-4 rounded-full bg-sky-100 text-[#0284C7] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       ✓
                     </span>
                     <span>{item}</span>
@@ -775,7 +775,7 @@ export const ObservationDetail: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShareModalOpen(true)}
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-98"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-98"
               >
                 <Share2 size={16} />
                 <span>Share</span>
@@ -798,7 +798,7 @@ export const ObservationDetail: React.FC = () => {
       {activeTab === 'comments' && (
         <section className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-xs space-y-5">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-            <MessageSquare size={18} className="text-[#0F4C81]" />
+            <MessageSquare size={18} className="text-[#0284C7]" />
             <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
               Community Comments
             </h3>
@@ -820,7 +820,7 @@ export const ObservationDetail: React.FC = () => {
                   ? 'Add field context — what did you notice at this site?'
                   : 'Sign in to join the conversation.'
               }
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81] resize-none leading-relaxed disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0284C7] resize-none leading-relaxed disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
             />
             <div className="flex items-center justify-between gap-3">
               <p className="text-[11px] text-slate-400">
@@ -833,7 +833,7 @@ export const ObservationDetail: React.FC = () => {
                 className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   !commentDraft.trim() || isPostingComment || !viewerId
                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : 'bg-[#0F4C81] hover:bg-[#0c3c66] text-white shadow-sm active:scale-95'
+                    : 'bg-[#0284C7] hover:bg-[#0369A1] text-white shadow-sm active:scale-95'
                 }`}
               >
                 {isPostingComment ? (
@@ -927,7 +927,7 @@ export const ObservationDetail: React.FC = () => {
             </div>
             <button
               onClick={() => setActiveView('map')}
-              className="text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer shrink-0"
+              className="text-xs font-semibold text-[#0284C7] hover:underline cursor-pointer shrink-0"
             >
               Open in Fullscreen Map View →
             </button>
@@ -942,7 +942,7 @@ export const ObservationDetail: React.FC = () => {
           />
 
           <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <MapPin size={16} className="text-[#0F4C81] shrink-0 mt-0.5" />
+            <MapPin size={16} className="text-[#0284C7] shrink-0 mt-0.5" />
             <div className="min-w-0">
               <p className="text-sm font-bold text-slate-800">{obs.site_name}</p>
               <p className="text-xs text-slate-500 mt-0.5">{obs.location_address || 'No address recorded for this site.'}</p>
@@ -998,7 +998,7 @@ export const ObservationDetail: React.FC = () => {
                 <div key={rev.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                      <User size={13} className="text-[#0F4C81]" />
+                      <User size={13} className="text-[#0284C7]" />
                       <span>{rev.reviewerName}</span>
                     </span>
                     <span className="text-slate-400">{formatDate(rev.timestamp)}</span>
@@ -1087,7 +1087,7 @@ export const ObservationDetail: React.FC = () => {
           <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-6 sm:p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#0F4C81] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#0284C7] flex items-center justify-center">
                   <Pencil size={20} />
                 </div>
                 <div>
@@ -1156,7 +1156,7 @@ export const ObservationDetail: React.FC = () => {
                   required
                   value={editSiteName}
                   onChange={(e) => setEditSiteName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                 />
               </div>
 
@@ -1168,7 +1168,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editAppearance}
                     onChange={(e) => setEditAppearance(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                   >
                     <option value="clear">Clear / Transparent</option>
                     <option value="cloudy">Cloudy / Slightly Silty</option>
@@ -1185,7 +1185,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editOdour}
                     onChange={(e) => setEditOdour(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                   >
                     <option value="none">No Detectable Odour</option>
                     <option value="earthy">Natural Earthy / Musty</option>
@@ -1204,7 +1204,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editFlowRate}
                     onChange={(e) => setEditFlowRate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                   >
                     <option value="stagnant">Stagnant / Pooled</option>
                     <option value="slow">Slow / Gentle Trickle</option>
@@ -1219,7 +1219,7 @@ export const ObservationDetail: React.FC = () => {
                       type="checkbox"
                       checked={editWasteVisible}
                       onChange={(e) => setEditWasteVisible(e.target.checked)}
-                      className="w-4 h-4 text-[#0F4C81] rounded-sm focus:ring-[#0F4C81]"
+                      className="w-4 h-4 text-[#0284C7] rounded-sm focus:ring-[#0284C7]"
                     />
                     <span className="text-xs font-semibold text-slate-800">
                       Visible Waste / Plastic Trash
@@ -1238,7 +1238,7 @@ export const ObservationDetail: React.FC = () => {
                     value={editLocationAddress}
                     onChange={(e) => setEditLocationAddress(e.target.value)}
                     placeholder="Nearest landmark or site address"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                   />
                 </div>
 
@@ -1253,7 +1253,7 @@ export const ObservationDetail: React.FC = () => {
                       value={editLatitude}
                       onChange={(e) => setEditLatitude(Number(e.target.value))}
                       placeholder="Lat"
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                     />
                     <input
                       type="number"
@@ -1261,7 +1261,7 @@ export const ObservationDetail: React.FC = () => {
                       value={editLongitude}
                       onChange={(e) => setEditLongitude(Number(e.target.value))}
                       placeholder="Lng"
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                     />
                   </div>
                 </div>
@@ -1276,7 +1276,7 @@ export const ObservationDetail: React.FC = () => {
                   value={editImageUrls}
                   onChange={(e) => setEditImageUrls(e.target.value)}
                   placeholder="https://example.com/photo-1.jpg, https://example.com/photo-2.jpg"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                 />
               </div>
 
@@ -1289,7 +1289,7 @@ export const ObservationDetail: React.FC = () => {
                   value={editNotes}
                   onChange={(e) => setEditNotes(e.target.value)}
                   placeholder="Additional context on riparian buffers, pipe discharges, weather..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
                 />
               </div>
 
@@ -1305,7 +1305,7 @@ export const ObservationDetail: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSavingEdit}
-                  className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors cursor-pointer shadow-sm flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer shadow-sm flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSavingEdit ? (
                     <>

@@ -145,7 +145,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
         {/* Header */}
         <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0F4C81] flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center shadow-xs">
               <Share2 size={20} />
             </div>
             <div>
@@ -173,7 +173,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
             onClick={() => setActiveTab('share')}
             className={`pb-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'share'
-                ? 'border-[#0F4C81] text-[#0F4C81]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -184,7 +184,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
             onClick={() => setActiveTab('qr')}
             className={`pb-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'qr'
-                ? 'border-[#0F4C81] text-[#0F4C81]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -195,7 +195,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
             onClick={() => setActiveTab('fhir')}
             className={`pb-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'fhir'
-                ? 'border-[#0F4C81] text-[#0F4C81]'
+                ? 'border-[#0284C7] text-[#0284C7]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -223,7 +223,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
                   />
                   <button
                     onClick={handleCopyLink}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#0F4C81] hover:bg-[#0c3c66] text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm active:scale-95"
                   >
                     {copiedLink ? <Check size={14} /> : <Copy size={14} />}
                     <span>{copiedLink ? 'Copied' : 'Copy'}</span>
@@ -343,7 +343,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
                 <div className="min-w-0 flex-1 text-xs">
                   <p className="font-bold text-slate-900 truncate">{observation.site_name}</p>
                   <p className="text-slate-500 text-[11px] truncate">{observation.location_address}</p>
-                  <span className="inline-block mt-1 font-semibold text-[10px] px-2 py-0.5 rounded-md bg-sky-100 text-[#0F4C81]">
+                  <span className="inline-block mt-1 font-semibold text-[10px] px-2 py-0.5 rounded-md bg-sky-100 text-[#0284C7]">
                     Signal: {observation.signal.toUpperCase()}
                   </span>
                 </div>
@@ -375,7 +375,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
                 <button
                   type="button"
                   onClick={handleDownloadQr}
-                  className="px-4 py-2.5 rounded-xl bg-[#0F4C81] hover:bg-[#0c3c66] text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
                 >
                   <Download size={14} />
                   <span>Download QR Image</span>
@@ -401,7 +401,7 @@ export const FhirExportModal: React.FC<FhirExportModalProps> = ({
                 </p>
                 <button
                   onClick={handleCopyFhir}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#0F4C81] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#0284C7] hover:underline cursor-pointer"
                 >
                   {copiedFhir ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                   <span>{copiedFhir ? 'Copied JSON' : 'Copy JSON'}</span>

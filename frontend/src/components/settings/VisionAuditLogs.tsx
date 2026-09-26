@@ -49,8 +49,8 @@ export const VisionAuditLogs: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-bold text-slate-900 text-base flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-[#0F4C81]/10 flex items-center justify-center">
-              <Cpu size={16} className="text-[#0F4C81]" />
+            <span className="w-8 h-8 rounded-xl bg-[#0284C7]/10 flex items-center justify-center">
+              <Cpu size={16} className="text-[#0284C7]" />
             </span>
             AquaSense Vision Audit Logs
           </h2>

@@ -74,7 +74,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               required
-              className="w-full p-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+              className="w-full p-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
             />
           </div>
 

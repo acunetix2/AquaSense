@@ -41,7 +41,7 @@ AquaSense is a civic-science platform for seeing and verifying environmental cha
 ## 4. Design Tokens
 ### Color Palette
 Primary palette:
-- Deep Water Blue: #0F4C81
+- Deep Water Blue: #0284C7
 - Fresh Teal: #1FB8A6
 - River Green: #4CAF50
 - Gold / Signal Warning: #E9B44C

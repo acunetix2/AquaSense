@@ -68,7 +68,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-800 shadow-2xs hover:border-slate-300 hover:bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-[#0F4C81] focus:border-[#0F4C81] transition-all cursor-pointer ${buttonClassName}`}
+        className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-800 shadow-2xs hover:border-slate-300 hover:bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-[#0284C7] focus:border-[#0284C7] transition-all cursor-pointer ${buttonClassName}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
@@ -102,7 +102,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search..."
-                  className="w-full pl-7 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-[#0F4C81]"
+                  className="w-full pl-7 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-[#0284C7]"
                   autoFocus
                 />
               </div>
@@ -134,7 +134,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                         }}
                         className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors cursor-pointer ${
                           isSelected
-                            ? 'bg-sky-50 text-[#0F4C81] font-medium'
+                            ? 'bg-sky-50 text-[#0284C7] font-medium'
                             : 'text-slate-700 hover:bg-slate-50'
                         }`}
                       >
@@ -147,7 +147,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                             )}
                           </div>
                         </div>
-                        {isSelected && <Check size={14} className="text-[#0F4C81] shrink-0 ml-2" />}
+                        {isSelected && <Check size={14} className="text-[#0284C7] shrink-0 ml-2" />}
                       </button>
                     )
                   })}
@@ -167,7 +167,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors cursor-pointer ${
                     isSelected
-                      ? 'bg-sky-50 text-[#0F4C81] font-medium'
+                      ? 'bg-sky-50 text-[#0284C7] font-medium'
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -180,7 +180,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                       )}
                     </div>
                   </div>
-                  {isSelected && <Check size={14} className="text-[#0F4C81] shrink-0 ml-2" />}
+                  {isSelected && <Check size={14} className="text-[#0284C7] shrink-0 ml-2" />}
                 </button>
               )
             })

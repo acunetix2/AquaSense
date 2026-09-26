@@ -253,7 +253,7 @@ export const ApiDocsView: React.FC = () => {
           href={`${API_ORIGIN}/docs`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-sm transition-all cursor-pointer"
         >
           <ExternalLink size={14} />
           Open live Swagger UI
@@ -335,7 +335,7 @@ export const ApiDocsView: React.FC = () => {
 
                 {ep.example && (
                   <details className="group">
-                    <summary className="text-[11px] font-semibold text-[#0F4C81] hover:underline cursor-pointer select-none">
+                    <summary className="text-[11px] font-semibold text-[#0284C7] hover:underline cursor-pointer select-none">
                       Example
                     </summary>
                     <pre className="mt-2 text-[11px] font-mono bg-slate-900 text-slate-300 rounded-xl p-3.5 overflow-x-auto whitespace-pre-wrap break-words">

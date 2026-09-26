@@ -61,7 +61,7 @@ export const MyObservationsView: React.FC = () => {
 
         <button
           onClick={() => setActiveView('capture')}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm transition-all cursor-pointer whitespace-nowrap"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-sm transition-all cursor-pointer whitespace-nowrap"
         >
           <PlusCircle size={16} />
           <span>New Observation</span>
@@ -75,7 +75,7 @@ export const MyObservationsView: React.FC = () => {
             onClick={() => setFilter('all')}
             className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               filter === 'all'
-                ? 'bg-[#0F4C81] text-white'
+                ? 'bg-[#0284C7] text-white'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
@@ -110,7 +110,7 @@ export const MyObservationsView: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search my observations..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81]"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
           />
         </div>
       </div>
@@ -156,7 +156,7 @@ export const MyObservationsView: React.FC = () => {
               </div>
 
               <div className="p-4 space-y-2">
-                <h3 className="font-bold text-slate-900 group-hover:text-[#0F4C81] transition-colors truncate pr-6">
+                <h3 className="font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors truncate pr-6">
                   {obs.site_name}
                 </h3>
                 <p className="text-xs text-slate-500 flex items-center gap-1.5">
@@ -176,7 +176,7 @@ export const MyObservationsView: React.FC = () => {
               </span>
               <button
                 onClick={() => openObservationDetail(obs)}
-                className="font-semibold text-[#0F4C81] hover:underline flex items-center gap-1 cursor-pointer"
+                className="font-semibold text-[#0284C7] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <span>View Details</span>
                 <ArrowRight size={12} />

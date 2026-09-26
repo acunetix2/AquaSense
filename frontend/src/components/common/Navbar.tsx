@@ -198,7 +198,7 @@ export const Navbar: React.FC = () => {
                         }}
                         className="w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer font-medium"
                       >
-                        <User size={15} className="text-[#0F4C81]" />
+                        <User size={15} className="text-[#0284C7]" />
                         <span>Profile & Settings</span>
                       </button>
                       <button
@@ -240,7 +240,7 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleNavClick('auth')}
-                  className="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0F4C81] hover:bg-sky-50 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0284C7] hover:bg-sky-50 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <LogIn size={15} />
                   <span>Log In</span>
@@ -253,7 +253,7 @@ export const Navbar: React.FC = () => {
                       handleNavClick('auth')
                     }
                   }}
-                  className="px-3.5 py-2 text-xs font-bold rounded-lg text-white bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] hover:opacity-95 shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-2 text-xs font-bold rounded-lg text-white bg-gradient-to-r from-[#0284C7] to-[#1FB8A6] hover:opacity-95 shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
                 >
                   {/* Google G icon */}
                   <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">

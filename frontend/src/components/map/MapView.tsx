@@ -328,7 +328,7 @@ export const MapView: React.FC = () => {
         <div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
             <span>Regional Watershed Map</span>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#0F4C81] capitalize transition-colors">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#0284C7] capitalize transition-colors">
               {mapLayer === 'satellite' ? 'Satellite View' : 'Live Street Map'}
             </span>
           </h2>
@@ -344,7 +344,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterSignal}
               onChange={(e) => setFilterSignal(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81] cursor-pointer"
+              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
             >
               <option value="all">All Signals ({observations.length})</option>
               <option value="investigate">🔴 Investigate Only</option>
@@ -358,7 +358,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterDateRange}
               onChange={(e) => setFilterDateRange(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81] cursor-pointer"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
             >
               <option value="7d">Last 7 days</option>
               <option value="30d">Last 30 days</option>
@@ -376,7 +376,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0F4C81] cursor-pointer max-w-[170px] truncate"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer max-w-[170px] truncate"
             >
               <option value="all">All Basins</option>
               {uniqueLocations.map((loc) => (
@@ -415,7 +415,7 @@ export const MapView: React.FC = () => {
               onClick={() => setMapLayer('streets')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 mapLayer === 'streets'
-                  ? 'bg-[#0F4C81] text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
               title="Switch to OpenStreetMap vector tiles"
@@ -428,7 +428,7 @@ export const MapView: React.FC = () => {
               onClick={() => setMapLayer('satellite')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 mapLayer === 'satellite'
-                  ? 'bg-[#0F4C81] text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
               title="Switch to Esri high-resolution satellite imagery"
@@ -529,7 +529,7 @@ export const MapView: React.FC = () => {
                           {activeObservation.observer_name || 'Civic Observer'}
                         </p>
                         <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                          <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                          <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
                             <Droplets size={8} className="text-white" />
                           </span>
                           <span>{activeObservation.observer_role || 'Citizen Scientist'}</span>
@@ -565,7 +565,7 @@ export const MapView: React.FC = () => {
                     <ul className="space-y-1 text-xs text-slate-600">
                       {activeObservation.key_evidence.slice(0, 3).map((item, idx) => (
                         <li key={idx} className="flex items-start gap-1.5">
-                          <span className="text-[#0F4C81] font-bold mt-0.5">•</span>
+                          <span className="text-[#0284C7] font-bold mt-0.5">•</span>
                           <span>{item}</span>
                         </li>
                       ))}
@@ -578,7 +578,7 @@ export const MapView: React.FC = () => {
               <div className="pt-2 border-t border-slate-100 space-y-2">
                 <button
                   onClick={() => openObservationDetail(activeObservation)}
-                  className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-[#0F4C81] hover:bg-[#0c3c66] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-98"
+                  className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-98"
                 >
                   <span>Inspect Full River Record</span>
                   <ArrowRight size={16} />
@@ -625,7 +625,7 @@ export const MapView: React.FC = () => {
                   onClick={() => handleSelectObservation(obs)}
                   className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-[#0F4C81] bg-sky-50/70 shadow-xs'
+                      ? 'border-[#0284C7] bg-sky-50/70 shadow-xs'
                       : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >

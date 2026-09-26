@@ -182,7 +182,7 @@ export const FeedView: React.FC = () => {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <Newspaper size={24} className="text-[#0F4C81]" />
+            <Newspaper size={24} className="text-[#0284C7]" />
             Community Feed
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
@@ -208,7 +208,7 @@ export const FeedView: React.FC = () => {
               setVisibleCount(PAGE_SIZE)
             }}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-              tab === id ? 'bg-[#0F4C81] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50'
+              tab === id ? 'bg-[#0284C7] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50'
             }`}
           >
             <Icon size={14} />
@@ -229,7 +229,7 @@ export const FeedView: React.FC = () => {
             }}
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-colors cursor-pointer ${
               category === cat.id
-                ? 'bg-sky-50 border-[#0F4C81]/30 text-[#0F4C81]'
+                ? 'bg-sky-50 border-[#0284C7]/30 text-[#0284C7]'
                 : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700'
             }`}
           >
@@ -355,7 +355,7 @@ export const FeedView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => openObservationDetail(obs)}
-                    className="text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-[#0284C7] hover:underline cursor-pointer"
                   >
                     View observation & analytics →
                   </button>
@@ -382,7 +382,7 @@ export const FeedView: React.FC = () => {
           <button
             type="button"
             onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-[#0F4C81] bg-white border border-slate-200 hover:bg-slate-50 shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-[#0284C7] bg-white border border-slate-200 hover:bg-slate-50 shadow-xs transition-colors cursor-pointer"
           >
             <Loader2 size={15} className="hidden" />
             Load more ({items.length - visibleCount} remaining)

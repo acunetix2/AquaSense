@@ -125,7 +125,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
   return (
     <article
       onClick={handleCardClick}
-      className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0F4C81]/35 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer text-left relative"
+      className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0284C7]/35 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer text-left relative"
     >
       {/* Stream Photo Container */}
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
@@ -176,7 +176,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
         <div className="space-y-2">
           {/* Site Title */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-[#0F4C81] transition-colors line-clamp-1">
+            <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-[#0284C7] transition-colors line-clamp-1">
               {obs.site_name}
             </h3>
             {obs.status === 'verified' && (
@@ -212,7 +212,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
                 <img
                   src={observerAvatar}
                   alt={observerName}
-                  className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-2xs group-hover/prof:ring-2 group-hover/prof:ring-[#0F4C81]/30 transition-all"
+                  className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-2xs group-hover/prof:ring-2 group-hover/prof:ring-[#0284C7]/30 transition-all"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
                       `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(observerName)}`
@@ -227,12 +227,12 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
 
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <p className="text-xs font-bold text-slate-800 truncate group-hover/prof:text-[#0F4C81] transition-colors underline-offset-2 group-hover/prof:underline">
+                  <p className="text-xs font-bold text-slate-800 truncate group-hover/prof:text-[#0284C7] transition-colors underline-offset-2 group-hover/prof:underline">
                     {observerName}
                   </p>
                 </div>
                 <p className="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
-                  <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                  <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
                     <Droplets size={8} className="text-white" />
                   </span>
                   <span>{observerRole}</span>
@@ -286,7 +286,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
               <span className="text-[11px] text-slate-400 truncate max-w-[180px]">
                 {observerLocation}
               </span>
-              <span className="inline-flex items-center gap-1 font-semibold text-[#0F4C81] group-hover:translate-x-0.5 transition-transform text-xs">
+              <span className="inline-flex items-center gap-1 font-semibold text-[#0284C7] group-hover:translate-x-0.5 transition-transform text-xs">
                 Inspect analysis
                 <ArrowRight size={13} />
               </span>

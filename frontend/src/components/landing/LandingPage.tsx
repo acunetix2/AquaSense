@@ -130,7 +130,7 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleStartCapture}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-[#0F4C81] bg-white hover:bg-sky-50 shadow-md transition-all duration-150 cursor-pointer active:scale-98"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-[#0284C7] bg-white hover:bg-sky-50 shadow-md transition-all duration-150 cursor-pointer active:scale-98"
               >
                 <span>Assess a Stream →</span>
               </button>
@@ -236,7 +236,7 @@ export const LandingPage: React.FC = () => {
       <section id="featured-rivers" className="space-y-6 scroll-mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1.5 text-left">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0284C7]">
               <Globe size={14} className="text-[#1FB8A6]" />
               <span>Worldwide Freshwater Explorer</span>
             </div>
@@ -274,11 +274,11 @@ export const LandingPage: React.FC = () => {
           {filteredGlobalWaterways.slice(0, 6).map((waterway) => (
             <div
               key={waterway.id}
-              className="bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-md hover:border-[#0F4C81]/30 transition-all flex flex-col justify-between space-y-4 text-left group"
+              className="bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-md hover:border-[#0284C7]/30 transition-all flex flex-col justify-between space-y-4 text-left group"
             >
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 text-[11px] font-semibold rounded-md bg-sky-50 text-[#0F4C81] border border-sky-100">
+                  <span className="px-2 py-0.5 text-[11px] font-semibold rounded-md bg-sky-50 text-[#0284C7] border border-sky-100">
                     {waterway.type === 'river' ? 'River' : 'Lake'} • {waterway.continent}
                   </span>
                   <span className="text-[11px] font-mono text-slate-400">
@@ -286,12 +286,12 @@ export const LandingPage: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#0F4C81] transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors">
                   {waterway.name}
                 </h3>
 
                 <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                  <MapPin size={12} className="text-[#0F4C81] shrink-0" />
+                  <MapPin size={12} className="text-[#0284C7] shrink-0" />
                   <span>{waterway.country}</span>
                 </p>
 
@@ -308,7 +308,7 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleWaterwayObserve(waterway)}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0F4C81] hover:text-[#0c3c66] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0284C7] hover:text-[#0369A1] hover:underline cursor-pointer"
                 >
                   <span>Observe Stream</span>
                   <ArrowRight size={13} />
@@ -323,7 +323,7 @@ export const LandingPage: React.FC = () => {
       <section className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-1.5 text-left">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0284C7]">
               <Sparkles size={14} className="text-[#1FB8A6]" />
               <span>Live Public Basin Reports</span>
             </div>
@@ -344,7 +344,7 @@ export const LandingPage: React.FC = () => {
                 onClick={() => setSelectedPublicCategory(cat)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   selectedPublicCategory === cat
-                    ? 'bg-[#0F4C81] text-white shadow-2xs'
+                    ? 'bg-[#0284C7] text-white shadow-2xs'
                     : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
                 }`}
               >
@@ -379,7 +379,7 @@ export const LandingPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveView(isAuthenticated ? 'home' : 'map')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-[#0F4C81] bg-sky-50 hover:bg-sky-100 border border-sky-200/80 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-[#0284C7] bg-sky-50 hover:bg-sky-100 border border-sky-200/80 transition-all cursor-pointer"
           >
             <span>{isAuthenticated ? 'View Full Community Feed' : 'Explore All on Basin Map'}</span>
             <ArrowRight size={15} />
@@ -390,7 +390,7 @@ export const LandingPage: React.FC = () => {
       {/* 4. PLATFORM CAPABILITIES */}
       <section id="how-it-works" className="space-y-8 scroll-mt-24">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-semibold text-[#0F4C81]">
+          <span className="text-xs font-semibold text-[#0284C7]">
             The AquaSense Platform
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
@@ -504,7 +504,7 @@ export const LandingPage: React.FC = () => {
           alt="Freshwater stream"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0F4C81]/95 via-[#0F4C81]/85 to-[#1FB8A6]/80 backdrop-blur-xs" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0284C7]/95 via-[#0284C7]/85 to-[#1FB8A6]/80 backdrop-blur-xs" />
 
         <div className="max-w-2xl space-y-4 relative z-10 text-left">
           <span className="px-3 py-1 rounded-full bg-white/20 text-teal-200 text-xs font-semibold backdrop-blur-md">
@@ -520,7 +520,7 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => (isAuthenticated ? setActiveView('home') : setActiveView('signup'))}
-              className="px-5 py-2.5 rounded-xl font-semibold bg-white text-[#0F4C81] hover:bg-slate-100 transition-colors shadow-sm cursor-pointer text-sm"
+              className="px-5 py-2.5 rounded-xl font-semibold bg-white text-[#0284C7] hover:bg-slate-100 transition-colors shadow-sm cursor-pointer text-sm"
             >
               {isAuthenticated ? 'Open Full Workspace' : 'Sign In / Create Account'}
             </button>
@@ -531,7 +531,7 @@ export const LandingPage: React.FC = () => {
       {/* 5. FOOTER */}
       <footer className="pt-8 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-[#0F4C81] flex items-center justify-center text-white">
+          <div className="w-6 h-6 rounded-lg bg-[#0284C7] flex items-center justify-center text-white">
             <Droplets size={13} />
           </div>
           <span className="font-semibold text-slate-800">AquaSense Freshwater Intelligence</span>
