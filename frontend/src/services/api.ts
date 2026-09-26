@@ -393,6 +393,110 @@ export async function fetchLiveAnalytics(): Promise<LiveAnalytics | null> {
 }
 
 // ---------------------------------------------------------------------------
+// Watershed Analytics API (per-location rollups, trusted sources, per-observation)
+// ---------------------------------------------------------------------------
+
+export interface LocationStat {
+  site_name: string
+  location_address: string | null
+  latitude: number
+  longitude: number
+  total: number
+  normal: number
+  watch: number
+  investigate: number
+  verified: number
+  pending: number
+  flagged: number
+  avg_confidence: number
+  views: number
+  likes: number
+  comments: number
+  last_observed: string | null
+}
+
+export interface TrustedSite {
+  site_name: string
+  basin_name: string
+  latitude: number
+  longitude: number
+  description: string | null
+  catchment_area_sq_km: number | null
+  baseline_quality: string
+}
+
+export interface TrustedSiteSection {
+  basin_name: string
+  sites: TrustedSite[]
+}
+
+export interface BasinSnapshot {
+  snapshot_date: string
+  basin_name: string
+  total_samples: number
+  normal_count: number
+  watch_count: number
+  investigate_count: number
+  verified_rate: number
+  health_index_score: number
+}
+
+export interface RegionAnalytics {
+  locations: LocationStat[]
+  trusted_sections: TrustedSiteSection[]
+  basin_snapshots: BasinSnapshot[]
+}
+
+export interface ObservationAnalytics {
+  observation_id: string
+  site_name: string
+  signal: string
+  status: string
+  confidence: number
+  consistency_flag_count: number
+  engagement: { views: number; likes: number; comments: number }
+  ai: Record<string, string | number | boolean | (string | number | boolean)[]>
+  site_context: TrustedSite | null
+  region: {
+    site_name: string
+    total_at_site: number
+    avg_confidence: number
+    normal: number
+    watch: number
+    investigate: number
+    verified: number
+    engagement_rank: number | null
+    top_confidence: number
+  } | null
+}
+
+export async function fetchRegionAnalytics(): Promise<RegionAnalytics | null> {
+  try {
+    const res = await apiFetch('/analytics/regions', undefined, 15000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Region analytics fetch notice:', err)
+  }
+  return null
+}
+
+export async function fetchObservationAnalytics(
+  observationId: number | string
+): Promise<ObservationAnalytics | null> {
+  try {
+    const res = await apiFetch(`/analytics/observations/${observationId}`, undefined, 10000)
+    if (res.ok) {
+      return await res.json()
+    }
+  } catch (err) {
+    console.warn('Observation analytics fetch notice:', err)
+  }
+  return null
+}
+
+// ---------------------------------------------------------------------------
 // Image CORS Proxy helper
 // ---------------------------------------------------------------------------
 

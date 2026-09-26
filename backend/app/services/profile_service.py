@@ -1,7 +1,8 @@
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.observation import Observation
 from app.models.profile import Profile
 from app.models.social import ProfileFollow, ProfileLike
 from app.schemas.profile import ProfileRead, ProfileReadWithEmail, ProfileUpsert, ProfileUpdate
@@ -25,6 +26,28 @@ class ProfileService:
             return None
 
         return cleaned
+
+    @staticmethod
+    async def sync_observation_attribution(db: AsyncSession, profile: Profile) -> None:
+        """
+        Propagate profile edits to the user's existing observations.
+
+        Observations store a denormalized snapshot of the observer's name,
+        avatar, role, location, and email. Without this sync, renaming an
+        account would leave every past observation stuck on the old name.
+        """
+        await db.execute(
+            update(Observation)
+            .where(Observation.user_id == profile.user_id)
+            .values(
+                observer_name=profile.full_name,
+                observer_avatar=profile.avatar_url,
+                observer_role=profile.role,
+                observer_location=profile.location,
+                observer_email=profile.email,
+            )
+        )
+        await db.commit()
 
     @staticmethod
     async def upsert_profile(db: AsyncSession, payload: ProfileUpsert) -> ProfileReadWithEmail:
@@ -95,6 +118,7 @@ class ProfileService:
 
         await db.commit()
         await db.refresh(profile)
+        await ProfileService.sync_observation_attribution(db, profile)
         return ProfileReadWithEmail.model_validate(profile)
 
     @staticmethod
@@ -126,6 +150,7 @@ class ProfileService:
 
         await db.commit()
         await db.refresh(profile)
+        await ProfileService.sync_observation_attribution(db, profile)
         return ProfileReadWithEmail.model_validate(profile)
 
     @staticmethod

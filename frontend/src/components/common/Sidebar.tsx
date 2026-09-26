@@ -5,9 +5,11 @@ import {
   Map as MapIcon,
   ClipboardList,
   LayoutDashboard,
+  BarChart3,
   ShieldCheck,
   PlusCircle,
   HelpCircle,
+  Newspaper,
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
@@ -22,9 +24,11 @@ export const Sidebar: React.FC = () => {
 
   const menuItems: { id: ActiveView; label: string; icon: React.FC<{ size?: number; className?: string }> }[] = [
     { id: 'home', label: 'Home', icon: Home },
+    { id: 'feed', label: 'Feed', icon: Newspaper },
     { id: 'map', label: 'Map', icon: MapIcon },
     { id: 'my-observations', label: 'My Observations', icon: ClipboardList },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'analytics', label: 'Watershed', icon: BarChart3 },
     ...(isReviewerRole(user?.role)
       ? [{ id: 'reviewer-queue' as ActiveView, label: 'Reviewer Queue', icon: ShieldCheck }]
       : []),

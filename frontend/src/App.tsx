@@ -13,8 +13,10 @@ import { CaptureWizard } from './components/capture/CaptureWizard'
 import { MapView } from './components/map/MapView'
 import { ReviewerQueue } from './components/reviewer/ReviewerQueue'
 import { DashboardView } from './components/dashboard/DashboardView'
+import { WatershedAnalyticsView } from './components/analytics/WatershedAnalyticsView'
 import { ObservationDetail } from './components/details/ObservationDetail'
 import { MyObservationsView } from './components/observations/MyObservationsView'
+import { FeedView } from './components/feed/FeedView'
 import { SettingsView } from './components/settings/SettingsView'
 import { ApiDocsView } from './components/docs/ApiDocsView'
 import { AppFooter } from './components/common/AppFooter'
@@ -42,6 +44,7 @@ const MainContent: React.FC = () => {
         activeView === 'reviewer-queue' ||
         activeView === 'my-observations' ||
         activeView === 'dashboard' ||
+        activeView === 'analytics' ||
         activeView === 'profile'
       ) {
         showToast(
@@ -92,10 +95,12 @@ const MainContent: React.FC = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeView === 'landing' && <LandingPage />}
         {activeView === 'home' && <HeroSection />}
+        {activeView === 'feed' && <FeedView />}
         {activeView === 'capture' && <CaptureWizard />}
         {activeView === 'map' && <MapView />}
         {activeView === 'reviewer-queue' && <ReviewerQueue />}
         {activeView === 'dashboard' && <DashboardView />}
+        {activeView === 'analytics' && <WatershedAnalyticsView />}
         {activeView === 'my-observations' && <MyObservationsView />}
         {activeView === 'profile' && <SettingsView />}
         {activeView === 'api-docs' && <ApiDocsView />}

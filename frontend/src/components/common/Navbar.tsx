@@ -15,6 +15,7 @@ import {
   LogOut,
   LogIn,
   Sparkles,
+  Newspaper,
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
@@ -37,10 +38,12 @@ export const Navbar: React.FC = () => {
     icon: React.FC<{ size?: number; className?: string }>
     tourKey: string
   }[] = [
-    { id: 'home', label: 'Feed', icon: Home, tourKey: 'nav-feed' },
+    { id: 'home', label: 'Home', icon: Home, tourKey: 'nav-feed' },
+    { id: 'feed', label: 'Feed', icon: Newspaper, tourKey: 'nav-social-feed' },
     { id: 'map', label: 'Map', icon: MapPin, tourKey: 'nav-map' },
     { id: 'my-observations', label: 'Records', icon: FileText, tourKey: 'nav-records' },
     { id: 'dashboard', label: 'Data', icon: BarChart2, tourKey: 'nav-data' },
+    { id: 'analytics', label: 'Watershed', icon: BarChart3, tourKey: 'nav-watershed' },
     ...(isReviewer
       ? [{ id: 'reviewer-queue' as ActiveView, label: 'Reviews', icon: ShieldCheck, tourKey: 'nav-reviews' }]
       : []),

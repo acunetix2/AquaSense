@@ -491,3 +491,71 @@ def test_analytics_returns_full_metric_shape(client: TestClient) -> None:
     assert 0 <= body["water_health_index"] <= 100
     assert body["average_confidence"] >= 0
     assert body["active_observers"] >= 1
+
+
+# ---------------------------------------------------------------------------
+# Profile rename propagates to existing observations
+# ---------------------------------------------------------------------------
+
+
+def test_profile_rename_propagates_to_observations(client: TestClient) -> None:
+    """PATCH /profiles/me must backfill observer_name on the user's records."""
+    _create_profile(client, "rename-user", "citizen")
+    obs = _create_observation(
+        client, user_id="rename-user", observer_name="Old Name", site_name="Renamed Site",
+        latitude=41.0, longitude=-71.0,
+    )
+    assert obs["observer_name"] == "Old Name"
+
+    resp = client.patch(
+        "/api/v1/profiles/me",
+        json={"full_name": "New Name"},
+        headers={"X-User-Id": "rename-user"},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["full_name"] == "New Name"
+
+    fetched = client.get(f"/api/v1/observations/{obs['id']}")
+    assert fetched.json()["observer_name"] == "New Name"
+
+
+def test_profile_upsert_syncs_observation_attribution(client: TestClient) -> None:
+    """Login upsert must refresh attribution columns on existing records."""
+    _create_profile(client, "sync-user", "citizen")
+    obs = _create_observation(
+        client, user_id="sync-user", observer_name="Pre Sync",
+        site_name="Synced Site", latitude=42.0, longitude=-72.0,
+    )
+
+    client.post("/api/v1/profiles/upsert", json={
+        "user_id": "sync-user",
+        "email": "sync-user@example.test",
+        "full_name": "Post Sync",
+        "role": "reviewer",
+    })
+
+    fetched = client.get(f"/api/v1/observations/{obs['id']}").json()
+    assert fetched["observer_name"] == "Post Sync"
+    assert fetched["observer_role"] == "reviewer"
+
+
+def test_profile_rename_updates_all_records(client: TestClient) -> None:
+    """Every record owned by the user is updated, not just the first."""
+    _create_profile(client, "batch-rename", "citizen")
+    ids = []
+    for i in range(3):
+        obs = _create_observation(
+            client, user_id="batch-rename", observer_name="Before",
+            site_name=f"Batch Site {i}", latitude=43.0 + i, longitude=-73.0,
+        )
+        ids.append(obs["id"])
+
+    client.patch(
+        "/api/v1/profiles/me",
+        json={"full_name": "After"},
+        headers={"X-User-Id": "batch-rename"},
+    )
+
+    for obs_id in ids:
+        fetched = client.get(f"/api/v1/observations/{obs_id}")
+        assert fetched.json()["observer_name"] == "After"

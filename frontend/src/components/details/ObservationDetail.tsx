@@ -33,6 +33,7 @@ import { FhirExportModal } from './FhirExportModal'
 import { ReviewModal } from '../reviewer/ReviewModal'
 import { AiDecisionTrail } from './AiDecisionTrail'
 import { ObservationMap } from './ObservationMap'
+import { ObservationAnalyticsPanel } from './ObservationAnalyticsPanel'
 import type { Observation, ObservationComment } from '../../types/observation'
 import {
   fetchComments,
@@ -59,7 +60,7 @@ export const ObservationDetail: React.FC = () => {
   } = useApp()
   const { user } = useAuth()
 
-  const [activeTab, setActiveTab] = useState<'evidence' | 'location' | 'images' | 'history' | 'comments'>('evidence')
+  const [activeTab, setActiveTab] = useState<'evidence' | 'location' | 'images' | 'history' | 'comments' | 'analytics'>('evidence')
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [reviewModalAction, setReviewModalAction] = useState<'verify' | 'flag' | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -653,7 +654,7 @@ export const ObservationDetail: React.FC = () => {
 
       {/* Tabs */}
       <div className="border-b border-slate-200 flex items-center gap-4 sm:gap-6 text-sm font-semibold overflow-x-auto">
-        {(['evidence', 'location', 'images', 'history', 'comments'] as const).map((tab) => (
+        {(['evidence', 'location', 'images', 'history', 'comments', 'analytics'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -1009,6 +1010,9 @@ export const ObservationDetail: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* Tab 6: Analytics (per-observation watershed analytics) */}
+      {activeTab === 'analytics' && <ObservationAnalyticsPanel observationId={obs.id} />}
 
       {/* Share / FHIR Export Modal */}
       {shareModalOpen && (

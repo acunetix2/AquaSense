@@ -47,6 +47,7 @@ interface AppContextType {
   ) => void
   deleteObservation: (id: number | string, userId?: string) => Promise<void>
   refreshObservations: () => Promise<void>
+  updateObservationSocial: (id: number | string, patch: Partial<Observation>) => void
   toasts: ToastMessage[]
   showToast: (title: string, message: string, type?: ToastMessage['type']) => void
   dismissToast: (id: string) => void
@@ -57,10 +58,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 const viewToPath: Record<ActiveView, string> = {
   landing: '/',
   auth: '/auth',
-  home: '/feed',
+  home: '/home',
+  feed: '/feed',
   map: '/map',
   'my-observations': '/records',
   dashboard: '/data',
+  analytics: '/watershed',
   'reviewer-queue': '/reviews',
   capture: '/capture',
   detail: '/detail',
@@ -75,6 +78,7 @@ const pathToView = (pathname: string): ActiveView | null => {
     case '/auth':
       return 'auth'
     case '/feed':
+      return 'feed'
     case '/home':
       return 'home'
     case '/map':
@@ -85,6 +89,8 @@ const pathToView = (pathname: string): ActiveView | null => {
     case '/data':
     case '/dashboard':
       return 'dashboard'
+    case '/watershed':
+      return 'analytics'
     case '/reviews':
     case '/reviewer-queue':
       return 'reviewer-queue'
@@ -350,6 +356,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Observation Deleted', 'The record has been removed from your account.', 'info')
   }
 
+  const updateObservationSocial = (id: number | string, patch: Partial<Observation>) => {
+    setObservations((prev) => prev.map((o) => (o.id === id ? { ...o, ...patch } : o)))
+    if (selectedObservation && selectedObservation.id === id) {
+      setSelectedObservation({ ...selectedObservation, ...patch })
+    }
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -371,6 +384,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         reviewObservation,
         deleteObservation,
         refreshObservations,
+        updateObservationSocial,
         toasts,
         showToast,
         dismissToast,

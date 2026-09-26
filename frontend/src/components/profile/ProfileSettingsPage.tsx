@@ -28,7 +28,7 @@ interface ProfileSettingsPageProps {
 
 export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedded = false }) => {
   const { user, updateUserProfile, signOut, setUserRole } = useAuth()
-  const { setActiveView, observations, showToast } = useApp()
+  const { setActiveView, observations, showToast, refreshObservations } = useApp()
 
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -99,6 +99,8 @@ export const ProfileSettingsPage: React.FC<ProfileSettingsPageProps> = ({ embedd
       setSaved(true)
       showToast('Profile Saved', 'Your changes have been saved to the database.', 'success')
       setTimeout(() => setSaved(false), 3000)
+      // Re-pull observations so the updated name/avatar appear on past records
+      refreshObservations().catch(() => {})
     } catch {
       showToast('Save Error', 'Failed to save changes. Please try again.', 'error')
     } finally {
