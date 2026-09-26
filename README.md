@@ -1,47 +1,44 @@
-# AquaSense
+<div align="center">
 
-AI-assisted citizen-science platform for observing freshwater conditions.
-Citizens submit photo + field-condition observations; a vision model produces an
-explainable signal (Normal / Watch / Investigate) with a consistency check and an
-auditable AI decision trail; certified reviewers verify or flag important cases.
+# 🌊 AquaSense
 
-**Informational only — the platform never declares water safe or unsafe.**
+**AI-assisted citizen-science platform for observing freshwater conditions**
 
-## Features
+[![Backend Tests](https://img.shields.io/badge/backend%20tests-86%20passing-2ea44f)](#tests--checks)
+[![TypeScript](https://img.shields.io/badge/tsc-clean-3178c6)](#tests--checks)
+[![Lint](https://img.shields.io/badge/oxlint-0%20errors-blue)](#tests--checks)
+[![License: CC BY 4.0](https://img.shields.io/badge/data%20license-CC--BY%204.0-lightgrey)](#license)
 
-- **Landing overview** — glassmorphism hero over real freshwater photography,
-  worldwide rivers & lakes explorer, recent public observations, platform
-  capability cards.
-- **Separate login and signup pages** (`/login`, `/signup`) — no tab switcher;
-  Google sign-in and email/password flows, password recovery, email
-  verification, role selection for reviewers.
-- **Guided capture wizard** — GPS pin (or pick a global waterway), up to 3 field
-  photos, odor/clarity/debris answers, AI-assisted consistency check with the
-  citizen always in control of the final answer.
-- **Observation detail** — photo evidence, AI decision trail (model, prompt
-  version, rules fired, confidence), comments, likes, shares, per-observation
-  analytics tab with cohort rank.
-- **Community feed** — For You / Trending ranking, category filters, inline
-  likes, shareable links; revalidates silently in the background (focus /
-  visibility / 60s — no manual refresh buttons anywhere).
-- **Interactive basin map** — OpenStreetMap/Leaflet with signal-coded markers
-  and an observation inspector panel.
-- **Watershed analytics** — per-location rollups, engagement metrics, trusted
-  monitoring-site sources, 14-day basin health snapshots, drill-downs.
-- **Impact dashboard** — live platform statistics, 8-day signal trend lines,
-  health-index donut, personal submissions.
-- **Reviewer queue** — reviewer-only verification/flagging with notes; every
-  action is logged against the observation's evidence trail.
-- **Profiles & social** — public profiles, follow, profile likes, attribution
-  sync for submitted observations.
-- **Notifications engine** — reviews, comments, likes, follows, and system
-  events with a bell dropdown, unread badge, polling, and mark-as-read.
-- **Uber-dark theme** — light/dark toggle in the navbar (persisted, no flash on
-  load) with a re-tokenized neutral palette.
-- **Progressive loader** — staged, plain-language checklist while auth state
-  and workspace data resolve.
+Citizens submit photo + field-condition observations. A vision model produces an
+explainable signal (**Normal** / **Watch** / **Investigate**) with a consistency
+check and an auditable AI decision trail. Certified reviewers verify or flag
+important cases.
 
-## Architecture
+> ⚠️ **Informational only** — the platform never declares water safe or unsafe.
+
+</div>
+
+---
+
+## ✨ Features
+
+| Area | Highlights |
+| --- | --- |
+| **Landing** | Glassmorphism hero over freshwater photography, worldwide rivers & lakes explorer, recent public observations, capability cards |
+| **Auth** | Separate `/login` and `/signup` pages (no tab switcher) — Google sign-in, email/password, password recovery, email verification, reviewer role selection |
+| **Capture wizard** | GPS pin or global waterway picker, up to 3 field photos, odor/clarity/debris answers, AI-assisted consistency check — citizen always confirms the final answer |
+| **Observation detail** | Photo evidence, AI decision trail (model, prompt version, rules fired, confidence), comments, likes, shares, per-observation analytics with cohort rank |
+| **Community feed** | For You / Trending ranking, category filters, inline likes, shareable links; silently revalidates on focus / visibility / 60s — no manual refresh |
+| **Basin map** | Interactive OpenStreetMap/Leaflet map with signal-coded markers and an observation inspector panel |
+| **Watershed analytics** | Per-location rollups, engagement metrics, trusted monitoring-site sources, 14-day basin health snapshots, drill-downs |
+| **Impact dashboard** | Live platform statistics, 8-day signal trend lines, health-index donut, personal submissions |
+| **Reviewer queue** | Reviewer-only verification/flagging with notes; every action logged against the observation's evidence trail |
+| **Profiles & social** | Public profiles, follow, profile likes, attribution sync for submitted observations |
+| **Notifications** | Reviews, comments, likes, follows, and system events — bell dropdown, unread badge, polling, mark-as-read |
+| **Theming** | Uber-dark theme with light/dark toggle in the navbar, persisted, no flash on load |
+| **Progressive loader** | Staged, plain-language checklist while auth state and workspace data resolve |
+
+## 🏗️ Architecture
 
 ```
 Browser (React SPA)
@@ -58,21 +55,16 @@ FastAPI  ── /api/v1 ──┬── auth / health
    └── Supabase Storage    ── observation photos (bucket: aquasense-observations)
 ```
 
-Key boundaries:
+**Key boundaries**
 
-- **AI assists, never overrides.** The citizen confirms or corrects the final
-  answers; every AI-influenced signal carries a logged decision trail
-  (model, prompt version, rules, confidence).
-- **Human review stays authoritative.** Reviewers verify or flag; citizens can
-  always edit/delete their own records (strict `user.id === observation.user_id`
-  ownership, server-side).
-- **Signals are informational.** No safety, health, or regulatory claims.
-- Backend owns validation and storage; the frontend renders plain-language
-  states and never invents data.
+- 🤖 **AI assists, never overrides** — the citizen confirms or corrects the final answers; every AI-influenced signal carries a logged decision trail (model, prompt version, rules, confidence).
+- 👤 **Human review stays authoritative** — reviewers verify or flag; citizens can always edit/delete their own records (strict `user.id === observation.user_id` ownership, enforced server-side).
+- 📊 **Signals are informational** — no safety, health, or regulatory claims.
+- 🔒 **Backend owns validation and storage** — the frontend renders plain-language states and never invents data.
 
 See [Architecture.md](Architecture.md) for diagrams and service boundaries.
 
-## Repository layout
+## 📁 Repository layout
 
 ```
 AquaSense/
@@ -100,19 +92,17 @@ AquaSense/
 └── Agents.md                 # contribution/agent guardrails
 ```
 
-## Stack
+## 🧰 Stack
 
-- **Frontend** — React 19, TypeScript, Vite, Tailwind CSS 4 (CSS-first),
-  framer-motion, Leaflet (`frontend/`)
-- **Backend** — FastAPI, SQLAlchemy 2 (async), Alembic, Supabase Postgres
-  (`backend/`)
-- **AI** — Groq vision model (`qwen/qwen3.8-27b`) with rule-based consistency
-  checks and an auditable decision trail
-- **Storage** — Supabase Storage bucket `aquasense-observations`
-- **Auth** — Supabase Auth on the client; API calls carry an `X-User-Id` header
-  validated server-side (401 when missing on protected routes)
+| Layer | Technology |
+| --- | --- |
+| **Frontend** | React 19 · TypeScript · Vite · Tailwind CSS 4 (CSS-first) · framer-motion · Leaflet (`frontend/`) |
+| **Backend** | FastAPI · SQLAlchemy 2 (async) · Alembic · Supabase Postgres (`backend/`) |
+| **AI** | Groq vision model (`qwen/qwen3.8-27b`) with rule-based consistency checks and an auditable decision trail |
+| **Storage** | Supabase Storage bucket `aquasense-observations` |
+| **Auth** | Supabase Auth on the client; API calls carry an `X-User-Id` header validated server-side (401 when missing on protected routes) |
 
-## Run locally
+## 🚀 Run locally
 
 ### Backend
 
@@ -120,7 +110,7 @@ AquaSense/
 cd backend
 python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt
-copy .env.example .env       # fill in the values (never commit .env)
+copy .env.example .env       # fill in your own values — never commit .env
 .venv/Scripts/python -m alembic upgrade head
 .venv/Scripts/python -m uvicorn app.main:app --reload --port 8000
 ```
@@ -132,34 +122,31 @@ API docs (Swagger): http://localhost:8000/docs
 ```bash
 cd frontend
 npm install
-copy .env.example .env       # fill in the values (never commit .env)
+copy .env.example .env       # fill in your own values — never commit .env
 npm run dev
 ```
 
 The dev server defaults to http://localhost:5173 and proxies API calls to the
-backend URL configured in `VITE_API_URL`.
+backend URL configured in your frontend environment file.
 
-## Environment variables
+## 🔐 Environment configuration
 
-Names only — values live in each `backend/.env` / `frontend/.env` and must
-never be committed (both `.env` and `.env.example` values are gitignored where
-applicable; the example files carry empty placeholders).
+Configuration is supplied entirely through local `.env` files — one for
+`backend/` and one for `frontend/`. Each directory ships a `.env.example`
+template with empty placeholders; copy it to `.env` and fill in your own
+credentials locally.
 
-| File | Variable | Purpose |
-| --- | --- | --- |
-| `backend/.env` | `DATABASE_URL` | Supabase Postgres connection string |
-| `backend/.env` | `SUPABASE_URL` | Supabase project URL |
-| `backend/.env` | `SUPABASE_ANON_KEY` | Supabase anon (public) key |
-| `backend/.env` | `SUPABASE_SERVICE_ROLE_KEY` | Server-side storage/admin operations |
-| `backend/.env` | `GROQ_API_KEY` | Groq vision model access |
-| `backend/.env` | `ENVIRONMENT` | `development` / `production` |
-| `backend/.env` | `CORS_ORIGINS` | Allowed frontend origins |
-| `backend/.env` | `PORT` | API port |
-| `frontend/.env` | `VITE_API_URL` | Backend base URL |
-| `frontend/.env` | `VITE_SUPABASE_URL` | Supabase project URL |
-| `frontend/.env` | `VITE_SUPABASE_ANON_KEY` | Supabase anon key (public) |
+- **Never commit `.env` files** — both `.env` and any populated `.env.example`
+  are git-ignored.
+- The backend `.env` configures database connectivity, Supabase project
+  access (anon + service-role keys), the Groq API key, environment mode,
+  allowed CORS origins, and the API port.
+- The frontend `.env` configures the backend API base URL and the public
+  Supabase project URL/anon key.
+- Consult each directory's `.env.example` file for the exact variable names
+  and short descriptions of what each one does.
 
-## Database & migrations
+## 🗄️ Database & migrations
 
 ```bash
 cd backend
@@ -171,7 +158,7 @@ Migrations are guarded with `inspector.has_table` checks so they are safe to
 re-run. Current head: **`009_notifications`** (observations/profiles, signals,
 indexes, analytics views, notifications).
 
-## API reference (base: `/api/v1`)
+## 🔌 API reference (base: `/api/v1`)
 
 | Group | Endpoint | Notes |
 | --- | --- | --- |
@@ -199,7 +186,7 @@ Protected routes require the `X-User-Id` header: missing header → `422`,
 unknown user → `401`, wrong owner/reviewer role → `403`, missing record →
 `404`. Email addresses are never returned on public endpoints.
 
-## Tests & checks
+## ✅ Tests & checks
 
 ```bash
 cd backend  && .venv/Scripts/python -m pytest     # API suite (in-memory SQLite)
@@ -210,38 +197,34 @@ cd frontend && npm run build                       # typecheck + production buil
 
 Current baseline: **86 backend tests passing**, `tsc` clean, oxlint 0 errors.
 
-## Design system
+## 🎨 Design system
 
-- **Surfaces** — `#F5F9FC` page background, white cards with `slate` borders;
-  Uber-dark mode re-tokens the neutral scale (`.dark` class on `<html>`).
+- **Surfaces** — `#F5F9FC` page background, white cards with `slate` borders; Uber-dark mode re-tokens the neutral scale (`.dark` class on `<html>`).
 - **Brand** — deep blue `#0F4C81`, teal `#1FB8A6`, live accent `#0284c7`.
-- **Signals** — Normal (emerald), Watch (amber), Investigate (rose); always
-  shown with a text label, never color alone.
+- **Signals** — Normal (emerald), Watch (amber), Investigate (rose) — always shown with a text label, never color alone.
 - **Type** — DM Sans; 15px base; sentence-case section labels.
-- **Spacing/radii** — Supabase-inspired tokens (`--radius-sm/md/lg/xl`,
-  6–16px).
+- **Spacing/radii** — Supabase-inspired tokens (`--radius-sm/md/lg/xl`, 6–16px).
 - **Copy** — calm, plain-language, non-technical; no safety claims.
 
 Full token reference: [Design_System.md](Design_System.md).
 
-## Product guardrails
+## 🛡️ Product guardrails
 
 - AI assists; it does not replace human review.
 - The platform never declares water safe or unsafe for consumption.
 - Signals are informational, not health diagnoses.
-- Insights must be explainable and evidence-based; AI-influenced decisions are
-  logged with metadata.
+- Insights must be explainable and evidence-based; AI-influenced decisions are logged with metadata.
 - Personal data is minimized; reviewer-only fields stay server-protected.
 
 See [Agents.md](Agents.md) for the full working rules.
 
-## Documentation
+## 📚 Documentation
 
 - [PRD.md](PRD.md) — product requirements
 - [Architecture.md](Architecture.md) — system design
 - [Design_System.md](Design_System.md) — UI tokens and patterns
 - [Agents.md](Agents.md) — guardrails for contributors and agents
 
-## License
+## 📄 License
 
-Observation data: CC-BY 4.0. Source © Aventorgo LLC.
+Observation data: **CC-BY 4.0**. Source © Aventorgo LLC.
