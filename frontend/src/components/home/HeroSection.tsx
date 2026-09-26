@@ -98,7 +98,7 @@ export const HeroSection: React.FC = () => {
   return (
     <div className="space-y-12 py-4 md:py-8 text-left">
       {/* 1. HERO BANNER */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50/70 via-white to-white border border-slate-200/80 p-6 sm:p-10 lg:p-12 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50/70 dark:from-sky-900/50 via-white dark:via-[#0e1117] to-white dark:to-[#0e1117] border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-10 lg:p-12 shadow-sm">
         {/* Soft Background Accent Circles */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-teal-200/20 rounded-full blur-3xl pointer-events-none -z-10" />

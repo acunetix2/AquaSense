@@ -93,28 +93,35 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="space-y-20 py-4 sm:py-6">
-      {/* 1. HERO SECTION (With Glassmorphism and Real Visual Slider from inspiration.png Screen 1) */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50/80 via-white to-sky-50/30 border border-slate-200/80 p-6 sm:p-10 lg:p-12 shadow-sm">
-        {/* Soft Ambient River Lighting */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-200/30 rounded-full blur-3xl pointer-events-none -z-10" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-teal-200/25 rounded-full blur-3xl pointer-events-none -z-10" />
+      {/* 1. HERO SECTION — real freshwater photograph backdrop + glassmorphism panels */}
+      <section className="relative overflow-hidden rounded-3xl border border-white/20 p-6 sm:p-10 lg:p-12 shadow-sm text-white">
+        {/* Real (non-AI) waterfall photograph as the full-bleed backdrop */}
+        <img
+          src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1920&q=80"
+          alt="Forest waterfall feeding a freshwater stream"
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#06263f]/95 via-[#06263f]/85 to-[#06263f]/55" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Hero Left Content */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-100 text-[#0F4C81] text-xs font-semibold shadow-2xs">
-              <Sparkles size={14} className="text-[#1FB8A6]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-sky-100 text-xs font-semibold">
+              <Sparkles size={14} className="text-teal-300" />
               <span>Real-Time Freshwater Watershed Monitoring</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-slate-900 leading-[1.12]">
+            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-white leading-[1.12] drop-shadow-lg">
               Healthier Freshwater.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-teal-200">
                 Stronger Communities.
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-600 max-w-lg leading-relaxed">
+            <p className="text-base sm:text-lg text-sky-100 max-w-lg leading-relaxed">
               See it. Share it. Help protect our rivers, streams and lakes. Real-time community stream monitoring with automated visual intelligence and hydrologist review.
             </p>
 
@@ -123,7 +130,7 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleStartCapture}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-sm hover:shadow transition-all duration-150 cursor-pointer active:scale-98"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-[#0F4C81] bg-white hover:bg-sky-50 shadow-md transition-all duration-150 cursor-pointer active:scale-98"
               >
                 <span>Assess a Stream →</span>
               </button>
@@ -131,29 +138,29 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleExploreMap}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs hover:border-slate-300 transition-all duration-150 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-white/10 hover:bg-white/20 border border-white/30 backdrop-blur-md shadow-2xs transition-all duration-150 cursor-pointer"
               >
-                <Layers size={15} className="text-[#0F4C81]" />
+                <Layers size={15} className="text-teal-300" />
                 <span>Explore Live Basin Map</span>
               </button>
             </div>
 
             {/* Three key pillars matching Screen 1 bottom icons */}
-            <div className="pt-6 border-t border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600 font-medium">
+            <div className="pt-6 border-t border-white/20 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-sky-100 font-medium">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-sky-50 text-[#0F4C81] flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-white/15 text-sky-200 flex items-center justify-center shrink-0">
                   <Camera size={14} />
                 </div>
                 <span>Capture observations</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-teal-50 text-[#1FB8A6] flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-white/15 text-teal-200 flex items-center justify-center shrink-0">
                   <Sparkles size={14} />
                 </div>
                 <span>Get AI-assisted insights</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-white/15 text-indigo-200 flex items-center justify-center shrink-0">
                   <ShieldCheck size={14} />
                 </div>
                 <span>Support research and communities</span>
@@ -161,11 +168,11 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Hero Right Visual: Screen 1 River Visual Card with Interactive Slider */}
+          {/* Hero Right Visual: frosted-glass river card with interactive slider */}
           <div className="lg:col-span-6 relative">
-            <div className="relative rounded-3xl bg-white/90 backdrop-blur-xl border border-white/60 overflow-hidden shadow-xl group">
+            <div className="relative rounded-3xl bg-white/15 backdrop-blur-xl border border-white/30 overflow-hidden shadow-2xl group">
               {/* Main River Image */}
-              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-100">
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900/40">
                 <img
                   src={currentHeroSlide.image_url}
                   alt={currentHeroSlide.site_name}
@@ -192,15 +199,15 @@ export const LandingPage: React.FC = () => {
 
               {/* Card Body */}
               <div className="p-6 space-y-2.5 text-left">
-                <h3 className="text-xl font-bold text-slate-900 leading-snug">
+                <h3 className="text-xl font-bold text-white leading-snug">
                   {currentHeroSlide.headline}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-sky-100/90 leading-relaxed">
                   {currentHeroSlide.description}
                 </p>
 
                 {/* Carousel controls */}
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-3 border-t border-white/20 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {HERO_RIVER_SLIDES.map((slide, idx) => (
                       <button
@@ -208,14 +215,14 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setHeroSlideIdx(idx)}
                         className={`h-2 rounded-full transition-all cursor-pointer ${
-                          heroSlideIdx === idx ? 'w-7 bg-[#0F4C81]' : 'w-2 bg-slate-200 hover:bg-slate-300'
+                          heroSlideIdx === idx ? 'w-7 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'
                         }`}
                         aria-label={`Slide ${idx + 1}`}
                       />
                     ))}
                   </div>
 
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-sky-200/80">
                     Watershed {heroSlideIdx + 1} of 3
                   </span>
                 </div>
@@ -512,7 +519,7 @@ export const LandingPage: React.FC = () => {
           <div className="pt-2 flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={() => (isAuthenticated ? setActiveView('home') : setActiveView('auth'))}
+              onClick={() => (isAuthenticated ? setActiveView('home') : setActiveView('signup'))}
               className="px-5 py-2.5 rounded-xl font-semibold bg-white text-[#0F4C81] hover:bg-slate-100 transition-colors shadow-sm cursor-pointer text-sm"
             >
               {isAuthenticated ? 'Open Full Workspace' : 'Sign In / Create Account'}

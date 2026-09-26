@@ -126,6 +126,7 @@ export interface LikeState {
 export type ActiveView = 
   | 'landing'
   | 'auth'
+  | 'signup'
   | 'home' 
   | 'feed'
   | 'map' 

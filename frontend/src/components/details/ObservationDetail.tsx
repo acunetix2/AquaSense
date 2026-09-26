@@ -9,7 +9,7 @@ import {
   BookOpen,
   User,
   Maximize2,
-  Sparkles,
+  Droplets,
   ShieldCheck,
   Clock,
   Trash2,
@@ -51,7 +51,6 @@ import {
 export const ObservationDetail: React.FC = () => {
   const {
     selectedObservation,
-    observations,
     setActiveView,
     editObservation,
     reviewObservation,
@@ -67,8 +66,10 @@ export const ObservationDetail: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [activeHeroImageIndex, setActiveHeroImageIndex] = useState(0)
 
-  // Fallback to first observation if none selected
-  const obs: Observation = selectedObservation || observations[0]
+  // No arbitrary fallback record: rendering observations[0] here previously
+  // showed another record's owner controls (Edit/Delete) on a detail page.
+  // When nothing is selected the empty state below is shown instead.
+  const obs: Observation | null = selectedObservation
 
   // Edit form state
   const [editSiteName, setEditSiteName] = useState(obs?.site_name || '')
@@ -457,7 +458,9 @@ export const ObservationDetail: React.FC = () => {
                 <div className="min-w-0 flex-1">
                   <p className="font-bold text-slate-900 text-sm truncate">{analystName}</p>
                   <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                    <Sparkles size={10} className="text-[#1FB8A6] shrink-0" />
+                    <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                      <Droplets size={8} className="text-white" />
+                    </span>
                     <span>{analystRole}</span>
                   </p>
                 </div>

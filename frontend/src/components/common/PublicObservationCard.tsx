@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   MapPin,
   Calendar,
-  Sparkles,
+  Droplets,
   ArrowRight,
   ShieldCheck,
   Clock,
@@ -232,7 +232,9 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
                   </p>
                 </div>
                 <p className="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
-                  <Sparkles size={10} className="text-[#1FB8A6] shrink-0" />
+                  <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                    <Droplets size={8} className="text-white" />
+                  </span>
                   <span>{observerRole}</span>
                 </p>
               </div>

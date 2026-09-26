@@ -13,7 +13,6 @@ import {
   Camera,
   ExternalLink,
   Image as ImageIcon,
-  RefreshCw,
   Eye,
 } from 'lucide-react'
 import 'leaflet/dist/leaflet.css'
@@ -579,18 +578,10 @@ export const Step1Location: React.FC<Step1LocationProps> = ({ location, onChange
           {hasPin && (
             <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-2xs">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                  <Camera size={15} className="text-[#0F4C81]" />
-                  <span>Recent Location Photos from Web</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => fetchRecentImages(location.latitude, location.longitude, location.site_name)}
-                  title="Refresh web images"
-                  className="p-1 rounded-lg text-slate-400 hover:text-[#0F4C81] hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  <RefreshCw size={13} className={loadingImages ? 'animate-spin text-[#0F4C81]' : ''} />
-                </button>
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
+                <Camera size={15} className="text-[#0F4C81]" />
+                <span>Recent Location Photos from Web</span>
+              </div>
               </div>
 
               <p className="text-[11px] text-slate-500 leading-relaxed">

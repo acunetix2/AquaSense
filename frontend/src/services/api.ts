@@ -393,6 +393,22 @@ export async function fetchLiveAnalytics(): Promise<LiveAnalytics | null> {
 }
 
 // ---------------------------------------------------------------------------
+// Fetch a single observation by id (shared links / direct navigation)
+// ---------------------------------------------------------------------------
+
+export async function fetchObservationById(id: number | string): Promise<Observation | null> {
+  try {
+    const res = await apiFetch(`/observations/${id}`, undefined, 8000)
+    if (res.ok) {
+      return adaptApiObservation(await res.json())
+    }
+  } catch (err) {
+    console.warn('Observation by-id fetch notice:', err)
+  }
+  return null
+}
+
+// ---------------------------------------------------------------------------
 // Watershed Analytics API (per-location rollups, trusted sources, per-observation)
 // ---------------------------------------------------------------------------
 

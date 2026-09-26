@@ -20,73 +20,51 @@ import {
 import { useAuth } from '../../context/AuthContext'
 import { useApp } from '../../context/AppContext'
 
-// ── African Rivers & Lakes Showcase (Highlighting Sanitation, Dirt & Contamination) ──
+// ── Freshwater Showcase: real field-observation themes for the side panel ──
 const SHOWCASE_RIVERS = [
   {
-    image: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?q=80&w=1600&auto=format&fit=crop',
-    title: 'River Nairobi Urban Basin',
-    location: 'Nairobi County, Kenya',
-    tag: 'Severe Plastic Waste & Raw Sewage',
-    signal: 'investigate' as const,
-    conditionType: 'dirty',
-    metric: 'Dissolved O₂ < 1.1 mg/L • Severe Anoxia',
-    status: 'Critical Pollution Priority',
-    highlight: 'Stagnant reach traversing Korogocho and Dandora choked by floating plastic refuse, domestic blackwater, and toxic industrial sludge.',
+    image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=1600&auto=format&fit=crop',
+    title: 'Forest Headwater Stream',
+    location: 'Upland Catchment Reference Reach',
+    tag: 'Clarity & Flow Baseline',
+    signal: 'normal' as const,
+    conditionType: 'clean',
+    metric: 'Turbidity 4 NTU • Steady Flow',
+    status: 'Baseline Reference',
+    highlight: 'Community observers photograph protected headwater reaches to establish a seasonal clarity and flow baseline for comparison.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?q=80&w=1600&auto=format&fit=crop',
-    title: 'Lake Victoria Basin (Winam Gulf)',
-    location: 'Kisumu & Homa Bay, Kenya',
-    tag: 'Invasive Water Hyacinth & Cyanobacteria',
-    signal: 'investigate' as const,
-    conditionType: 'dirty',
-    metric: 'Eutrophication Index: Critical (4.2x Threshold)',
-    status: 'Ecological Emergency',
-    highlight: 'Suffocating green carpets of invasive water hyacinth trapping municipal debris, halting artisan fishing, and fostering waterborne pathogen vectors.',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop',
+    title: 'Alpine Lake Basin',
+    location: 'Watershed Storage Monitoring',
+    tag: 'Seasonal Level Tracking',
+    signal: 'normal' as const,
+    conditionType: 'clean',
+    metric: 'Surface Temp 14°C • Stable Level',
+    status: 'Routine Monitoring',
+    highlight: 'Repeat visits log surface temperature and shoreline extent so reviewers can spot seasonal shifts across the record.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1621451537084-482c73073a0f?q=80&w=1600&auto=format&fit=crop',
-    title: 'Athi River Industrial Catchment',
-    location: 'Machakos & Mavoko, Kenya',
-    tag: 'Toxic Chemical Effluent & Foaming',
-    signal: 'investigate' as const,
-    conditionType: 'dirty',
-    metric: 'Surfactant Foaming • Turbidity 780 NTU',
-    status: 'Downstream Alert',
-    highlight: 'Toxic grey chemical discharges and persistent foaming rafts contaminating key downstream irrigation waters for local smallholder farming.',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1569163139599-0f4517e36f51?q=80&w=1600&auto=format&fit=crop',
-    title: 'Ogun River & Urban Drainage Network',
-    location: 'Lagos & Ogun Basin, Nigeria',
-    tag: 'Municipal Refuse & Drainage Sludge',
-    signal: 'investigate' as const,
-    conditionType: 'dirty',
-    metric: 'High Microplastic Load • Severe Siltation',
-    status: 'Urban Cleanup Urgency',
-    highlight: 'Unregulated municipal waste dumps, discarded polyethylene bags, and stagnant open sewer outfalls choking the coastal river mouth.',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1526951521990-620dc14c214b?q=80&w=1600&auto=format&fit=crop',
-    title: 'Mara River Siltation Basin',
-    location: 'Narok County, Kenya / Serengeti Basin',
-    tag: 'Severe Soil Erosion & Sediment Runoff',
+    image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=1600&auto=format&fit=crop',
+    title: 'Meandering River Valley',
+    location: 'Lower Catchment Reach',
+    tag: 'Sediment Runoff Watch',
     signal: 'watch' as const,
     conditionType: 'dirty',
-    metric: 'Turbidity > 850 NTU • Heavy Silt Plumes',
-    status: 'Watershed Sediment Watch',
-    highlight: 'Rapid deforestation and riparian degradation causing catastrophic brown sediment runoff, smothering native aquatic habitats.',
+    metric: 'Turbidity 62 NTU • Rising After Rain',
+    status: 'Sediment Watch',
+    highlight: 'After heavy rainfall, elevated sediment prompts a follow-up observation and reviewer attention before any signal is shared.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?q=80&w=1600&auto=format&fit=crop',
-    title: 'Vaal River Catchment Basin',
-    location: 'Gauteng & Free State, South Africa',
-    tag: 'Municipal Raw Sewage Pump Failure',
-    signal: 'investigate' as const,
-    conditionType: 'dirty',
-    metric: 'Raw Sewage Inflow • Critical E. Coli Spikes',
-    status: 'Infrastructure Crisis',
-    highlight: 'Widespread breakdown of municipal wastewater treatment facilities releasing untreated domestic sewage directly into vital drinking reservoirs.',
+    image: 'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1600&auto=format&fit=crop',
+    title: 'Community Lakeside Survey',
+    location: 'Citizen Science Transect',
+    tag: 'Evidence Collection Day',
+    signal: 'normal' as const,
+    conditionType: 'clean',
+    metric: 'Secchi Depth 2.1 m • Photos Logged',
+    status: 'Evidence Collected',
+    highlight: 'Volunteers photograph shorelines and record simple measurements; reviewers verify each entry before it informs a signal.',
   },
 ]
 
@@ -102,8 +80,12 @@ const ROLE_OPTIONS = [
   { value: 'volunteer', label: 'Community Volunteer / Student', desc: 'Youth & community action' },
 ]
 
-export const AuthPage: React.FC = () => {
-  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot' | 'reset-password'>('signin')
+interface AuthPageProps {
+  initialMode?: 'signin' | 'signup'
+}
+
+export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) => {
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot' | 'reset-password'>(initialMode)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -139,6 +121,15 @@ export const AuthPage: React.FC = () => {
     isPasswordRecovery,
   } = useAuth()
   const { setActiveView, showToast } = useApp()
+
+  // Login and signup are separate pages — navigating between them changes
+  // the route (the view key remounts this component with a fresh mode).
+  const showSignIn = () => {
+    setMode('signin')
+    setErrors({})
+    clearAuthError()
+    if (initialMode === 'signup') setActiveView('auth')
+  }
 
   // Auto-switch to reset-password if user arrived with password recovery link
   useEffect(() => {
@@ -353,7 +344,7 @@ export const AuthPage: React.FC = () => {
             type="button"
             onClick={() => {
               clearVerificationNotice()
-              setMode('signin')
+              showSignIn()
             }}
             className="w-full py-3 rounded-xl font-bold text-sm text-white bg-[#0F4C81] hover:bg-[#0c3c66] shadow-md transition-colors cursor-pointer"
           >
@@ -439,42 +430,6 @@ export const AuthPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Mode Switcher Tabs (Only for signin / signup) */}
-          {(mode === 'signin' || mode === 'signup') && (
-            <div className="flex bg-slate-100 p-1 rounded-xl mb-5 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('signin')
-                  setErrors({})
-                  clearAuthError()
-                }}
-                className={`flex-1 py-2 rounded-lg transition-all cursor-pointer ${
-                  mode === 'signin'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('signup')
-                  setErrors({})
-                  clearAuthError()
-                }}
-                className={`flex-1 py-2 rounded-lg transition-all cursor-pointer ${
-                  mode === 'signup'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                Sign Up
-              </button>
-            </div>
-          )}
-
           {/* Error Banner */}
           {(errors.form || authError) && (
             <div className="mb-5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs flex items-center gap-2">
@@ -509,9 +464,8 @@ export const AuthPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setMode('signin')
+                        showSignIn()
                         setForgotSent(false)
-                        setErrors({})
                       }}
                       className="w-full py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
@@ -568,11 +522,7 @@ export const AuthPage: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      setMode('signin')
-                      setErrors({})
-                      clearAuthError()
-                    }}
+                    onClick={showSignIn}
                     className="w-full py-2.5 text-center text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <ArrowLeft size={13} />
@@ -663,10 +613,7 @@ export const AuthPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => {
-                  setMode('signin')
-                  setErrors({})
-                }}
+                onClick={showSignIn}
                 className="w-full py-2.5 text-center text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft size={13} />
@@ -901,6 +848,32 @@ export const AuthPage: React.FC = () => {
             <span className="underline cursor-pointer hover:text-slate-600">Terms</span> and{' '}
             <span className="underline cursor-pointer hover:text-slate-600">Privacy Policy</span>.
           </p>
+
+          {/* Cross-page links — login and signup are separate pages */}
+          {mode === 'signin' && (
+            <p className="mt-4 text-center text-sm text-slate-500">
+              New to AquaSense?{' '}
+              <button
+                type="button"
+                onClick={() => setActiveView('signup')}
+                className="font-bold text-[#0F4C81] hover:underline cursor-pointer"
+              >
+                Create an account
+              </button>
+            </p>
+          )}
+          {mode === 'signup' && (
+            <p className="mt-4 text-center text-sm text-slate-500">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => setActiveView('auth')}
+                className="font-bold text-[#0F4C81] hover:underline cursor-pointer"
+              >
+                Sign in
+              </button>
+            </p>
+          )}
         </div>
 
         {/* Bottom Legal / Copyright */}
@@ -978,7 +951,7 @@ export const AuthPage: React.FC = () => {
               Protecting rivers, streams and lakes through community observations.
             </h2>
             <p className="text-slate-200 text-sm xl:text-base mt-4 leading-relaxed font-normal drop-shadow">
-              Connecting field photos with automated computer vision diagnostics, calibrated water quality signals, and scientific data to detect clean waters and critical contamination early.
+              Connecting field photos with automated computer vision checks, calibrated water quality signals, and community records — so meaningful changes are surfaced early and routed to expert review.
             </p>
           </div>
 

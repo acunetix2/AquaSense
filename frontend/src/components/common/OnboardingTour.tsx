@@ -91,7 +91,7 @@ const TOUR_STEPS: TourStep[] = [
     title: '4-Step Field Wizard',
     badge: 'Log River Observations',
     description:
-      'Click "New Stream" to launch the 4-step wizard: pinpoint GPS, snap up to 3 stream photos, report odor and clarity, and get instant GROQ Vision analysis.',
+      'Click "Report" to launch the 4-step wizard: pinpoint GPS, snap up to 3 stream photos, report odor and clarity, and get instant GROQ Vision analysis.',
     tip: 'AI computer vision evaluates river turbidity and chemical slicks immediately.',
     icon: PlusCircle,
     preferredSide: 'bottom',

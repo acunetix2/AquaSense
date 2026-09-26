@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext'
 import { getRoleDefinition } from '../types/roles'
 import {
   fetchObservations,
+  fetchObservationById,
   createObservation,
   updateObservation as updateObservationApi,
   reviewObservation as reviewObservationApi,
@@ -57,7 +58,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 const viewToPath: Record<ActiveView, string> = {
   landing: '/',
-  auth: '/auth',
+  auth: '/login',
+  signup: '/signup',
   home: '/home',
   feed: '/feed',
   map: '/map',
@@ -75,8 +77,11 @@ const pathToView = (pathname: string): ActiveView | null => {
   switch (pathname.toLowerCase()) {
     case '/':
       return 'landing'
+    case '/login':
     case '/auth':
       return 'auth'
+    case '/signup':
+      return 'signup'
     case '/feed':
       return 'feed'
     case '/home':
@@ -162,7 +167,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     let isMounted = true
 
-    const resolveSharedLink = (data: typeof observations) => {
+    const resolveSharedLink = async (data: typeof observations) => {
       // Check if user navigated to a shared link
       const hash = window.location.hash
       const search = window.location.search
@@ -172,6 +177,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const found = data.find((o) => String(o.id) === targetId)
         if (found) {
           setSelectedObservation(found)
+          setActiveView('detail')
+          return
+        }
+        // Not in the local list — fetch the real record directly so the
+        // detail page never falls back to a different observation.
+        const fetched = await fetchObservationById(targetId)
+        if (fetched) {
+          setSelectedObservation(fetched)
           setActiveView('detail')
         }
       }
@@ -183,12 +196,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         // Instant paint from cache — no spinner, no waiting on the network
         setObservations(cached)
         setIsLoading(false)
-        resolveSharedLink(cached)
+        void resolveSharedLink(cached)
         if (!isObservationsCacheFresh(undefined, user?.id)) {
           const fresh = await fetchObservations(undefined, user?.id, { force: true })
           if (isMounted) {
             setObservations(fresh)
-            resolveSharedLink(fresh)
+            void resolveSharedLink(fresh)
           }
         }
         return
@@ -199,7 +212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (isMounted) {
         setObservations(data)
         setIsLoading(false)
-        resolveSharedLink(data)
+        void resolveSharedLink(data)
       }
     }
     load()
@@ -235,6 +248,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (found) {
           setSelectedObservation(found)
           setActiveView('detail')
+        } else {
+          void fetchObservationById(targetId).then((fetched) => {
+            if (fetched) {
+              setSelectedObservation(fetched)
+              setActiveView('detail')
+            }
+          })
         }
       }
     }
@@ -257,6 +277,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setObservations(data)
     setIsLoading(false)
   }
+
+  // Silent background revalidation — no manual refresh buttons anywhere:
+  // refetch when the tab is refocused or every 60s, but only once a cache
+  // exists and has gone stale (initial load still handles the first fetch).
+  useEffect(() => {
+    const revalidate = () => {
+      if (document.visibilityState === 'hidden') return
+      const cached = getCachedObservations(undefined, user?.id)
+      if (!cached || isObservationsCacheFresh(undefined, user?.id)) return
+      void (async () => {
+        const fresh = await fetchObservations(undefined, user?.id, { force: true })
+        setObservations(fresh)
+      })()
+    }
+    const timer = window.setInterval(revalidate, 60_000)
+    window.addEventListener('focus', revalidate)
+    document.addEventListener('visibilitychange', revalidate)
+    return () => {
+      window.clearInterval(timer)
+      window.removeEventListener('focus', revalidate)
+      document.removeEventListener('visibilitychange', revalidate)
+    }
+  }, [user?.id])
 
   const addNewObservation = async (payload: any): Promise<Observation> => {
     const created = await createObservation(payload)

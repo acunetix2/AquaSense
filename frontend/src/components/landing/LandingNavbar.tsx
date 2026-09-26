@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
+import type { ActiveView } from '../../types/observation'
 
 export const LandingNavbar: React.FC = () => {
   const { setActiveView } = useApp()
@@ -25,7 +26,7 @@ export const LandingNavbar: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const handleNavClick = (view: 'landing' | 'map' | 'auth' | 'home') => {
+  const handleNavClick = (view: ActiveView) => {
     setActiveView(view)
     setMobileMenuOpen(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -123,7 +124,7 @@ export const LandingNavbar: React.FC = () => {
               </button>
             ) : (
               <button
-                onClick={() => handleNavClick('auth')}
+                onClick={() => handleNavClick('signup')}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] hover:opacity-90 shadow-md shadow-sky-900/15 transition-all cursor-pointer active:scale-[0.98]"
               >
                 <Rocket size={15} className="shrink-0" />
@@ -189,7 +190,7 @@ export const LandingNavbar: React.FC = () => {
               </button>
             ) : (
               <button
-                onClick={() => handleNavClick('auth')}
+                onClick={() => handleNavClick('signup')}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0F4C81] to-[#1FB8A6] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <Rocket size={16} />

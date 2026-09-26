@@ -5,7 +5,6 @@ import {
   MapPin,
   ShieldCheck,
   ChevronDown,
-  RefreshCw,
   Eye,
   Users,
   Info,
@@ -79,7 +78,6 @@ export const WatershedAnalyticsView: React.FC = () => {
   const [overview, setOverview] = useState<LiveAnalytics | null>(null)
   const [regions, setRegions] = useState<RegionAnalytics | null>(null)
   const [failed, setFailed] = useState(false)
-  const [isRefreshing, setIsRefreshing] = useState(false)
   const [expandedSite, setExpandedSite] = useState<string | null>(null)
 
   const applyResult = useCallback((ov: LiveAnalytics | null, rg: RegionAnalytics | null): boolean => {
@@ -90,31 +88,31 @@ export const WatershedAnalyticsView: React.FC = () => {
     return ok
   }, [])
 
+  // Initial load + silent background revalidation (focus / visibility / 60s).
   useEffect(() => {
     let cancelled = false
-    const loadInitial = async () => {
+    const load = async (announce: boolean) => {
       const [ov, rg] = await Promise.all([fetchLiveAnalytics(), fetchRegionAnalytics()])
       if (cancelled) return
       const ok = applyResult(ov, rg)
-      if (!ok) {
+      if (!ok && announce) {
         showToast('Analytics Unavailable', 'Could not reach the analytics service. Please retry.', 'error')
       }
     }
-    void loadInitial()
+    void load(true)
+    const revalidate = () => {
+      if (document.visibilityState !== 'hidden') void load(false)
+    }
+    const timer = window.setInterval(revalidate, 60_000)
+    window.addEventListener('focus', revalidate)
+    document.addEventListener('visibilitychange', revalidate)
     return () => {
       cancelled = true
+      window.clearInterval(timer)
+      window.removeEventListener('focus', revalidate)
+      document.removeEventListener('visibilitychange', revalidate)
     }
   }, [applyResult, showToast])
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    const [ov, rg] = await Promise.all([fetchLiveAnalytics(), fetchRegionAnalytics()])
-    const ok = applyResult(ov, rg)
-    if (!ok) {
-      showToast('Analytics Unavailable', 'Could not reach the analytics service. Please retry.', 'error')
-    }
-    setIsRefreshing(false)
-  }
 
   const isLoading = !overview && !regions && !failed
 
@@ -160,18 +158,9 @@ export const WatershedAnalyticsView: React.FC = () => {
           </h1>
           <p className="text-sm text-slate-500 mt-1">
             Citizen observations, trusted monitoring sources, and regional trends — combined in one
-            view.
+            view. Refreshes automatically in the background.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer disabled:opacity-60"
-        >
-          <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
-          Refresh
-        </button>
       </div>
 
       {/* ── 1. Platform overview ── */}

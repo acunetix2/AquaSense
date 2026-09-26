@@ -8,7 +8,6 @@ import {
   BarChart3,
   Trash2,
   AlertCircle,
-  RefreshCw,
 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
@@ -16,23 +15,34 @@ import { EmptyState } from '../common/EmptyState'
 import { fetchLiveAnalytics, type LiveAnalytics } from '../../services/api'
 
 export const DashboardView: React.FC = () => {
-  const { observations, setActiveView, deleteObservation, refreshObservations } = useApp()
+  const { observations, setActiveView, deleteObservation } = useApp()
   const { user } = useAuth()
   const [liveStats, setLiveStats] = useState<LiveAnalytics | null>(null)
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const loadAnalytics = async () => {
-    setIsRefreshing(true)
-    try {
-      const stats = await fetchLiveAnalytics()
-      if (stats) setLiveStats(stats)
-    } finally {
-      setIsRefreshing(false)
-    }
-  }
-
+  // Initial load + silent background revalidation (focus / visibility / 60s)
   useEffect(() => {
-    loadAnalytics()
+    let cancelled = false
+    const load = async () => {
+      try {
+        const stats = await fetchLiveAnalytics()
+        if (!cancelled && stats) setLiveStats(stats)
+      } catch {
+        /* background revalidation stays silent */
+      }
+    }
+    void load()
+    const revalidate = () => {
+      if (document.visibilityState !== 'hidden') void load()
+    }
+    const timer = window.setInterval(revalidate, 60_000)
+    window.addEventListener('focus', revalidate)
+    document.addEventListener('visibilitychange', revalidate)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+      window.removeEventListener('focus', revalidate)
+      document.removeEventListener('visibilitychange', revalidate)
+    }
   }, [])
 
   const myObservations = user
@@ -131,17 +141,6 @@ export const DashboardView: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             Live DB Synced
           </span>
-          <button
-            type="button"
-            onClick={async () => {
-              await Promise.all([loadAnalytics(), refreshObservations()])
-            }}
-            disabled={isRefreshing}
-            className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer"
-            title="Refresh database analytics"
-          >
-            <RefreshCw size={15} className={isRefreshing ? 'animate-spin text-[#0F4C81]' : ''} />
-          </button>
         </div>
       </div>
 
@@ -393,7 +392,7 @@ export const DashboardView: React.FC = () => {
           )}
 
           {/* Community Challenge Banner */}
-          <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-r from-sky-50 via-teal-50/30 to-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-[#262e3c] bg-gradient-to-r from-sky-50 dark:from-sky-900/50 via-teal-50/30 dark:via-teal-900/20 to-white dark:to-[#0e1117] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
                 <Award size={14} className="text-[#1FB8A6]" />

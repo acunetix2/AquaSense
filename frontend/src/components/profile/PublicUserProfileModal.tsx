@@ -3,7 +3,7 @@ import {
   X,
   MapPin,
   Calendar,
-  Sparkles,
+  Droplets,
   ShieldCheck,
   Heart,
   Users,
@@ -340,7 +340,9 @@ export const PublicUserProfileModal: React.FC<PublicUserProfileModalProps> = ({
 
           {userObservations.length === 0 ? (
             <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-              <Sparkles size={24} className="mx-auto text-slate-400 mb-2" />
+              <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6] flex items-center justify-center shadow-md shadow-sky-900/15 mb-2">
+                <Droplets size={24} className="text-white" />
+              </div>
               <p className="text-xs text-slate-600 font-medium">
                 {observerName} has recorded {observationCount} verified river reports across regional field sensors.
               </p>

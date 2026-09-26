@@ -6,7 +6,7 @@ import {
   Layers,
   MapPin,
   ArrowRight,
-  Sparkles,
+  Droplets,
   ShieldCheck,
   User,
   Globe,
@@ -517,7 +517,9 @@ export const MapView: React.FC = () => {
                           {activeObservation.observer_name || 'Civic Observer'}
                         </p>
                         <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                          <Sparkles size={10} className="text-[#1FB8A6] shrink-0" />
+                          <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0F4C81] to-[#1FB8A6]">
+                            <Droplets size={8} className="text-white" />
+                          </span>
                           <span>{activeObservation.observer_role || 'Citizen Scientist'}</span>
                         </p>
                       </div>

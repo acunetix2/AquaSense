@@ -8,7 +8,6 @@ import {
   Eye,
   Share2,
   MapPin,
-  RefreshCw,
   BadgeCheck,
   Droplets,
   Loader2,
@@ -108,7 +107,7 @@ const FeedMedia: React.FC<{ obs: Observation }> = ({ obs }) => {
 }
 
 export const FeedView: React.FC = () => {
-  const { observations, isLoading, openObservationDetail, updateObservationSocial, showToast, refreshObservations } =
+  const { observations, isLoading, openObservationDetail, updateObservationSocial, showToast } =
     useApp()
   const { user } = useAuth()
 
@@ -117,7 +116,6 @@ export const FeedView: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({})
   const [busyId, setBusyId] = useState<string | null>(null)
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const items = useMemo(() => {
     const filtered = observations.filter((obs) => {
@@ -178,12 +176,6 @@ export const FeedView: React.FC = () => {
     }
   }
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    await refreshObservations()
-    setIsRefreshing(false)
-  }
-
   return (
     <div className="max-w-2xl mx-auto space-y-5 text-left">
       {/* Header */}
@@ -194,18 +186,10 @@ export const FeedView: React.FC = () => {
             Community Feed
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Field observations from citizen scientists, ranked for freshness and engagement.
+            Field observations from citizen scientists, ranked for freshness and engagement. Updates
+            automatically as new records arrive.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer disabled:opacity-60"
-        >
-          <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
-          Refresh
-        </button>
       </div>
 
       {/* Tabs: For You / Trending */}

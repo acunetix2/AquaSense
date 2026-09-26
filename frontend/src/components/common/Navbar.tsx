@@ -20,6 +20,7 @@ import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
 import { isReviewerRole } from '../../types/roles'
 import { NotificationCenter } from './NotificationCenter'
+import { ThemeToggle } from './ThemeToggle'
 import type { ActiveView } from '../../types/observation'
 
 export const Navbar: React.FC = () => {
@@ -122,11 +123,11 @@ export const Navbar: React.FC = () => {
                   data-tour={item.tourKey}
                   className={`relative px-4 py-2 rounded-xl text-sm transition-all duration-150 flex items-center gap-2 cursor-pointer ${
                     isActive
-                      ? 'text-[#0284c7] bg-[#e8f3fc] font-semibold'
+                      ? 'text-[#0284c7] bg-[#e8f3fc] dark:text-[#7dd3fc] dark:bg-[#12324c] font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium'
                   }`}
                 >
-                  <item.icon size={16} className={isActive ? 'text-[#0284c7]' : 'text-slate-500'} />
+                  <item.icon size={16} className={isActive ? 'text-[#0284c7] dark:text-[#7dd3fc]' : 'text-slate-500'} />
                   <span>{item.label}</span>
                   {isReviewerLink && pendingReviewCount > 0 && (
                     <span className="ml-1 px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[11px] font-bold rounded-full">
@@ -143,15 +144,17 @@ export const Navbar: React.FC = () => {
 
           {/* Right actions — pushed to the far-right end so everything fits */}
           <div className="hidden sm:flex items-center gap-2 lg:gap-3 shrink-0 ml-auto">
-            {/* New Stream CTA Button */}
+            {/* Report CTA Button */}
             <button
               onClick={handleStartCapture}
               data-tour="new-stream"
               className="inline-flex items-center gap-2 px-3.5 lg:px-5 py-2 text-sm font-semibold rounded-full text-white bg-[#0284c7] hover:bg-[#0369a1] shadow-xs hover:shadow-sm transition-all duration-150 cursor-pointer active:scale-98"
             >
               <PlusCircle size={17} className="stroke-[2.3]" />
-              <span className="hidden lg:inline">New Stream</span>
+              <span className="hidden lg:inline">Report</span>
             </button>
+
+            <ThemeToggle />
 
             {isAuthenticated && <NotificationCenter />}
 
@@ -270,10 +273,11 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center gap-2 ml-auto shrink-0">
             {isAuthenticated && <NotificationCenter className="sm:hidden" />}
+            <ThemeToggle className="sm:hidden" />
             <button
               onClick={handleStartCapture}
               className="p-2 text-white bg-[#0F4C81] rounded-lg shadow-xs cursor-pointer"
-              title="Assess Stream"
+              title="Report an observation"
             >
               <PlusCircle size={18} />
             </button>
@@ -299,7 +303,7 @@ export const Navbar: React.FC = () => {
                 onClick={() => handleNavClick(item.id)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-base font-medium cursor-pointer ${
                   isActive
-                    ? 'text-[#0F4C81] bg-sky-50 font-semibold'
+                    ? 'text-[#0F4C81] bg-sky-50 dark:text-sky-300 dark:bg-sky-900/40 font-semibold'
                     : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >

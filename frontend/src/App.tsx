@@ -29,7 +29,7 @@ const MainContent: React.FC = () => {
 
   // Auto transition to home when user signs in from landing or auth
   useEffect(() => {
-    if (isAuthenticated && (activeView === 'auth' || activeView === 'landing')) {
+    if (isAuthenticated && (activeView === 'auth' || activeView === 'signup' || activeView === 'landing')) {
       setActiveView('home')
     }
   }, [isAuthenticated])
@@ -69,25 +69,28 @@ const MainContent: React.FC = () => {
   }, [isLoading, isAuthenticated, isReviewer, activeView, setActiveView, showToast])
 
   const isLanding = activeView === 'landing'
-  const isAuth = activeView === 'auth'
+  const isAuth = activeView === 'auth' || activeView === 'signup'
 
   // Branded full-screen loader while auth state resolves
   if (isLoading) {
     return <AppLoader />
   }
 
-  // Full-bleed edge-to-edge layout for auth page
+  // Full-bleed edge-to-edge layout — login and signup are separate pages
   if (isAuth) {
     return (
       <div className="min-h-screen w-full">
-        <AuthPage />
+        <AuthPage
+          key={activeView}
+          initialMode={activeView === 'signup' ? 'signup' : 'signin'}
+        />
         <ToastContainer />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F9FC]">
+    <div className="min-h-screen flex flex-col bg-[#F5F9FC] dark:bg-[#0a0d13]">
       {/* Proper Navbar depending on public vs app state */}
       {isLanding ? <LandingNavbar /> : <Navbar />}
 

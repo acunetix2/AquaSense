@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark variant (html.dark) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --color-deep-blue: #0F4C81;
@@ -40,6 +43,111 @@
     font-weight: 600;
     letter-spacing: -0.01em;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * Uber-dark theme (html.dark)
+ * Tailwind v4 utilities reference var(--color-*), so the neutral palette is
+ * re-tokenized here and every bg-white / text-slate-* utility flips at once.
+ * Foreground utilities that must stay white (text-white, fill-white…) are
+ * intentionally NOT routed through --color-white, so they are untouched.
+ * --------------------------------------------------------------------------- */
+.dark {
+  color-scheme: dark;
+
+  --color-mist: #0a0d13;
+
+  --color-slate-50: #12161f;
+  --color-slate-100: #171c26;
+  --color-slate-200: #232a37;
+  --color-slate-300: #333c4c;
+  --color-slate-400: #7d8899;
+  --color-slate-500: #94a0b4;
+  --color-slate-600: #b3bdcd;
+  --color-slate-700: #ccd4e0;
+  --color-slate-800: #e2e8f0;
+  --color-slate-900: #f1f5f9;
+  --color-slate-950: #f8fafc;
+
+  --as-surface: #0e1117;
+  --as-bg: #0a0d13;
+}
+
+/* Solid + near-opaque white surfaces become the dark surface.
+ * Translucent veils over imagery (bg-white/10–40) intentionally stay. */
+.dark .bg-white,
+.dark .bg-white\/95,
+.dark .bg-white\/90,
+.dark .bg-white\/80,
+.dark .bg-white\/70,
+.dark .bg-white\/60,
+.dark .hover\:bg-white:hover,
+.dark .hover\:bg-white\/95:hover,
+.dark .hover\:bg-white\/90:hover,
+.dark .hover\:bg-white\/80:hover {
+  background-color: var(--as-surface);
+}
+
+/* Dark surfaces must stay dark in Uber-dark: the slate token flip above is
+ * meant for text/border utilities, but bg-slate-900/950 (footer, code blocks,
+ * image badges, modal backdrops) are dark panels by design. Re-declare them
+ * with their original opacity so overlays keep working over photos. */
+.dark .bg-slate-900 { background-color: #07090d; }
+.dark .bg-slate-900\/5 { background-color: color-mix(in oklab, #07090d 5%, transparent); }
+.dark .bg-slate-900\/40 { background-color: color-mix(in oklab, #07090d 40%, transparent); }
+.dark .bg-slate-900\/50 { background-color: color-mix(in oklab, #07090d 50%, transparent); }
+.dark .bg-slate-900\/60 { background-color: color-mix(in oklab, #07090d 60%, transparent); }
+.dark .bg-slate-900\/70 { background-color: color-mix(in oklab, #07090d 70%, transparent); }
+.dark .bg-slate-900\/80 { background-color: color-mix(in oklab, #07090d 80%, transparent); }
+.dark .hover\:bg-slate-900\/60:hover { background-color: color-mix(in oklab, #07090d 60%, transparent); }
+.dark .hover\:bg-slate-900\/80:hover { background-color: color-mix(in oklab, #07090d 80%, transparent); }
+
+.dark .bg-slate-950 { background-color: #050609; }
+.dark .bg-slate-950\/40 { background-color: color-mix(in oklab, #050609 40%, transparent); }
+.dark .bg-slate-950\/60 { background-color: color-mix(in oklab, #050609 60%, transparent); }
+.dark .bg-slate-950\/65 { background-color: color-mix(in oklab, #050609 65%, transparent); }
+.dark .bg-slate-950\/80 { background-color: color-mix(in oklab, #050609 80%, transparent); }
+.dark .bg-slate-950\/85 { background-color: color-mix(in oklab, #050609 85%, transparent); }
+
+/* Dark-on-dark borders (footer dividers etc.) must not flip light */
+.dark .border-slate-800 { border-color: #262e3c; }
+
+.dark {
+  background-color: var(--as-bg);
+}
+
+.dark body {
+  background-color: var(--as-bg);
+  color: #cbd5e1;
+}
+
+/* Scrollbars in Uber-dark */
+.dark ::-webkit-scrollbar-thumb {
+  background: #2b3342;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3a4455;
+}
+
+/* Leaflet map chrome */
+.dark .leaflet-container {
+  background: #0d1117;
+}
+.dark .leaflet-bar a,
+.dark .leaflet-bar a:hover {
+  background: var(--as-surface);
+  color: #e2e8f0;
+  border-bottom-color: #232a37;
+}
+.dark .leaflet-control-zoom a {
+  color: #e2e8f0 !important;
+}
+.dark .leaflet-control-attribution {
+  background: rgba(10, 13, 19, 0.75);
+  color: #94a0b4;
+}
+.dark .leaflet-control-attribution a {
+  color: #7dd3fc;
 }
 
 /* Custom scrollbars */
