@@ -6,9 +6,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import analytics, auth, health, notifications, observations, profiles
+from app.core.config import get_settings
 from app.db.session import check_database_connection, create_db
 
 logger = logging.getLogger(__name__)
+settings = get_settings()
+# Comma-separated origins from CORS_ORIGINS (e.g. "https://app.vercel.app,http://localhost:5173"),
+# or "*" to allow every origin.
+cors_origins = [
+    origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()
+] or ["*"]
 
 
 @asynccontextmanager
@@ -35,7 +42,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
