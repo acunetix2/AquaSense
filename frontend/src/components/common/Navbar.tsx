@@ -18,6 +18,7 @@ import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
 import { isReviewerRole } from '../../types/roles'
 import { NotificationCenter } from './NotificationCenter'
+import { ThemeToggle } from './ThemeToggle'
 import type { ActiveView } from '../../types/observation'
 
 export const Navbar: React.FC = () => {
@@ -148,6 +149,8 @@ export const Navbar: React.FC = () => {
               <span className="hidden lg:inline">Report</span>
             </button>
 
+            <ThemeToggle />
+
             {isAuthenticated && <NotificationCenter />}
 
             {isAuthenticated ? (
@@ -265,6 +268,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile actions — navigation lives in the bottom bar (BottomNav) */}
           <div className="flex md:hidden items-center gap-1.5 ml-auto shrink-0">
             {isAuthenticated && <NotificationCenter className="sm:hidden" />}
+            <ThemeToggle className="sm:hidden" />
           </div>
         </div>
       </div>
