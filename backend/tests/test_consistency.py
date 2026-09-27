@@ -3,6 +3,7 @@ Tests for the consistency-check service and the AI decision trail (PRD FR-06/FR-
 """
 from fastapi.testclient import TestClient
 
+from app.services.ai_service import _normalise
 from app.services.consistency_service import check_consistency, image_quality_note
 
 
@@ -90,6 +91,30 @@ def test_image_quality_note_shape() -> None:
     assert note["observed"] == "vision model unavailable"
 
 
+def test_model_output_is_bounded_and_excludes_safety_claims() -> None:
+    result = _normalise({
+        "signal": "investigate",
+        "confidence": 1.5,
+        "title": "This water is safe to drink",
+        "summary": "This water is unsafe for consumption.",
+        "visual_condition_score": "101",
+        "detected_issues": "not a list",
+        "key_evidence": ["Visible litter", "Water is safe"],
+        "suggested_steps": ["Drink no water", "Photograph the site again"],
+        "ecosystem_indicators": {"turbidity": "invented"},
+        "urgency": "unknown",
+    })
+    assert result["confidence"] == 1.0
+    assert result["visual_condition_score"] == 100
+    assert result["title"] == "Visual observation summary"
+    assert "consumption" not in result["summary"].lower()
+    assert result["detected_issues"] == []
+    assert result["key_evidence"] == ["Visible litter"]
+    assert result["suggested_steps"] == ["Photograph the site again"]
+    assert result["ecosystem_indicators"]["turbidity"] == "clear"
+    assert result["urgency"] == "routine"
+
+
 # ---------------------------------------------------------------------------
 # API tests – flags and decision trail persist with an observation
 # ---------------------------------------------------------------------------
@@ -124,7 +149,7 @@ def test_create_reuses_step4_analysis_and_keeps_flags(client: TestClient) -> Non
         "confidence": 0.91,
         "title": "Minor turbidity near outflow",
         "summary": "Photo shows slightly cloudy water near the outflow.",
-        "water_quality_score": 64,
+        "visual_condition_score": 64,
         "key_evidence": ["Cloudy water at outflow"],
         "suggested_steps": ["Re-photograph in 48 hours"],
         "urgency": "monitor",
@@ -141,6 +166,7 @@ def test_create_reuses_step4_analysis_and_keeps_flags(client: TestClient) -> Non
             "model": "qwen/qwen3.8-27b",
             "prompt_version": "aquasense-vision-2026-09-v1",
             "image_count": 2,
+            "assessment_status": "assessed",
             "analysed_at": "2026-09-25T10:00:00+00:00",
         },
     }
@@ -151,7 +177,11 @@ def test_create_reuses_step4_analysis_and_keeps_flags(client: TestClient) -> Non
         "user_id": "trail-test-user",
         "water_appearance": "clear",
         "flow_rate": "normal",
-        "assessment_answers": {"waterClarity": "clear", "ai_result": ai_result},
+        "assessment_answers": {
+            "waterClarity": "clear",
+            "ai_result": ai_result,
+            "consistency_acknowledged": True,
+        },
     })
     assert response.status_code == 201
     data = response.json()
@@ -166,7 +196,35 @@ def test_create_reuses_step4_analysis_and_keeps_flags(client: TestClient) -> Non
     assert trail["model"] == "qwen/qwen3.8-27b"
     assert trail["image_count"] == 2
     assert trail["consistency_rule_hits"] == ["water_clarity"]
+    assert trail["observer_consistency_response"]["action"] == "kept_reported_answers"
+    assert trail["observer_consistency_response"]["flagged_fields"] == ["water_clarity"]
     assert "analysed_at" in trail
+
+
+def test_create_rejects_step4_result_that_needs_a_better_photo(client: TestClient) -> None:
+    response = client.post("/api/v1/observations", json={
+        "site_name": "Blurry Photo Site",
+        "latitude": 42.0,
+        "longitude": -75.0,
+        "user_id": "trail-test-user",
+        "assessment_answers": {
+            "ai_result": {
+                "signal": "normal",
+                "confidence": 0,
+                "summary": "The water surface is not visible.",
+                "analysis_meta": {
+                    "source": "groq",
+                    "model": "qwen/qwen3.8-27b",
+                    "prompt_version": "aquasense-vision-2026-09-v1",
+                    "image_count": 1,
+                    "assessment_status": "needs_better_photo",
+                    "analysed_at": "2026-09-25T10:00:00+00:00",
+                },
+            },
+        },
+    })
+    assert response.status_code == 422
+    assert "clearer photo" in response.json()["detail"].lower()
 
 
 def test_consistency_flags_survive_fetch(client: TestClient) -> None:

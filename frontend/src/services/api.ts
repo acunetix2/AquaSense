@@ -1,4 +1,4 @@
-import type { Observation, SignalType, ConsistencyFlag, AiTrail, ObservationComment, LikeState } from '../types/observation'
+import type { AiAssessmentAlignment, Observation, SignalType, ConsistencyFlag, AiTrail, ObservationComment, LikeState } from '../types/observation'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -305,6 +305,7 @@ export async function reviewObservation(
   action: 'verified' | 'flagged',
   reviewerName: string,
   notes: string,
+  alignment: AiAssessmentAlignment,
   userId?: string
 ): Promise<Observation | null> {
   let res: Response
@@ -319,6 +320,7 @@ export async function reviewObservation(
         action,
         reviewer_name: reviewerName,
         notes,
+        ai_assessment_alignment: alignment,
       }),
     }, 5000)
   } catch {
@@ -494,6 +496,27 @@ export async function fetchRegionAnalytics(): Promise<RegionAnalytics | null> {
     }
   } catch (err) {
     console.warn('Region analytics fetch notice:', err)
+  }
+  return null
+}
+
+export interface AIEvaluationMetrics {
+  total_observations: number
+  vision_assessed: number
+  questionnaire_only: number
+  observations_with_consistency_flags: number
+  reviewed_with_alignment: number
+  reviewer_agreements: number
+  reviewer_overrides: number
+  agreement_rate: number | null
+}
+
+export async function fetchAIEvaluationMetrics(): Promise<AIEvaluationMetrics | null> {
+  try {
+    const res = await apiFetch('/analytics/ai-evaluation', undefined, 10000)
+    if (res.ok) return await res.json()
+  } catch (err) {
+    console.warn('AI evaluation metrics fetch notice:', err)
   }
   return null
 }

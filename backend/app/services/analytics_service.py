@@ -17,6 +17,7 @@ from app.models.monitoring_site import MonitoringSite
 from app.models.observation import Observation
 from app.models.social import ObservationComment, ObservationLike, ObservationView
 from app.schemas.analytics import (
+    AIEvaluationMetrics,
     BasinSnapshot,
     LocationStat,
     ObservationAnalytics,
@@ -51,6 +52,61 @@ def _sanitize_ai_trail(trail: dict | None) -> dict:
 
 
 class AnalyticsService:
+    @staticmethod
+    async def ai_evaluation_metrics(db: AsyncSession) -> AIEvaluationMetrics:
+        """Summarise reviewer feedback without treating it as model accuracy.
+
+        The metric answers a narrow, auditable question: when a reviewer records
+        an alignment decision, did they agree with or override the AI's visual
+        interpretation? Records without that explicit decision are excluded.
+        """
+        observations = (await db.execute(
+            select(Observation.ai_trail, Observation.consistency_flags)
+        )).all()
+
+        vision_assessed = 0
+        questionnaire_only = 0
+        observations_with_flags = 0
+        agreements = 0
+        overrides = 0
+
+        for trail_value, flags in observations:
+            trail = trail_value if isinstance(trail_value, dict) else {}
+            source = trail.get("source")
+            assessment_status = trail.get("assessment_status")
+            if source == "groq" and assessment_status != "needs_better_photo":
+                vision_assessed += 1
+            if assessment_status == "questionnaire_only" or source in {"heuristic", "questionnaire"}:
+                questionnaire_only += 1
+            if any(isinstance(flag, dict) and flag.get("type") == "consistency" for flag in (flags or [])):
+                observations_with_flags += 1
+
+            events = trail.get("review_events")
+            if not isinstance(events, list) or not events:
+                continue
+            latest_event = events[-1]
+            if not isinstance(latest_event, dict):
+                continue
+            alignment = latest_event.get("ai_assessment_alignment")
+            if alignment == "agreed":
+                agreements += 1
+            elif alignment == "overridden":
+                overrides += 1
+
+        reviewed_with_alignment = agreements + overrides
+        return AIEvaluationMetrics(
+            total_observations=len(observations),
+            vision_assessed=vision_assessed,
+            questionnaire_only=questionnaire_only,
+            observations_with_consistency_flags=observations_with_flags,
+            reviewed_with_alignment=reviewed_with_alignment,
+            reviewer_agreements=agreements,
+            reviewer_overrides=overrides,
+            agreement_rate=round(agreements / reviewed_with_alignment, 3)
+            if reviewed_with_alignment
+            else None,
+        )
+
     @staticmethod
     async def region_breakdown(db: AsyncSession) -> RegionAnalyticsResponse:
         """Per-location rollups + trusted-source sections + basin snapshots."""

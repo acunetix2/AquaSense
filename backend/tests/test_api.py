@@ -223,6 +223,7 @@ def test_review_observation_verified(client: TestClient) -> None:
         "action": "verified",
         "reviewer_name": "Dr. Test Reviewer",
         "notes": "Confirmed conditions on site visit.",
+        "ai_assessment_alignment": "agreed",
     }
     response = client.patch(
         f"/api/v1/observations/{obs_id}/review",
@@ -235,6 +236,11 @@ def test_review_observation_verified(client: TestClient) -> None:
     assert data["reviewed_by"] == "Dr. Test Reviewer"
     assert data["reviewer_notes"] == "Confirmed conditions on site visit."
     assert data["reviewed_at"] is not None
+    event = data["ai_trail"]["review_events"][-1]
+    assert event["action"] == "verified"
+    assert event["reviewer_user_id"] == REVIEWER_ID
+    assert event["reviewer_name"] == "Dr. Test Reviewer"
+    assert event["ai_assessment_alignment"] == "agreed"
 
 
 def test_review_observation_flagged(client: TestClient) -> None:

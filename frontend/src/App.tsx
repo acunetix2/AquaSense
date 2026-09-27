@@ -12,6 +12,7 @@ import { AuthPage } from './components/auth/AuthPage'
 import { HeroSection } from './components/home/HeroSection'
 import { CaptureWizard } from './components/capture/CaptureWizard'
 import { MapView } from './components/map/MapView'
+import { PublicBasinMap } from './components/map/PublicBasinMap'
 import { ReviewerQueue } from './components/reviewer/ReviewerQueue'
 import { DashboardView } from './components/dashboard/DashboardView'
 import { WatershedAnalyticsView } from './components/analytics/WatershedAnalyticsView'
@@ -70,6 +71,7 @@ const MainContent: React.FC = () => {
   }, [isLoading, isAuthenticated, isReviewer, activeView, setActiveView, showToast])
 
   const isLanding = activeView === 'landing'
+  const isPublicSurface = isLanding || activeView === 'public-map'
   const isAuth = activeView === 'auth' || activeView === 'signup'
 
   // Context-aware full-screen loader while auth state resolves
@@ -97,13 +99,20 @@ const MainContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F9FC] dark:bg-[#0a0d13]">
+    <div className="min-h-screen flex flex-col bg-[#F9FAFB]">
       {/* Proper Navbar depending on public vs app state */}
-      {isLanding ? <LandingNavbar /> : <Navbar />}
+      {isPublicSurface ? <LandingNavbar /> : <Navbar />}
 
       {/* Main View Shell - Single clean container, no redundant sidebar tabs */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className={isPublicSurface ? 'flex-1 w-full' : 'flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6'}>
         {activeView === 'landing' && <LandingPage />}
+        {activeView === 'public-map' && (
+          <div className="min-h-full bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+              <PublicBasinMap />
+            </div>
+          </div>
+        )}
         {activeView === 'home' && <HeroSection />}
         {activeView === 'feed' && <FeedView />}
         {activeView === 'capture' && <CaptureWizard />}
@@ -118,13 +127,13 @@ const MainContent: React.FC = () => {
       </main>
 
       {/* Inside App Footer */}
-      {!isLanding && <AppFooter />}
+      {!isPublicSurface && <AppFooter />}
 
       {/* Mobile bottom navigation (inside the app shell only) */}
-      {!isLanding && <BottomNav />}
+      {!isPublicSurface && <BottomNav />}
 
       {/* Clearance so the fixed bottom bar never covers the footer */}
-      {!isLanding && <div className="h-[76px] md:hidden shrink-0" aria-hidden />}
+      {!isPublicSurface && <div className="h-[76px] md:hidden shrink-0" aria-hidden />}
 
       {/* Global Toast Notification Container */}
       <ToastContainer />

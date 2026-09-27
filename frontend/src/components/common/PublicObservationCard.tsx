@@ -33,6 +33,15 @@ const getEcosystemCategory = (obs: Observation): string => {
   return 'Riparian Corridor'
 }
 
+const presentationSummary = (summary: string): string => {
+  // Records created before the responsible-AI output guard may contain claims
+  // outside AquaSense's scope. Do not repeat those claims in public cards.
+  if (/\b(safe|unsafe|drinkable|potable|consumption|medical|health\s+(?:risk|hazard))\b/i.test(summary)) {
+    return 'This report contains a visual evidence summary. Review its evidence trail and any human verification before drawing conclusions.'
+  }
+  return summary
+}
+
 export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
   observation: obs,
   onSelect,
@@ -125,7 +134,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
   return (
     <article
       onClick={handleCardClick}
-      className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0284C7]/35 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer text-left relative"
+      className="public-observation-card group rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer text-left relative"
     >
       {/* Stream Photo Container */}
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
@@ -145,7 +154,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
         )}
 
         {/* Gradient Scrim for Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-slate-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
 
         {/* Signal Badge Top Left */}
         <div className="absolute top-3 left-3 z-10">
@@ -154,18 +163,18 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
 
         {/* Category Pill Top Right */}
         {showCategory && (
-          <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white border border-white/10 text-[11px] font-medium tracking-wide">
+          <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-slate-700 border border-slate-200 text-[11px] font-medium tracking-wide shadow-sm">
             {category}
           </div>
         )}
 
         {/* Location Tag Bottom Left */}
-        <div className="absolute bottom-2.5 left-3 right-3 z-10 flex items-center justify-between text-white text-xs">
-          <div className="flex items-center gap-1.5 font-medium truncate drop-shadow-md">
-            <MapPin size={13} className="text-teal-300 shrink-0" />
+        <div className="absolute bottom-2.5 left-3 right-3 z-10 flex items-center justify-between text-slate-800 text-xs">
+          <div className="flex items-center gap-1.5 font-medium truncate drop-shadow-md bg-white/95 backdrop-blur-sm px-2 py-1 rounded-lg border border-slate-200">
+            <MapPin size={13} className="text-[#0284C7] shrink-0" />
             <span className="truncate">{obs.location_address || obs.site_name}</span>
           </div>
-          <span className="text-[11px] font-mono shrink-0 bg-black/40 px-1.5 py-0.5 rounded-sm backdrop-blur-xs">
+          <span className="text-[11px] font-mono shrink-0 bg-white/95 border border-slate-200 px-1.5 py-0.5 rounded-sm backdrop-blur-sm text-slate-700 font-semibold">
             {Math.round(obs.confidence * 100)}% conf
           </span>
         </div>
@@ -190,9 +199,9 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
             )}
           </div>
 
-          {/* AI Summary / Diagnosis snippet */}
+          {/* Visible-evidence summary, never a safety or health conclusion. */}
           <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-            {obs.ai_summary}
+            {presentationSummary(obs.ai_summary)}
           </p>
         </div>
 

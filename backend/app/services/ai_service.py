@@ -7,9 +7,11 @@ metadata so the frontend can render an auditable AI decision trail.
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import logging
 import os
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -26,6 +28,10 @@ def _get_api_key() -> str:
 
 _VISION_MODEL = "qwen/qwen3.8-27b"
 _PROMPT_VERSION = "aquasense-vision-2026-09-v1"
+_SAFETY_CLAIM_RE = re.compile(
+    r"\b(safe|unsafe|drink|drinkable|potable|consumption|medical|diagnos(?:e|is)|health\s+(?:risk|hazard))\b",
+    re.IGNORECASE,
+)
 
 # ---------------------------------------------------------------------------
 # System prompt – defines AI persona and structured JSON output contract
@@ -43,7 +49,8 @@ The JSON must have exactly these keys:
   "confidence": <float 0.0–1.0>,
   "title": "<8–12 word headline>",
   "summary": "<2–4 sentence plain-language assessment>",
-  "water_quality_score": <integer 0–100, 100 = pristine>,
+  "visual_condition_score": <integer 0–100, where 100 means the image shows fewer visible concerns; this is NOT a water-quality or safety score>,
+  "assessment_status": "assessed" | "needs_better_photo",
   "detected_issues": [<list of short strings, can be empty>],
   "key_evidence": [<3–6 factual observations from the image>],
   "suggested_steps": [<2–5 actionable recommendations>],
@@ -63,8 +70,15 @@ Signal definitions:
 - "watch"  = one or more mild indicators worth monitoring
 - "investigate" = multiple or severe indicators needing field inspection
 
+If the image is too dark, blurred, obstructed, unrelated to a water body, or
+otherwise insufficient, set "assessment_status" to "needs_better_photo",
+set confidence to 0, and explain what photograph would help. Do not infer a
+condition from an insufficient image.
+
 Be honest and calibrated. If image quality is low, reduce confidence accordingly.
 Always base evidence directly on what you can observe in the image.
+Never state or imply that water is safe, unsafe, drinkable, potable, or suitable
+for consumption. Do not make health or medical claims.
 """
 
 _USER_PROMPT_TEMPLATE = """Please analyse this water body photograph for AquaSense citizen science monitoring.
@@ -111,6 +125,7 @@ def _finish(
         "model": model,
         "prompt_version": _PROMPT_VERSION if source == "groq" else "n/a",
         "image_count": image_count,
+        "assessment_status": result.get("assessment_status", "assessed"),
         "analysed_at": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -236,7 +251,10 @@ async def analyze_multiple_images_with_groq(
     content.append({"type": "text", "text": user_text})
 
     try:
-        response = client.chat.completions.create(
+        # The Groq SDK is synchronous. Offload it so one slow vision request
+        # does not block other FastAPI requests on the event loop.
+        response = await asyncio.to_thread(
+            client.chat.completions.create,
             model=_VISION_MODEL,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
@@ -276,8 +294,33 @@ async def analyze_multiple_images_with_groq(
 # Internal helpers
 # ---------------------------------------------------------------------------
 
+def _clean_text(value: Any, default: str, *, max_length: int) -> str:
+    """Constrain untrusted model text before it reaches a citizen-facing result."""
+    if not isinstance(value, str):
+        return default
+    cleaned = " ".join(value.split())[:max_length]
+    if not cleaned or _SAFETY_CLAIM_RE.search(cleaned):
+        return default
+    return cleaned
+
+
+def _clean_text_list(value: Any, *, limit: int, fallback: list[str]) -> list[str]:
+    if not isinstance(value, list):
+        return fallback
+    cleaned = [
+        item
+        for item in (_clean_text(entry, "", max_length=280) for entry in value[:limit])
+        if item
+    ]
+    return cleaned or fallback
+
+
+def _enum(value: Any, allowed: set[str], default: str) -> str:
+    return value if isinstance(value, str) and value in allowed else default
+
+
 def _normalise(data: dict) -> dict:
-    """Ensure all required keys exist with safe defaults."""
+    """Validate and constrain a model response before exposing it to users."""
     signal = data.get("signal", "normal")
     if signal not in ("normal", "watch", "investigate"):
         signal = "normal"
@@ -285,29 +328,74 @@ def _normalise(data: dict) -> dict:
     confidence = float(data.get("confidence", 0.75))
     confidence = max(0.0, min(1.0, confidence))
 
-    water_score = int(data.get("water_quality_score", 70))
-    water_score = max(0, min(100, water_score))
+    try:
+        visual_score = int(data.get("visual_condition_score", data.get("water_quality_score", 70)))
+    except (TypeError, ValueError):
+        visual_score = 70
+    visual_score = max(0, min(100, visual_score))
+
+    assessment_status = data.get("assessment_status", "assessed")
+    if assessment_status not in ("assessed", "needs_better_photo"):
+        assessment_status = "assessed"
+    if assessment_status == "needs_better_photo":
+        confidence = 0.0
+        visual_score = 0
 
     eco = data.get("ecosystem_indicators", {})
+    if not isinstance(eco, dict):
+        eco = {}
 
     return {
         "signal": signal,
         "confidence": confidence,
-        "title": data.get("title", "Water Quality Assessment"),
-        "summary": data.get("summary", "Analysis completed."),
-        "water_quality_score": water_score,
-        "detected_issues": data.get("detected_issues", []),
-        "key_evidence": data.get("key_evidence", []),
-        "suggested_steps": data.get("suggested_steps", []),
+        "title": _clean_text(data.get("title"), "Visual observation summary", max_length=120),
+        "summary": _clean_text(
+            data.get("summary"),
+            "The image was assessed for visible environmental indicators only.",
+            max_length=900,
+        ),
+        "visual_condition_score": visual_score,
+        "assessment_status": assessment_status,
+        "detected_issues": _clean_text_list(data.get("detected_issues"), limit=6, fallback=[]),
+        "key_evidence": _clean_text_list(
+            data.get("key_evidence"),
+            limit=6,
+            fallback=["No additional visual evidence could be confirmed."],
+        ),
+        "suggested_steps": _clean_text_list(
+            data.get("suggested_steps"),
+            limit=5,
+            fallback=["Use this observation as a monitoring record, not a safety assessment."],
+        ),
         "ecosystem_indicators": {
-            "turbidity": eco.get("turbidity", "clear"),
-            "algae_presence": eco.get("algae_presence", "none"),
+            "turbidity": _enum(
+                eco.get("turbidity"),
+                {"clear", "slightly_cloudy", "cloudy", "very_cloudy"},
+                "clear",
+            ),
+            "algae_presence": _enum(
+                eco.get("algae_presence"),
+                {"none", "minimal", "moderate", "heavy"},
+                "none",
+            ),
             "waste_visible": bool(eco.get("waste_visible", False)),
-            "flow_condition": eco.get("flow_condition", "healthy"),
-            "bank_condition": eco.get("bank_condition", "healthy"),
-            "color_anomaly": eco.get("color_anomaly", "none"),
+            "flow_condition": _enum(
+                eco.get("flow_condition"),
+                {"healthy", "low", "stagnant", "flooding"},
+                "healthy",
+            ),
+            "bank_condition": _enum(
+                eco.get("bank_condition"),
+                {"vegetated", "eroded", "degraded", "healthy"},
+                "healthy",
+            ),
+            "color_anomaly": _enum(
+                eco.get("color_anomaly"),
+                {"none", "greenish", "brownish", "reddish", "blackish", "foamy"},
+                "none",
+            ),
         },
-        "urgency": data.get("urgency", "routine"),
+        "urgency": _enum(data.get("urgency"), {"routine", "monitor", "urgent", "critical"}, "routine"),
     }
 
 
@@ -320,12 +408,13 @@ def _heuristic_fallback(*, waste_visible: bool = False, notes: str = "") -> dict
     return {
         "signal": signal,
         "confidence": confidence,
-        "title": "Preliminary Assessment (Heuristic)",
+        "title": "Questionnaire-only preliminary record",
         "summary": (
             "AI image analysis is currently unavailable. This assessment is based on "
             "observer-reported data only. A field inspection is recommended to verify conditions."
         ),
-        "water_quality_score": 55 if waste_visible else 72,
+        "visual_condition_score": 0,
+        "assessment_status": "questionnaire_only",
         "detected_issues": issues,
         "key_evidence": [
             "Assessment derived from observer questionnaire responses.",

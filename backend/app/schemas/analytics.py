@@ -62,6 +62,18 @@ class RegionAnalyticsResponse(BaseModel):
     basin_snapshots: list[BasinSnapshot] = Field(default_factory=list)
 
 
+class AIEvaluationMetrics(BaseModel):
+    """Aggregate human-feedback metrics for responsible AI evaluation."""
+    total_observations: int = 0
+    vision_assessed: int = 0
+    questionnaire_only: int = 0
+    observations_with_consistency_flags: int = 0
+    reviewed_with_alignment: int = 0
+    reviewer_agreements: int = 0
+    reviewer_overrides: int = 0
+    agreement_rate: float | None = None
+
+
 class ObservationEngagement(BaseModel):
     views: int = 0
     likes: int = 0

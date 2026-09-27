@@ -1,5 +1,6 @@
 import React from 'react'
 import { X } from 'lucide-react'
+import { Button } from './Button'
 
 interface InfoModalProps {
   open: boolean
@@ -38,13 +39,9 @@ export const InfoModal: React.FC<InfoModalProps> = ({ open, title, children, onC
 
         <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">{children}</div>
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-full px-5 py-2.5 rounded-xl font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer text-sm"
-        >
+        <Button onClick={onClose} variant="primary" className="w-full">
           Close
-        </button>
+        </Button>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
+  BarChart3,
   CheckCircle,
   Flag,
   Search,
@@ -9,7 +10,8 @@ import { useApp } from '../../context/AppContext'
 import { SignalBadge } from '../common/SignalBadge'
 import { EmptyState } from '../common/EmptyState'
 import { ReviewModal } from './ReviewModal'
-import type { Observation } from '../../types/observation'
+import { fetchAIEvaluationMetrics, type AIEvaluationMetrics } from '../../services/api'
+import type { AiAssessmentAlignment, Observation } from '../../types/observation'
 
 export const ReviewerQueue: React.FC = () => {
   const { observations, reviewObservation, openObservationDetail } = useApp()
@@ -20,6 +22,11 @@ export const ReviewerQueue: React.FC = () => {
     action: 'verify' | 'flag'
   } | null>(null)
   const [search, setSearch] = useState('')
+  const [evaluationMetrics, setEvaluationMetrics] = useState<AIEvaluationMetrics | null>(null)
+
+  useEffect(() => {
+    fetchAIEvaluationMetrics().then(setEvaluationMetrics)
+  }, [])
 
   // Priority counts
   const highCount = observations.filter((o) => o.priority === 'high' || o.signal === 'investigate').length
@@ -58,6 +65,26 @@ export const ReviewerQueue: React.FC = () => {
           Prioritized observations requiring human expert review and verification.
         </p>
       </div>
+
+      {evaluationMetrics && (
+        <section className="rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4 sm:p-5" aria-label="AI evaluation metrics">
+          <div className="flex items-start gap-3">
+            <span className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
+              <BarChart3 size={18} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-slate-900">Human feedback on AI assessments</p>
+              <p className="text-xs text-slate-600 mt-0.5">Reviewer alignment is an evaluation signal, not a measure of environmental truth.</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+                <Metric label="Vision assessed" value={evaluationMetrics.vision_assessed} />
+                <Metric label="Reviewed with feedback" value={evaluationMetrics.reviewed_with_alignment} />
+                <Metric label="Reviewer overrides" value={evaluationMetrics.reviewer_overrides} />
+                <Metric label="Agreement rate" value={evaluationMetrics.agreement_rate === null ? '—' : `${Math.round(evaluationMetrics.agreement_rate * 100)}%`} />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
@@ -116,7 +143,7 @@ export const ReviewerQueue: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by location..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white placeholder-slate-400 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
           />
         </div>
       </div>
@@ -252,8 +279,8 @@ export const ReviewerQueue: React.FC = () => {
           observation={modalObs.obs}
           actionType={modalObs.action}
           onClose={() => setModalObs(null)}
-          onConfirm={(notes) => {
-            reviewObservation(modalObs.obs.id, modalObs.action === 'verify' ? 'verified' : 'flagged', notes)
+          onConfirm={(notes, alignment: AiAssessmentAlignment) => {
+            reviewObservation(modalObs.obs.id, modalObs.action === 'verify' ? 'verified' : 'flagged', notes, alignment)
             setModalObs(null)
           }}
         />
@@ -261,3 +288,10 @@ export const ReviewerQueue: React.FC = () => {
     </div>
   )
 }
+
+const Metric: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+  <div className="rounded-xl border border-indigo-100 bg-white/80 p-3">
+    <p className="text-lg font-black text-indigo-800">{value}</p>
+    <p className="text-[11px] font-medium text-slate-600 leading-tight mt-0.5">{label}</p>
+  </div>
+)

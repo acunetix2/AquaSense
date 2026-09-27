@@ -45,7 +45,7 @@ export const Sidebar: React.FC = () => {
       <div className="p-5 border-b border-slate-100 flex items-center justify-between">
         <button
           onClick={() => handleNav('home')}
-          className="flex items-center gap-2.5 group cursor-pointer focus:outline-hidden"
+          className="flex items-center gap-2.5 group cursor-pointer focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 rounded-lg"
         >
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
             <Droplets size={18} className="stroke-[2.2]" />

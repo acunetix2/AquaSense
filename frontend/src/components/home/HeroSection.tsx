@@ -98,7 +98,7 @@ export const HeroSection: React.FC = () => {
   return (
     <div className="space-y-12 py-4 md:py-8 text-left">
       {/* 1. HERO BANNER */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50/70 dark:from-sky-900/50 via-white dark:via-[#0e1117] to-white dark:to-[#0e1117] border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-10 lg:p-12 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50 via-white to-white border border-slate-200 p-6 sm:p-10 lg:p-12 shadow-sm">
         {/* Soft Background Accent Circles */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-teal-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -191,7 +191,7 @@ export const HeroSection: React.FC = () => {
               placeholder="Search river, observer, location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] focus:border-[#0284C7] shadow-2xs placeholder:text-slate-400"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 focus:border-[#0284C7] shadow-2xs placeholder:text-slate-400"
             />
             {searchQuery && (
               <button
@@ -230,7 +230,7 @@ export const HeroSection: React.FC = () => {
               onClick={() => setSelectedSignal('all')}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                 selectedSignal === 'all'
-                  ? 'bg-slate-900 text-white'
+                  ? 'bg-[#0284C7] text-white shadow-sm'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -278,7 +278,7 @@ export const HeroSection: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 font-semibold text-slate-700 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="confidence">Highest Confidence</option>
@@ -324,7 +324,7 @@ export const HeroSection: React.FC = () => {
       </section>
 
       {/* 4. ONE HEALTH / ECOSYSTEM SCIENTIFIC SECTION */}
-      <section className="bg-gradient-to-r from-slate-900 via-[#0284C7] to-slate-900 text-white rounded-3xl p-8 sm:p-10 shadow-xl">
+      <section className="bg-gradient-to-r from-[#0284C7] to-sky-600 text-white rounded-3xl p-8 sm:p-10 shadow-xl border border-sky-200">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-400/20 text-teal-300 text-xs font-semibold tracking-wide">

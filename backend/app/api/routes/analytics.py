@@ -5,10 +5,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
-from app.schemas.analytics import ObservationAnalytics, RegionAnalyticsResponse
+from app.schemas.analytics import AIEvaluationMetrics, ObservationAnalytics, RegionAnalyticsResponse
 from app.services.analytics_service import AnalyticsService
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
+
+
+@router.get("/ai-evaluation", response_model=AIEvaluationMetrics)
+async def ai_evaluation_metrics(db: AsyncSession = Depends(get_db)) -> AIEvaluationMetrics:
+    """Responsible-AI metrics derived from reviewers' explicit alignment decisions."""
+    return await AnalyticsService.ai_evaluation_metrics(db)
 
 
 @router.get("/regions", response_model=RegionAnalyticsResponse)

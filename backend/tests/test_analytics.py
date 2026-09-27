@@ -48,6 +48,63 @@ def _seed_trusted_rows(client: TestClient) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Responsible-AI evaluation
+# ---------------------------------------------------------------------------
+
+
+def test_ai_evaluation_reports_reviewer_alignment(client: TestClient) -> None:
+    from tests.test_api import REVIEWER_ID, _create_profile
+
+    _create_profile(client, REVIEWER_ID, "reviewer")
+    agreed = _create_observation(
+        client,
+        site_name="AI Agree",
+        latitude=40.0,
+        longitude=-73.0,
+        assessment_answers={
+            "ai_result": {
+                "signal": "watch",
+                "confidence": 0.82,
+                "summary": "Cloudy water is visible near the bank.",
+                "key_evidence": ["Cloudy water is visible."],
+                "suggested_steps": ["Record a follow-up photo."],
+                "urgency": "monitor",
+                "analysis_meta": {
+                    "source": "groq",
+                    "model": "qwen/qwen3.8-27b",
+                    "prompt_version": "aquasense-vision-2026-09-v1",
+                    "image_count": 1,
+                    "assessment_status": "assessed",
+                    "analysed_at": "2026-09-25T10:00:00+00:00",
+                },
+            },
+        },
+    )
+    overridden = _create_observation(client, site_name="AI Override", latitude=41.0, longitude=-74.0)
+
+    for observation, alignment in ((agreed, "agreed"), (overridden, "overridden")):
+        response = client.patch(
+            f"{API}/observations/{observation['id']}/review",
+            json={
+                "action": "verified",
+                "reviewer_name": "Evaluation Reviewer",
+                "notes": "Reviewed against submitted evidence.",
+                "ai_assessment_alignment": alignment,
+            },
+            headers={"X-User-Id": REVIEWER_ID},
+        )
+        assert response.status_code == 200
+
+    body = client.get(f"{API}/analytics/ai-evaluation").json()
+    assert body["total_observations"] == 2
+    assert body["vision_assessed"] == 1
+    assert body["reviewed_with_alignment"] == 2
+    assert body["reviewer_agreements"] == 1
+    assert body["reviewer_overrides"] == 1
+    assert body["agreement_rate"] == 0.5
+
+
+# ---------------------------------------------------------------------------
 # Region breakdown (per-location rollups + sections)
 # ---------------------------------------------------------------------------
 

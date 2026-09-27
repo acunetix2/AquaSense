@@ -161,7 +161,10 @@ async def create_observation(
     db: AsyncSession = Depends(get_db),
 ) -> ObservationRead:
     """Submit a new citizen observation. GROQ vision analysis runs if image_data or image_data_list is included."""
-    obs = await ObservationService.create_observation(db, payload)
+    try:
+        obs = await ObservationService.create_observation(db, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc))
     # Increment profile observation counter if user is authenticated
     if payload.user_id:
         await ProfileService.increment_observation_count(db, payload.user_id)

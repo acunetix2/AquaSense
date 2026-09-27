@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { X, CheckCircle2, AlertTriangle } from 'lucide-react'
 
-import type { Observation } from '../../types/observation'
+import type { AiAssessmentAlignment, Observation } from '../../types/observation'
 
 interface ReviewModalProps {
   observation: Observation
   actionType: 'verify' | 'flag'
   onClose: () => void
-  onConfirm: (notes: string) => void
+  onConfirm: (notes: string, alignment: AiAssessmentAlignment) => void
 }
 
 export const ReviewModal: React.FC<ReviewModalProps> = ({
@@ -22,10 +22,14 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       ? 'Field evidence and water appearance are consistent with typical regional baseline.'
       : 'Flagged for environmental field sampling and investigation by local water authority.'
   )
+  const visionAssessed = observation.ai_trail?.source === 'groq'
+  const [alignment, setAlignment] = useState<AiAssessmentAlignment | null>(
+    visionAssessed ? null : 'not_applicable'
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onConfirm(notes)
+    if (alignment) onConfirm(notes, alignment)
   }
 
   return (
@@ -74,9 +78,42 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               required
-              className="w-full p-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+              className="w-full p-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
             />
           </div>
+
+          <fieldset className="space-y-2">
+            <legend className="block text-xs font-semibold text-slate-700">
+              Relationship to the AI interpretation {visionAssessed ? '(required)' : ''}
+            </legend>
+            <p className="text-[11px] text-slate-500">
+              This is recorded for model evaluation; it does not change your review decision.
+            </p>
+            <div className="grid gap-2 pt-1">
+              {([
+                ['agreed', 'I agree with the AI interpretation'],
+                ['overridden', 'I override the AI interpretation'],
+                ['not_applicable', 'Not applicable / insufficient evidence'],
+              ] as const).map(([value, label]) => (
+                <label
+                  key={value}
+                  className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-xs cursor-pointer transition-colors ${
+                    alignment === value ? 'border-[#0284C7] bg-sky-50 text-slate-800' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="ai-assessment-alignment"
+                    value={value}
+                    checked={alignment === value}
+                    onChange={() => setAlignment(value)}
+                    required={visionAssessed}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
@@ -88,10 +125,13 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
             </button>
             <button
               type="submit"
+              disabled={!alignment}
               className={`px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm cursor-pointer ${
-                isVerify
+                isVerify && alignment
                   ? 'bg-emerald-600 hover:bg-emerald-700'
-                  : 'bg-rose-600 hover:bg-rose-700'
+                  : alignment
+                  ? 'bg-rose-600 hover:bg-rose-700'
+                  : 'bg-slate-300 cursor-not-allowed'
               }`}
             >
               {isVerify ? 'Confirm Verification' : 'Confirm Flagging'}

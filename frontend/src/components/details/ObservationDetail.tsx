@@ -9,9 +9,7 @@ import {
   BookOpen,
   User,
   Maximize2,
-  Droplets,
   ShieldCheck,
-  Clock,
   Trash2,
   Pencil,
   Loader2,
@@ -59,7 +57,15 @@ export const ObservationDetail: React.FC = () => {
   } = useApp()
   const { user } = useAuth()
 
-  const [activeTab, setActiveTab] = useState<'evidence' | 'location' | 'images' | 'history' | 'comments' | 'analytics'>('evidence')
+  // Initialize activeTab from URL query param, default to 'evidence'
+  const getInitialTab = () => {
+    const params = new URLSearchParams(window.location.search)
+    const tabParam = params.get('tab')
+    const validTabs = ['evidence', 'location', 'images', 'history', 'comments', 'analytics']
+    return validTabs.includes(tabParam || '') ? (tabParam as any) : 'evidence'
+  }
+
+  const [activeTab, setActiveTab] = useState<'evidence' | 'location' | 'images' | 'history' | 'comments' | 'analytics'>(getInitialTab())
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [reviewModalAction, setReviewModalAction] = useState<'verify' | 'flag' | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -167,6 +173,13 @@ export const ObservationDetail: React.FC = () => {
     }
   }, [obs, user?.id])
 
+  // Persist activeTab to URL query param
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    params.set('tab', activeTab)
+    window.history.replaceState({}, '', `?${params.toString()}`)
+  }, [activeTab])
+
   if (!obs) {
     return (
       <div className="p-12 text-center text-slate-500">
@@ -201,7 +214,6 @@ export const ObservationDetail: React.FC = () => {
   const analystAvatar = obs.observer_avatar || user?.avatar_url ||
     `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(analystName)}`
   const analystRole = obs.observer_role || (obs.reviewed_by ? 'Certified Reviewer' : 'Citizen Observer')
-  const analysisTime = obs.reviewed_at || obs.created_at
 
   // Only the authenticated owner may edit or delete a record (strict user-id match;
   // email is redacted server-side and display names are not unique).
@@ -430,132 +442,90 @@ export const ObservationDetail: React.FC = () => {
               </span>
             </div>
 
-            {/* ── ANALYST ATTRIBUTION CARD ── */}
-            <div className="mt-4 pt-4 border-t border-slate-100">
-              <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-3">
-                Analyzed By
-              </p>
-              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/80 to-teal-50/40 border border-sky-100/80">
-                {/* Avatar */}
-                <div className="relative shrink-0">
-                  <img
-                    src={analystAvatar}
-                    alt={analystName}
-                    className="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(analystName)}`
-                    }}
-                  />
-                  {obs.status === 'verified' && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center border border-white">
-                      <ShieldCheck size={9} className="text-white" />
-                    </div>
-                  )}
-                </div>
 
-                {/* Info */}
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold text-slate-900 text-sm truncate">{analystName}</p>
-                  <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                    <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
-                      <Droplets size={8} className="text-white" />
-                    </span>
-                    <span>{analystRole}</span>
-                  </p>
-                </div>
-
-                {/* Timestamp */}
-                <div className="shrink-0 text-right">
-                  <div className="flex items-center gap-1 text-[11px] text-slate-400">
-                    <Clock size={10} />
-                    <span>{formatDate(analysisTime).split(',')[0]}</span>
-                  </div>
-                  <p className="text-[10px] text-slate-300 mt-0.5">
-                    {new Date(analysisTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-                  </p>
-                </div>
-              </div>
-
-              {obs.observer_location && (
-                <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-2 ml-1">
-                  <MapPin size={10} className="text-slate-300" />
-                  <span>{obs.observer_location}</span>
-                </p>
-              )}
-            </div>
           </div>
         </div>
       </div>
 
-      {/* ── OBSERVATION SOURCE SECTION ── */}
+      {/* ── SUBMITTED BY SECTION (Consolidated Observer Info) ── */}
       <section className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 sm:p-7 space-y-5">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <User size={18} className="text-[#0284C7]" />
           <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-            Observation Submitted By
+            Submitted By
           </h3>
+          {obs.status === 'verified' && (
+            <span className="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold">
+              <ShieldCheck size={12} />
+              Verified
+            </span>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          <div className="md:col-span-6 flex items-center gap-4">
-            <img
-              src={analystAvatar}
-              alt={analystName}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(analystName)}`
-              }}
-            />
+        <div className="flex items-start gap-4">
+          {/* Avatar */}
+          <img
+            src={analystAvatar}
+            alt={analystName}
+            className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md shrink-0"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(analystName)}`
+            }}
+          />
 
-            <div className="space-y-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h4 className="font-extrabold text-base sm:text-lg text-slate-900">
-                  {analystName}
-                </h4>
-                <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
-                  {analystRole}
-                </span>
-              </div>
-              {obs.observer_location && (
-                <p className="text-xs text-slate-500 flex items-center gap-1">
-                  <MapPin size={12} className="text-slate-400" />
-                  <span>{obs.observer_location}</span>
-                </p>
-              )}
+          {/* Observer Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h4 className="font-bold text-base sm:text-lg text-slate-900">
+                {analystName}
+              </h4>
+              <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                {analystRole}
+              </span>
             </div>
-          </div>
-
-          <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 text-xs">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Photo Uploaded
+            
+            {obs.observer_location && (
+              <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                <MapPin size={12} className="text-slate-400 shrink-0" />
+                <span>{obs.observer_location}</span>
               </p>
-              <p className="font-semibold text-slate-800 mt-0.5 flex items-center gap-1.5">
-                <Calendar size={13} className="text-slate-400" />
-                <span>{formatDate(obs.created_at)}</span>
-              </p>
-            </div>
-
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Field Coordinates
-              </p>
-              <p className="font-mono font-semibold text-slate-800 mt-0.5">
-                {obs.latitude.toFixed(4)}° N, {obs.longitude.toFixed(4)}° W
-              </p>
-            </div>
+            )}
+            
+            <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-1">
+              <Calendar size={11} className="text-slate-400 shrink-0" />
+              <span>Submitted {formatDate(obs.created_at)}</span>
+            </p>
           </div>
         </div>
 
-        {/* Observer engagement stats — followers, likes, comments, views */}
+        {/* Key Metadata */}
+        <div className="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Coordinates
+            </p>
+            <p className="font-mono text-xs font-semibold text-slate-800 mt-1">
+              {obs.latitude.toFixed(4)}°, {obs.longitude.toFixed(4)}°
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Photos
+            </p>
+            <p className="text-xs font-semibold text-slate-800 mt-1">
+              {((obs.image_urls && obs.image_urls.length > 0) ? obs.image_urls : [obs.image_url]).length} image{((obs.image_urls && obs.image_urls.length > 0) ? obs.image_urls : [obs.image_url]).length !== 1 ? 's' : ''}
+            </p>
+          </div>
+        </div>
+
+        {/* Observer Engagement Stats */}
         {observerProfile && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {(
               [
                 { icon: Users, label: 'Followers', value: observerProfile.followers_count },
-                { icon: Heart, label: 'Profile Likes', value: observerProfile.likes_received },
+                { icon: Heart, label: 'Likes', value: observerProfile.likes_received },
                 { icon: MessageSquare, label: 'Comments', value: observerProfile.comments_received ?? 0 },
                 { icon: Eye, label: 'Views', value: observerProfile.views_received ?? 0 },
               ] as const
@@ -568,7 +538,7 @@ export const ObservationDetail: React.FC = () => {
                   <StatIcon size={15} className="text-[#0284C7]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-extrabold text-slate-900 leading-none">{value}</p>
+                  <p className="text-sm font-bold text-slate-900 leading-none">{value}</p>
                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-1">
                     {label}
                   </p>
@@ -1028,8 +998,8 @@ export const ObservationDetail: React.FC = () => {
           observation={obs}
           actionType={reviewModalAction}
           onClose={() => setReviewModalAction(null)}
-          onConfirm={(notes) => {
-            reviewObservation(obs.id, reviewModalAction === 'verify' ? 'verified' : 'flagged', notes)
+          onConfirm={(notes, alignment) => {
+            reviewObservation(obs.id, reviewModalAction === 'verify' ? 'verified' : 'flagged', notes, alignment)
             setReviewModalAction(null)
           }}
         />
@@ -1156,7 +1126,7 @@ export const ObservationDetail: React.FC = () => {
                   required
                   value={editSiteName}
                   onChange={(e) => setEditSiteName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                 />
               </div>
 
@@ -1168,7 +1138,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editAppearance}
                     onChange={(e) => setEditAppearance(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                   >
                     <option value="clear">Clear / Transparent</option>
                     <option value="cloudy">Cloudy / Slightly Silty</option>
@@ -1185,7 +1155,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editOdour}
                     onChange={(e) => setEditOdour(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                   >
                     <option value="none">No Detectable Odour</option>
                     <option value="earthy">Natural Earthy / Musty</option>
@@ -1204,7 +1174,7 @@ export const ObservationDetail: React.FC = () => {
                   <select
                     value={editFlowRate}
                     onChange={(e) => setEditFlowRate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                   >
                     <option value="stagnant">Stagnant / Pooled</option>
                     <option value="slow">Slow / Gentle Trickle</option>
@@ -1238,7 +1208,7 @@ export const ObservationDetail: React.FC = () => {
                     value={editLocationAddress}
                     onChange={(e) => setEditLocationAddress(e.target.value)}
                     placeholder="Nearest landmark or site address"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                   />
                 </div>
 
@@ -1253,7 +1223,7 @@ export const ObservationDetail: React.FC = () => {
                       value={editLatitude}
                       onChange={(e) => setEditLatitude(Number(e.target.value))}
                       placeholder="Lat"
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                     />
                     <input
                       type="number"
@@ -1261,7 +1231,7 @@ export const ObservationDetail: React.FC = () => {
                       value={editLongitude}
                       onChange={(e) => setEditLongitude(Number(e.target.value))}
                       placeholder="Lng"
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                     />
                   </div>
                 </div>
@@ -1276,7 +1246,7 @@ export const ObservationDetail: React.FC = () => {
                   value={editImageUrls}
                   onChange={(e) => setEditImageUrls(e.target.value)}
                   placeholder="https://example.com/photo-1.jpg, https://example.com/photo-2.jpg"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                 />
               </div>
 
@@ -1289,7 +1259,7 @@ export const ObservationDetail: React.FC = () => {
                   value={editNotes}
                   onChange={(e) => setEditNotes(e.target.value)}
                   placeholder="Additional context on riparian buffers, pipe discharges, weather..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2"
                 />
               </div>
 

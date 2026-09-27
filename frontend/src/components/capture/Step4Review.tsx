@@ -40,7 +40,8 @@ interface AIAnalysisResult {
   confidence: number
   title: string
   summary: string
-  water_quality_score: number
+  visual_condition_score: number
+  assessment_status: 'assessed' | 'needs_better_photo' | 'questionnaire_only'
   detected_issues: string[]
   key_evidence: string[]
   suggested_steps: string[]
@@ -52,6 +53,7 @@ interface AIAnalysisResult {
     model: string
     prompt_version: string
     image_count: number
+    assessment_status?: 'assessed' | 'needs_better_photo' | 'questionnaire_only'
     analysed_at: string
   }
 }
@@ -70,6 +72,7 @@ interface Step4ReviewProps {
   imageMime: string
   answers: AssessmentAnswers
   onBack: () => void
+  onRetakePhoto: () => void
   onSave: (calculated: {
     signal: SignalType
     confidence: number
@@ -92,7 +95,8 @@ const URGENCY_CONFIG: Record<string, { bg: string; text: string; border: string;
   critical: { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', label: 'Critical — Escalate' },
 }
 
-// Water quality score colour
+// Visual-condition score colour. This expresses what the image visibly shows;
+// it is never a measure of water safety or suitability for use.
 function scoreColor(score: number): string {
   if (score >= 80) return 'text-emerald-600'
   if (score >= 60) return 'text-amber-600'
@@ -164,6 +168,7 @@ export const Step4Review: React.FC<Step4ReviewProps> = ({
   imageMime,
   answers,
   onBack,
+  onRetakePhoto,
   onSave,
   onViewOnMap,
 }) => {
@@ -272,6 +277,9 @@ export const Step4Review: React.FC<Step4ReviewProps> = ({
   const allFlags = aiResult?.consistency_flags || []
   const consistencyFlags = allFlags.filter((f) => f.type === 'consistency')
   const qualityFlags = allFlags.filter((f) => f.type === 'image_quality')
+  const assessmentStatus = aiResult?.assessment_status ?? aiResult?.analysis_meta?.assessment_status ?? 'assessed'
+  const needsBetterPhoto = assessmentStatus === 'needs_better_photo'
+  const isQuestionnaireOnly = assessmentStatus === 'questionnaire_only'
 
   return (
     <div className="space-y-6">
@@ -334,28 +342,70 @@ export const Step4Review: React.FC<Step4ReviewProps> = ({
       {/* Main Results */}
       {aiResult && !isAnalysing && (
         <div className="space-y-5">
+          {needsBetterPhoto && (
+            <div className="rounded-2xl border border-sky-300 bg-sky-50 p-5 flex items-start gap-3">
+              <AlertTriangle size={19} className="text-sky-700 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-sky-900">A clearer water photo is needed</p>
+                <p className="text-xs text-sky-800 mt-1 leading-relaxed">
+                  AquaSense did not infer stream conditions from this image. Retake the photo so the water surface is well lit, in focus and clearly visible.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {isQuestionnaireOnly && (
+            <div className="rounded-2xl border border-sky-300 bg-sky-50 p-5 flex items-start gap-3">
+              <AlertTriangle size={19} className="text-sky-700 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-sky-900">Photo analysis was unavailable</p>
+                <p className="text-xs text-sky-800 mt-1 leading-relaxed">
+                  This preliminary record reflects your reported observations only. No visual AI conclusion was produced, so a reviewer or follow-up photo is needed to verify it.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Top Row: Signal + Score + Urgency */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Signal */}
             <div className="rounded-2xl border border-slate-200 bg-white p-5 flex flex-col items-center text-center shadow-sm">
-              <p className="text-xs text-slate-400 mb-2">Signal</p>
-              <SignalBadge signal={aiResult.signal} size="lg" />
-              <p className="text-xs text-slate-500 mt-2">{aiResult.signal.charAt(0).toUpperCase() + aiResult.signal.slice(1)}</p>
+              <p className="text-xs text-slate-400 mb-2">{needsBetterPhoto ? 'Photo check' : 'Monitoring signal'}</p>
+              {needsBetterPhoto ? (
+                <>
+                  <AlertTriangle size={30} className="text-sky-600" />
+                  <p className="text-xs text-sky-700 font-semibold mt-2">Needs a clearer photo</p>
+                </>
+              ) : (
+                <>
+                  <SignalBadge signal={aiResult.signal} size="lg" />
+                  <p className="text-xs text-slate-500 mt-2">{aiResult.signal.charAt(0).toUpperCase() + aiResult.signal.slice(1)}</p>
+                </>
+              )}
             </div>
 
-            {/* Water Quality Score */}
-            <div className={`rounded-2xl border p-5 flex flex-col items-center text-center shadow-sm ${scoreBg(aiResult.water_quality_score)}`}>
-              <p className="text-xs text-slate-400 mb-2">Water quality</p>
-              <div className={`text-4xl font-black ${scoreColor(aiResult.water_quality_score)}`}>
-                {aiResult.water_quality_score}
-              </div>
-              <div className="w-full mt-2 h-1.5 rounded-full bg-white/60">
-                <div
-                  className={`h-full rounded-full transition-all ${scoreTrackColor(aiResult.water_quality_score)}`}
-                  style={{ width: `${aiResult.water_quality_score}%` }}
-                />
-              </div>
-              <p className="text-[10px] text-slate-500 mt-1">Score / 100</p>
+            {/* Visual-condition score */}
+            <div className={`rounded-2xl border p-5 flex flex-col items-center text-center shadow-sm ${needsBetterPhoto || isQuestionnaireOnly ? 'bg-slate-50 border-slate-200' : scoreBg(aiResult.visual_condition_score)}`}>
+              <p className="text-xs text-slate-400 mb-2">Visual conditions in image</p>
+              {needsBetterPhoto || isQuestionnaireOnly ? (
+                <>
+                  <span className="text-sm font-bold text-slate-600">Not available</span>
+                  <p className="text-[10px] text-slate-500 mt-2">No image conclusion</p>
+                </>
+              ) : (
+                <>
+                  <div className={`text-4xl font-black ${scoreColor(aiResult.visual_condition_score)}`}>
+                    {aiResult.visual_condition_score}
+                  </div>
+                  <div className="w-full mt-2 h-1.5 rounded-full bg-white/60">
+                    <div
+                      className={`h-full rounded-full transition-all ${scoreTrackColor(aiResult.visual_condition_score)}`}
+                      style={{ width: `${aiResult.visual_condition_score}%` }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1">Image interpretation only — not a safety rating</p>
+                </>
+              )}
             </div>
 
             {/* Urgency */}
@@ -594,7 +644,7 @@ export const Step4Review: React.FC<Step4ReviewProps> = ({
             <button
               type="button"
               onClick={handleSaveClick}
-              disabled={isSubmitting}
+              disabled={isSubmitting || needsBetterPhoto}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0b3b64] shadow-sm hover:shadow transition-all cursor-pointer disabled:opacity-60"
             >
               {isSubmitting ? (
@@ -603,6 +653,17 @@ export const Step4Review: React.FC<Step4ReviewProps> = ({
                 <><Save size={14} />Save Observation</>
               )}
             </button>
+
+            {needsBetterPhoto && (
+              <button
+                type="button"
+                onClick={onRetakePhoto}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0b3b64] shadow-sm transition-all cursor-pointer"
+              >
+                <RefreshCw size={14} />
+                Retake photo
+              </button>
+            )}
 
             <button
               type="button"

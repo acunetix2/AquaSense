@@ -87,7 +87,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, context
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 dark:bg-[#0a0d13]/95 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-md animate-in fade-in duration-300">
       {content}
     </div>
   )

@@ -48,6 +48,9 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
   }
   const hits = trail.consistency_rule_hits || []
   const qualityNotes = flags.filter((f) => f.type === 'image_quality')
+  const observerResponse = trail.observer_consistency_response
+  const reviewEvents = trail.review_events || []
+  const latestReview = reviewEvents[reviewEvents.length - 1]
 
   const steps = [
     {
@@ -81,7 +84,11 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
       body: (
         <div className="space-y-1.5">
           <p className="text-xs text-slate-700">
-            {trail.image_count > 0
+            {trail.assessment_status === 'needs_better_photo'
+              ? 'The photo was not suitable for analysis — a clearer photo is required'
+              : trail.assessment_status === 'questionnaire_only'
+              ? 'Photo analysis was unavailable — assessment is based on questionnaire answers only'
+              : trail.image_count > 0
               ? `${trail.image_count} photo${trail.image_count > 1 ? 's' : ''} analysed`
               : 'No photograph provided — assessment based on questionnaire answers only'}
           </p>
@@ -105,10 +112,10 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
                 Possible mismatch: {hit.replace(/_/g, ' ')} — observer answer was never overwritten
               </li>
             ))}
-            {acknowledged && (
+            {(observerResponse?.action === 'kept_reported_answers' || acknowledged) && (
               <li className="text-xs text-emerald-700 font-semibold flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Observer confirmed their original answer
+                Observer kept their reported answer — recorded in the decision trail
               </li>
             )}
           </ul>
@@ -134,6 +141,22 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
       ),
     },
   ]
+
+  if (latestReview) {
+    steps.push({
+      icon: ShieldCheck,
+      title: '5 · Human review recorded',
+      body: (
+        <div className="space-y-1">
+          <p className="text-xs text-slate-700">
+            <span className="font-bold capitalize">{latestReview.action}</span> by {latestReview.reviewer_name}
+            <span className="text-slate-400"> · {formatTimestamp(latestReview.reviewed_at)}</span>
+          </p>
+          {latestReview.notes && <p className="text-xs text-slate-600 italic">“{latestReview.notes}”</p>}
+        </div>
+      ),
+    })
+  }
 
   return (
     <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">

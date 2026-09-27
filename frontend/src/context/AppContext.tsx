@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import type { Observation, ActiveView } from '../types/observation'
+import type { AiAssessmentAlignment, Observation, ActiveView } from '../types/observation'
 import { useAuth } from './AuthContext'
 import { getRoleDefinition } from '../types/roles'
+import { toastRateLimiter } from '../lib/toastQueue'
 import {
   fetchObservations,
   fetchObservationById,
@@ -45,7 +46,8 @@ interface AppContextType {
   reviewObservation: (
     id: number | string,
     action: 'verified' | 'flagged',
-    notes: string
+    notes: string,
+    alignment: AiAssessmentAlignment
   ) => void
   deleteObservation: (id: number | string, userId?: string) => Promise<void>
   refreshObservations: () => Promise<void>
@@ -59,6 +61,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 const viewToPath: Record<ActiveView, string> = {
   landing: '/',
+  'public-map': '/public-map',
   auth: '/login',
   signup: '/signup',
   home: '/home',
@@ -78,6 +81,8 @@ const pathToView = (pathname: string): ActiveView | null => {
   switch (pathname.toLowerCase()) {
     case '/':
       return 'landing'
+    case '/public-map':
+      return 'public-map'
     case '/login':
     case '/auth':
       return 'auth'
@@ -154,12 +159,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     message: string,
     type: ToastMessage['type'] = 'success'
   ) => {
-    const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`
-    setToasts((prev) => [...prev, { id, title, message, type }])
-    setTimeout(() => {
-      dismissToast(id)
-    }, 4500)
+    // Use rate limiter to control toast frequency
+    toastRateLimiter.show(title, message, type)
   }
+
+  // Initialize rate limiter callback on mount
+  useEffect(() => {
+    toastRateLimiter.setShowToastCallback((title: string, message: string, type?: string) => {
+      const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`
+      setToasts((prev) => [...prev, { id, title, message, type: (type || 'success') as ToastMessage['type'] }])
+      setTimeout(() => {
+        dismissToast(id)
+      }, 4500)
+    })
+  }, [])
 
   const dismissToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id))
@@ -339,14 +352,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const reviewObservation = async (
     id: number | string,
     action: 'verified' | 'flagged',
-    notes: string
+    notes: string,
+    alignment: AiAssessmentAlignment
   ) => {
     const reviewerName = user?.name
       ? `${user.name} (${getRoleDefinition(user.role).label})`
       : 'Community Reviewer'
 
     try {
-      const updated = await reviewObservationApi(id, action, reviewerName, notes, user?.id)
+      const updated = await reviewObservationApi(id, action, reviewerName, notes, alignment, user?.id)
 
       if (updated) {
         const refreshed = await fetchObservations(undefined, user?.id, { force: true })

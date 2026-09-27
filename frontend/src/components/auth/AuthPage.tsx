@@ -8,7 +8,6 @@ import {
   AlertCircle,
   ArrowRight,
   ShieldCheck,
-  Sparkles,
   Droplets,
   MapPin,
   ChevronLeft,
@@ -20,51 +19,51 @@ import {
 import { useAuth } from '../../context/AuthContext'
 import { useApp } from '../../context/AppContext'
 
-// ── Freshwater Showcase: real field-observation themes for the side panel ──
+// ── Freshwater Showcase: curated local waterway images for the auth side panel ──
 const SHOWCASE_RIVERS = [
   {
-    image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=1600&auto=format&fit=crop',
-    title: 'Forest Headwater Stream',
-    location: 'Upland Catchment Reference Reach',
-    tag: 'Clarity & Flow Baseline',
+    image: '/images/river_nairobi.jpg',
+    title: 'Nairobi River',
+    location: 'Nairobi, Kenya',
+    tag: 'Urban River Stewardship',
     signal: 'normal' as const,
     conditionType: 'clean',
-    metric: 'Turbidity 4 NTU • Steady Flow',
-    status: 'Baseline Reference',
-    highlight: 'Community observers photograph protected headwater reaches to establish a seasonal clarity and flow baseline for comparison.',
+    metric: 'Photo-led observation • Local context',
+    status: 'Community Focus',
+    highlight: 'Document visible change in a familiar urban waterway, then add the place and observation details that a reviewer needs.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop',
-    title: 'Alpine Lake Basin',
-    location: 'Watershed Storage Monitoring',
-    tag: 'Seasonal Level Tracking',
+    image: '/images/lake_victoria.jpg',
+    title: 'Lake Victoria Basin',
+    location: 'Kenya / Uganda / Tanzania',
+    tag: 'Shared Freshwater Basin',
     signal: 'normal' as const,
     conditionType: 'clean',
-    metric: 'Surface Temp 14°C • Stable Level',
-    status: 'Routine Monitoring',
-    highlight: 'Repeat visits log surface temperature and shoreline extent so reviewers can spot seasonal shifts across the record.',
+    metric: 'Repeat visits • Shared evidence',
+    status: 'Basin Context',
+    highlight: 'Repeat observations help communities and researchers compare visible shoreline, flow, and clarity changes across a shared basin.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=1600&auto=format&fit=crop',
-    title: 'Meandering River Valley',
-    location: 'Lower Catchment Reach',
-    tag: 'Sediment Runoff Watch',
+    image: '/images/river_mara.jpg',
+    title: 'Mara River',
+    location: 'Kenya / Tanzania',
+    tag: 'River Corridor Watch',
     signal: 'watch' as const,
     conditionType: 'dirty',
-    metric: 'Turbidity 62 NTU • Rising After Rain',
-    status: 'Sediment Watch',
-    highlight: 'After heavy rainfall, elevated sediment prompts a follow-up observation and reviewer attention before any signal is shared.',
+    metric: 'Follow-up observation • Reviewer check',
+    status: 'Observation Watch',
+    highlight: 'When a place looks different after rain or seasonal change, add a follow-up observation so the evidence can be compared responsibly.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1600&auto=format&fit=crop',
-    title: 'Community Lakeside Survey',
-    location: 'Citizen Science Transect',
-    tag: 'Evidence Collection Day',
+    image: '/images/lake_tanganyika.jpg',
+    title: 'Lake Tanganyika',
+    location: 'Tanzania / DR Congo / Burundi',
+    tag: 'Lakeside Evidence Collection',
     signal: 'normal' as const,
     conditionType: 'clean',
-    metric: 'Secchi Depth 2.1 m • Photos Logged',
-    status: 'Evidence Collected',
-    highlight: 'Volunteers photograph shorelines and record simple measurements; reviewers verify each entry before it informs a signal.',
+    metric: 'Shoreline photo • Field notes',
+    status: 'Evidence Ready',
+    highlight: 'A photo and plain-language field notes give reviewers enough context to assess what is visibly documented without overclaiming.',
   },
 ]
 
@@ -399,9 +398,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
         <div className="max-w-md w-full mx-auto my-auto py-8">
           
           {/* Header titles */}
-          <div className="mb-6">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 text-[#0284C7] text-xs font-semibold mb-3 border border-sky-100">
-              <Sparkles size={12} className="text-[#1FB8A6]" />
+          <div className="mb-8">
+            <div className="inline-flex px-3 py-1.5 rounded-full bg-gradient-to-r from-[#0284C7]/10 to-emerald-600/10 text-[#0284C7] text-xs font-semibold mb-4 border border-[#0284C7]/20">
               <span>
                 {mode === 'forgot'
                   ? 'Account Recovery'
@@ -419,7 +417,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                 ? 'Reset Password'
                 : 'Set New Password'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 mt-2.5 font-normal leading-relaxed">
               {mode === 'signin'
                 ? 'Sign in to access real-time river health data, basin maps, and monitoring reports.'
                 : mode === 'signup'
@@ -432,9 +430,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
           {/* Error Banner */}
           {(errors.form || authError) && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs flex items-center gap-2">
-              <AlertCircle size={15} className="shrink-0 text-red-500" />
-              <span>{errors.form || authError}</span>
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-3 shadow-sm">
+              <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                <AlertCircle size={14} className="text-red-600" />
+              </div>
+              <span className="font-medium">{errors.form || authError}</span>
             </div>
           )}
 
@@ -652,15 +652,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-3.5" noValidate>
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {/* Full Name Field (Sign Up only) */}
                 {mode === 'signup' && (
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-700 block">
                       Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                       <input
                         type="text"
                         placeholder="Enter your full name"
@@ -669,13 +669,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                           setFullName(e.target.value)
                           if (errors.name) setErrors((prev) => ({ ...prev, name: '' }))
                         }}
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
-                          errors.name ? 'border-red-500 focus:ring-red-500/20' : ''
+                        className={`w-full pl-11 pr-4 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                          errors.name ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                         }`}
                       />
                     </div>
                     {errors.name && (
-                      <p className="text-[11px] text-red-500 flex items-center gap-1 mt-1">
+                      <p className="text-[11px] text-red-600 flex items-center gap-1 mt-1.5 font-medium">
                         <AlertCircle size={11} /> {errors.name}
                       </p>
                     )}
@@ -684,25 +684,25 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
                 {/* Custom Dropdown Role Selector (Sign Up only) */}
                 {mode === 'signup' && (
-                  <div className="space-y-1 relative">
-                    <label className="text-xs font-bold text-slate-700">
+                  <div className="space-y-2 relative">
+                    <label className="text-xs font-bold text-slate-700 block">
                       Watershed Contributor Role
                     </label>
                     <button
                       type="button"
                       onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                      className="w-full py-2.5 px-3.5 rounded-xl border border-slate-300 bg-slate-50/80 hover:bg-white text-left flex items-center justify-between transition-colors cursor-pointer text-xs sm:text-sm"
+                      className="w-full py-3 px-4 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left flex items-center justify-between transition-all cursor-pointer text-xs sm:text-sm focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7]"
                     >
-                      <div className="truncate">
+                      <div className="truncate min-w-0">
                         <span className="font-semibold text-slate-900 block truncate">{currentRoleObj.label}</span>
                         <span className="text-[11px] text-slate-500 block truncate">{currentRoleObj.desc}</span>
                       </div>
-                      <ChevronDown size={16} className={`text-slate-400 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown size={16} className={`text-slate-400 transition-transform flex-shrink-0 ml-2 ${roleDropdownOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {roleDropdownOpen && (
                       <div
-                        className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 py-1.5 max-h-56 overflow-y-auto"
+                        className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl z-50 py-1 max-h-56 overflow-y-auto"
                         onMouseLeave={() => setRoleDropdownOpen(false)}
                       >
                         {ROLE_OPTIONS.map((opt) => (
@@ -713,15 +713,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                               setRole(opt.value)
                               setRoleDropdownOpen(false)
                             }}
-                            className={`w-full text-left px-3.5 py-2 hover:bg-sky-50 transition-colors flex items-center justify-between cursor-pointer ${
-                              role === opt.value ? 'bg-sky-50/80 font-bold text-[#0284C7]' : 'text-slate-700'
+                            className={`w-full text-left px-4 py-2.5 hover:bg-blue-50 transition-colors flex items-center justify-between cursor-pointer border-b border-slate-100 last:border-b-0 ${
+                              role === opt.value ? 'bg-blue-50 font-bold text-[#0284C7]' : 'text-slate-700'
                             }`}
                           >
                             <div>
                               <p className="text-xs font-bold">{opt.label}</p>
                               <p className="text-[10px] text-slate-500">{opt.desc}</p>
                             </div>
-                            {role === opt.value && <ShieldCheck size={14} className="text-[#0284C7]" />}
+                            {role === opt.value && <ShieldCheck size={14} className="text-[#0284C7] flex-shrink-0" />}
                           </button>
                         ))}
                       </div>
@@ -730,12 +730,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                 )}
 
                 {/* Email Field */}
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-700 block">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <input
                       type="email"
                       placeholder="Enter your email address"
@@ -744,25 +744,25 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setEmail(e.target.value)
                         if (errors.email) setErrors((prev) => ({ ...prev, email: '' }))
                       }}
-                      className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
-                        errors.email ? 'border-red-500 focus:ring-red-500/20' : ''
+                      className={`w-full pl-11 pr-4 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                        errors.email ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                       }`}
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-[11px] text-red-500 flex items-center gap-1 mt-1">
+                    <p className="text-[11px] text-red-600 flex items-center gap-1 mt-1.5 font-medium">
                       <AlertCircle size={11} /> {errors.email}
                     </p>
                   )}
                 </div>
 
                 {/* Password Field */}
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-700 block">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Enter your password (min 6 characters)"
@@ -771,33 +771,33 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setPassword(e.target.value)
                         if (errors.password) setErrors((prev) => ({ ...prev, password: '' }))
                       }}
-                      className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
-                        errors.password ? 'border-red-500 focus:ring-red-500/20' : ''
+                      className={`w-full pl-11 pr-11 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                        errors.password ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                       }`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-[11px] text-red-500 flex items-center gap-1 mt-1">
+                    <p className="text-[11px] text-red-600 flex items-center gap-1 mt-1.5 font-medium">
                       <AlertCircle size={11} /> {errors.password}
                     </p>
                   )}
                 </div>
 
                 {/* Remember Me + Forgot Password */}
-                <div className="flex items-center justify-between pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                <div className="flex items-center justify-between pt-2">
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-[#0284C7] focus:ring-[#0284C7]"
+                      className="h-4 w-4 rounded border-slate-300 text-[#0284C7] focus:ring-[#0284C7] cursor-pointer"
                     />
                     <span className="text-xs text-slate-600 font-medium">Remember me</span>
                   </label>
@@ -810,7 +810,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setErrors({})
                         clearAuthError()
                       }}
-                      className="text-xs font-semibold text-[#0284C7] hover:underline cursor-pointer"
+                      className="text-xs font-semibold text-[#0284C7] hover:text-[#0369A1] transition-colors cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -821,7 +821,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full mt-4 h-12 rounded-lg text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#0284C7] to-[#0369A1] hover:from-[#0369A1] hover:to-[#024B8C] transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:ring-2 focus:ring-[#0284C7]/40 focus:ring-offset-2"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -843,32 +843,32 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
           )}
 
           {/* Privacy hint */}
-          <p className="mt-4 text-center text-[11px] text-slate-400">
+          <p className="mt-6 text-center text-[11px] text-slate-500">
             By continuing you agree to our{' '}
-            <span className="underline cursor-pointer hover:text-slate-600">Terms</span> and{' '}
-            <span className="underline cursor-pointer hover:text-slate-600">Privacy Policy</span>.
+            <span className="underline cursor-pointer hover:text-slate-700 font-medium">Terms</span> and{' '}
+            <span className="underline cursor-pointer hover:text-slate-700 font-medium">Privacy Policy</span>.
           </p>
 
           {/* Cross-page links — login and signup are separate pages */}
           {mode === 'signin' && (
-            <p className="mt-4 text-center text-sm text-slate-500">
+            <p className="mt-6 text-center text-sm text-slate-600">
               New to AquaSense?{' '}
               <button
                 type="button"
                 onClick={() => setActiveView('signup')}
-                className="font-bold text-[#0284C7] hover:underline cursor-pointer"
+                className="font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors cursor-pointer"
               >
                 Create an account
               </button>
             </p>
           )}
           {mode === 'signup' && (
-            <p className="mt-4 text-center text-sm text-slate-500">
+            <p className="mt-6 text-center text-sm text-slate-600">
               Already have an account?{' '}
               <button
                 type="button"
                 onClick={() => setActiveView('auth')}
-                className="font-bold text-[#0284C7] hover:underline cursor-pointer"
+                className="font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors cursor-pointer"
               >
                 Sign in
               </button>
@@ -943,9 +943,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
           {/* Center Quote / Heading */}
           <div className="max-w-xl my-auto">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-teal-400/20 text-teal-300 text-xs font-semibold mb-4 border border-teal-300/30 backdrop-blur-xs">
-              <Sparkles size={13} className="text-[#1FB8A6]" />
-              <span>Freshwater Watershed Intelligence Network</span>
+            <span className="inline-flex px-3.5 py-1 rounded-full bg-teal-400/20 text-teal-300 text-xs font-semibold mb-4 border border-teal-300/30 backdrop-blur-xs">
+              Freshwater Watershed Intelligence Network
             </span>
             <h2 className="text-3xl xl:text-5xl font-extrabold text-white leading-tight drop-shadow-2xl">
               Protecting rivers, streams and lakes through community observations.

@@ -26,13 +26,14 @@ important cases.
 | --- | --- |
 | **Landing** | Glassmorphism hero over freshwater photography, worldwide rivers & lakes explorer, recent public observations, capability cards |
 | **Auth** | Separate `/login` and `/signup` pages (no tab switcher) — Google sign-in, email/password, password recovery, email verification, reviewer role selection |
-| **Capture wizard** | GPS pin or global waterway picker, up to 3 field photos, odor/clarity/debris answers, AI-assisted consistency check — citizen always confirms the final answer |
-| **Observation detail** | Photo evidence, AI decision trail (model, prompt version, rules fired, confidence), comments, likes, shares, per-observation analytics with cohort rank |
+| **Capture wizard** | GPS pin or global waterway picker, up to 3 field photos, odor/clarity/debris answers, AI-assisted consistency check — citizen always confirms the final answer; unusable photos are rejected for retake |
+| **Observation detail** | Photo evidence, AI decision trail (model, prompt version, rules fired, confidence, observer response, reviewer outcome), comments, likes, shares, per-observation analytics with cohort rank |
 | **Community feed** | For You / Trending ranking, category filters, inline likes, shareable links; silently revalidates on focus / visibility / 60s — no manual refresh |
 | **Basin map** | Interactive OpenStreetMap/Leaflet map with signal-coded markers and an observation inspector panel |
 | **Watershed analytics** | Per-location rollups, engagement metrics, trusted monitoring-site sources, 14-day basin health snapshots, drill-downs |
 | **Impact dashboard** | Live platform statistics, 8-day signal trend lines, health-index donut, personal submissions |
-| **Reviewer queue** | Reviewer-only verification/flagging with notes; every action logged against the observation's evidence trail |
+| **Reviewer queue** | Reviewer-only verification/flagging with notes and explicit AI agreement/override capture; every action is logged against the observation's evidence trail |
+| **AI evaluation** | Live reviewer-agreement, override, review-coverage, and consistency-flag metrics — feedback is evidence for evaluation, never presented as environmental truth |
 | **Profiles & social** | Public profiles, follow, profile likes, attribution sync for submitted observations |
 | **Notifications** | Reviews, comments, likes, follows, and system events — bell dropdown, unread badge, polling, mark-as-read |
 | **Theming** | Uber-dark theme with light/dark toggle in the navbar, persisted, no flash on load |
@@ -58,6 +59,8 @@ FastAPI  ── /api/v1 ──┬── auth / health
 **Key boundaries**
 
 - 🤖 **AI assists, never overrides** — the citizen confirms or corrects the final answers; every AI-influenced signal carries a logged decision trail (model, prompt version, rules, confidence).
+- 📷 **AI can abstain** — when a photo cannot support a visual assessment, AquaSense requests a clearer image instead of assigning a monitoring signal.
+- 🧭 **Visible conditions, not water safety** — image scores describe visible environmental conditions only; they are never a safety, potability, or health rating.
 - 👤 **Human review stays authoritative** — reviewers verify or flag; citizens can always edit/delete their own records (strict `user.id === observation.user_id` ownership, enforced server-side).
 - 📊 **Signals are informational** — no safety, health, or regulatory claims.
 - 🔒 **Backend owns validation and storage** — the frontend renders plain-language states and never invents data.
@@ -179,6 +182,7 @@ indexes, analytics views, notifications).
 | | `POST/DELETE /profiles/{user_id}/follow`, `.../like` | Social edges |
 | Analytics | `GET /analytics/regions` | Per-location rollups, trusted sources, basin snapshots |
 | | `GET /analytics/observations/{id}` | Engagement, AI trail, site cohort rank |
+| | `GET /analytics/ai-evaluation` | Reviewer agreement/override and responsible-AI feedback metrics |
 | Notifications | `GET /notifications` | Current user's notifications |
 | | `POST /notifications/{id}/read`, `POST /notifications/read-all` | Mark read |
 

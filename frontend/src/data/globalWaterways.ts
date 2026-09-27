@@ -8,6 +8,8 @@ export interface GlobalWaterway {
   longitude: number
   description: string
   significance: string
+  /** Public image served from frontend/public when a curated photograph is available. */
+  image_url?: string
 }
 
 export const CONTINENTS = ['All Continents', 'Africa', 'Europe', 'Asia', 'Americas', 'Oceania'] as const
@@ -24,6 +26,7 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 31.2357,
     description: 'The longest river in the world, vital for agriculture and drinking water across northeastern Africa.',
     significance: 'Primary lifeline for over 280 million people in 11 riparian nations.',
+    image_url: '/images/river_nile.jpg',
   },
   {
     id: 'lake-victoria',
@@ -35,6 +38,7 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 33.0,
     description: 'Africa’s largest tropical lake, supporting artisanal fisheries and regional climate stability.',
     significance: 'World’s second-largest freshwater lake by surface area.',
+    image_url: '/images/lake_victoria.jpg',
   },
   {
     id: 'congo-river',
@@ -46,6 +50,7 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 15.3122,
     description: 'The world’s deepest river, flowing through the vast Congo Rainforest basin.',
     significance: 'Second largest river discharge in the world after the Amazon.',
+    image_url: '/images/river_congo.jpg',
   },
   {
     id: 'zambezi-river',
@@ -57,6 +62,7 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 25.8572,
     description: 'Host to the Victoria Falls (Mosi-oa-Tunya), providing hydropower and biodiversity corridors.',
     significance: 'Key freshwater artery for southern Africa.',
+    image_url: '/images/river_zambezi.jpg',
   },
   {
     id: 'lake-tanganyika',
@@ -68,6 +74,7 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 29.5,
     description: 'Second oldest and second deepest freshwater lake on Earth, holding 16% of global surface freshwater.',
     significance: 'Home to over 250 endemic cichlid species.',
+    image_url: '/images/lake_tanganyika.jpg',
   },
   {
     id: 'mara-river',
@@ -79,6 +86,31 @@ export const GLOBAL_WATERWAYS: GlobalWaterway[] = [
     longitude: 35.0,
     description: 'Critical watering and migration crossing for the Great Serengeti Wildebeest Migration.',
     significance: 'Crucial ecosystem support for Maasai Mara & Serengeti.',
+    image_url: '/images/river_mara.jpg',
+  },
+  {
+    id: 'nairobi-river',
+    name: 'Nairobi River',
+    type: 'river',
+    continent: 'Africa',
+    country: 'Kenya',
+    latitude: -1.2864,
+    longitude: 36.8172,
+    description: 'An urban river running through Nairobi, shaped by community stewardship, seasonal runoff, and restoration efforts.',
+    significance: 'A locally relevant waterway where repeated observations can make change visible over time.',
+    image_url: '/images/river_nairobi.jpg',
+  },
+  {
+    id: 'athi-river',
+    name: 'Athi River',
+    type: 'river',
+    continent: 'Africa',
+    country: 'Kenya',
+    latitude: -1.457,
+    longitude: 36.978,
+    description: 'A major Kenyan river corridor connecting upland catchments to downstream communities and coastal ecosystems.',
+    significance: 'An important basin for community-led documentation of visible waterway conditions.',
+    image_url: '/images/athi_river.jpg',
   },
 
   // Europe

@@ -1,5 +1,6 @@
 import React from 'react'
 import type { LucideIcon } from 'lucide-react'
+import { Button } from './Button'
 
 interface EmptyStateProps {
   icon: LucideIcon
@@ -69,24 +70,22 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {(actionLabel || secondaryLabel) && (
         <div className={`flex items-center gap-3 ${compact ? 'mt-5' : 'mt-7'}`}>
           {actionLabel && onAction && (
-            <button
+            <Button
               onClick={onAction}
-              className={`inline-flex items-center gap-2 font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] rounded-xl shadow transition-all cursor-pointer active:scale-95 ${
-                compact ? 'px-4 py-2 text-xs' : 'px-5 py-2.5 text-sm'
-              }`}
+              variant="primary"
+              size={compact ? 'sm' : 'md'}
             >
               {actionLabel}
-            </button>
+            </Button>
           )}
           {secondaryLabel && onSecondaryAction && (
-            <button
+            <Button
               onClick={onSecondaryAction}
-              className={`inline-flex items-center gap-2 font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all cursor-pointer active:scale-95 ${
-                compact ? 'px-4 py-2 text-xs' : 'px-5 py-2.5 text-sm'
-              }`}
+              variant="secondary"
+              size={compact ? 'sm' : 'md'}
             >
               {secondaryLabel}
-            </button>
+            </Button>
           )}
         </div>
       )}

@@ -82,6 +82,10 @@ class ObservationReview(BaseModel):
     )
     reviewer_name: str = Field(..., min_length=2, max_length=255)
     notes: str = Field(default="", max_length=2000)
+    ai_assessment_alignment: Literal["agreed", "overridden", "not_applicable"] = Field(
+        default="not_applicable",
+        description="Whether the reviewer agreed with, overrode, or could not assess the AI interpretation.",
+    )
 
 
 class ConsistencyFlag(BaseModel):
@@ -105,6 +109,7 @@ class AnalysisMeta(BaseModel):
     model: str = "none"
     prompt_version: str = "unknown"
     image_count: int = 0
+    assessment_status: Literal["assessed", "needs_better_photo", "questionnaire_only"] = "assessed"
     analysed_at: str = Field(..., description="ISO-8601 timestamp")
 
 
@@ -185,7 +190,8 @@ class ImageAnalysisResponse(BaseModel):
     confidence: float
     title: str
     summary: str
-    water_quality_score: int
+    visual_condition_score: int = Field(..., ge=0, le=100)
+    assessment_status: Literal["assessed", "needs_better_photo", "questionnaire_only"] = "assessed"
     detected_issues: list[str]
     key_evidence: list[str]
     suggested_steps: list[str]

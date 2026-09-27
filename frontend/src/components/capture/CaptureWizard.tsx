@@ -199,6 +199,7 @@ export const CaptureWizard: React.FC = () => {
             imageMime={imageMime}
             answers={answers}
             onBack={() => setCurrentStep(3)}
+            onRetakePhoto={() => setCurrentStep(2)}
             onSave={handleSaveObservation}
             onViewOnMap={() => setActiveView('map')}
           />

@@ -27,7 +27,7 @@
   }
 
   body {
-    background-color: var(--color-mist);
+    background-color: #F9FAFB;
     color: #1E293B;
     font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
@@ -428,4 +428,161 @@
 /* Section label — replaces ALL CAPS */
 .section-label {
   @apply text-xs font-medium text-slate-500 mb-1.5;
+}
+
+/* ---------------------------------------------------------------------------
+ * Public experience — a clean, bright visual system.
+ * This scope gives public pages a bright, accessible feel while maintaining
+ * cohesion with the main application design.
+ * ------------------------------------------------------------------------- */
+.public-nav {
+  background: rgba(249, 250, 251, 0.96);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.public-experience {
+  --public-bg: #F9FAFB;
+  --public-surface: #F9FAFB;
+  --public-surface-raised: #ffffff;
+  --public-line: #e2e8f0;
+  --public-title: #1e293b;
+  --public-copy: #64748b;
+  --public-kicker: #0284C7;
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  padding: 1.5rem 1rem 3rem;
+  background: var(--public-bg);
+}
+
+@media (min-width: 640px) {
+  .public-experience {
+    padding: 2rem 1.5rem 4rem;
+  }
+}
+
+.public-experience > * {
+  width: min(100%, 1280px);
+  margin-inline: auto;
+}
+
+.public-hero::after,
+.public-cta::after {
+  display: none;
+}
+
+.public-hero > .grid,
+.public-cta > .max-w-2xl { position: relative; z-index: 1; }
+
+.public-section {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--public-line);
+  border-radius: 2rem;
+  background: #F9FAFB;
+}
+
+.public-title { color: var(--public-title); }
+.public-copy { color: var(--public-copy); }
+.public-kicker { color: var(--public-kicker); }
+
+.public-waterway-card,
+.public-capability-card,
+.public-observation-card {
+  border: 1px solid var(--public-line);
+  background: #F9FAFB;
+}
+
+.public-waterway-card:hover,
+.public-capability-card:hover,
+.public-observation-card:hover {
+  border-color: #0284C7;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.1);
+}
+
+.public-waterway-image-fallback {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+}
+
+.public-action-card {
+  border-color: var(--public-line);
+  background: #F9FAFB;
+}
+
+.public-action-card:hover {
+  border-color: #0284C7;
+  background: #f1f5f9;
+}
+
+.public-experience .public-waterway-card .text-slate-900,
+.public-experience .public-capability-card .text-slate-900,
+.public-experience .public-observation-card .text-slate-900,
+.public-experience .public-footer .text-slate-800 { color: #1e293b; }
+
+.public-experience .public-waterway-card .text-slate-600,
+.public-experience .public-waterway-card .text-slate-500,
+.public-experience .public-capability-card .text-slate-500,
+.public-experience .public-observation-card .text-slate-600,
+.public-experience .public-observation-card .text-slate-500,
+.public-experience .public-observation-card .text-slate-400,
+.public-footer { color: #64748b; }
+
+.public-experience .public-waterway-card .border-slate-100,
+.public-experience .public-observation-card .border-slate-100,
+.public-experience .public-observation-card .border-slate-200,
+.public-footer { border-color: #e2e8f0; }
+
+.public-experience .public-observation-card .bg-white,
+.public-experience .public-observation-card .hover\:bg-slate-50:hover,
+.public-experience .public-observation-card .hover\:bg-slate-100\/80:hover {
+  background-color: #f8fafc;
+}
+
+.public-dropdown label { color: #64748b; }
+.public-dropdown-button {
+  border-color: #e2e8f0 !important;
+  background: #F9FAFB !important;
+  color: #1e293b !important;
+}
+.public-dropdown-button:hover { border-color: #0284C7 !important; }
+.public-dropdown-button .text-slate-800 { color: #1e293b !important; }
+.public-dropdown-button .text-slate-400 { color: #94a3b8 !important; }
+.public-dropdown > div:last-child {
+  border-color: #e2e8f0 !important;
+  background: #F9FAFB !important;
+}
+.public-dropdown > div:last-child .text-slate-700 { color: #334155 !important; }
+.public-dropdown > div:last-child .hover\:bg-slate-50:hover { background: #f1f5f9 !important; }
+
+.public-filter-tab {
+  border: 1px solid #e2e8f0;
+  background: #F9FAFB;
+  color: #64748b;
+}
+.public-filter-tab:hover { background: #f1f5f9; color: #1e293b; }
+
+.public-secondary-cta {
+  color: #0284C7;
+  border: 1px solid #e2e8f0;
+  background: #F9FAFB;
+}
+.public-secondary-cta:hover { background: #e0f2fe; }
+
+.public-cta { border: 1px solid #e2e8f0; }
+.public-footer button { color: #64748b; }
+.public-footer button:hover { color: #1e293b; }
+
+/* Keyboard visibility */
+.public-experience button:focus-visible,
+.public-nav button:focus-visible {
+  outline: 3px solid #0284C7;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-experience *, .public-nav * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

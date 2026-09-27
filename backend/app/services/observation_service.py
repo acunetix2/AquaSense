@@ -201,6 +201,12 @@ class ObservationService:
                 "analysed_at": datetime.now(timezone.utc).isoformat(),
             }
 
+        # A deliberately abstaining vision assessment must not become a
+        # misleading map signal. The citizen can retake the photo and submit
+        # once the image is suitable for analysis.
+        if analysis_meta.get("assessment_status") == "needs_better_photo":
+            raise ValueError("A clearer photo is required before this observation can be submitted.")
+
         # AI decision trail – auditable record of how the signal was produced
         # (Agents.md §5: log whenever AI output influences a signal).
         ai_trail = {
@@ -209,6 +215,7 @@ class ObservationService:
             "prompt_version": analysis_meta.get("prompt_version", "n/a"),
             "analysed_at": analysis_meta.get("analysed_at"),
             "image_count": analysis_meta.get("image_count", len(image_data_list)),
+            "assessment_status": analysis_meta.get("assessment_status", "assessed"),
             "reused_step4_analysis": reused_step4_analysis,
             "inputs": {
                 "site_name": payload.site_name,
@@ -223,6 +230,15 @@ class ObservationService:
                 "urgency": precomputed_urgency,
             },
             "consistency_rule_hits": [f.get("field") for f in consistency_flags],
+            "observer_consistency_response": {
+                "action": (
+                    "kept_reported_answers"
+                    if bool(answers.get("consistency_acknowledged"))
+                    else "not_recorded"
+                ),
+                "flagged_fields": [f.get("field") for f in consistency_flags if f.get("type") == "consistency"],
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
+            },
         }
 
         # Normalise image_urls: combine payload.image_urls and payload.image_url while rejecting raw data/blob payloads.
@@ -370,6 +386,24 @@ class ObservationService:
         observation.reviewer_notes = review.notes or None
         observation.reviewed_by = review.reviewer_name
         observation.reviewed_at = datetime.now(timezone.utc)
+
+        # Preserve a review event in the AI decision trail. The latest review
+        # fields above support the product UI; this history makes the human
+        # decision traceable alongside the AI assessment for later evaluation.
+        ai_trail = dict(observation.ai_trail or {})
+        review_events = list(ai_trail.get("review_events") or [])
+        review_events.append({
+            "action": review.action,
+            "ai_assessment_alignment": review.ai_assessment_alignment,
+            "reviewer_name": review.reviewer_name,
+            "reviewer_user_id": reviewer_user_id,
+            "notes": review.notes or None,
+            "reviewed_at": observation.reviewed_at.isoformat(),
+            "ai_signal_at_review": observation.signal,
+            "ai_source": ai_trail.get("source", "unknown"),
+        })
+        ai_trail["review_events"] = review_events
+        observation.ai_trail = ai_trail
 
         await db.commit()
         await db.refresh(observation)

@@ -17,7 +17,12 @@ import { SignalBadge } from '../common/SignalBadge'
 import { EmptyState } from '../common/EmptyState'
 import type { Observation, SignalType } from '../../types/observation'
 
-export const MapView: React.FC = () => {
+interface MapViewProps {
+  /** A public browser can request a focused map without changing the app map defaults. */
+  initialObservation?: Observation | null
+}
+
+export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
   const {
     observations,
     openObservationDetail,
@@ -35,9 +40,14 @@ export const MapView: React.FC = () => {
   const tileLayerRef = useRef<L.TileLayer | null>(null)
 
   const [mapLayer, setMapLayer] = useState<'streets' | 'satellite'>('streets')
-  const [activeObservation, setActiveObservation] = useState<Observation | null>(
-    observations[0] || null
+  const [activeObservation, setActiveObservation] = useState<Observation | null>(() =>
+    initialObservation === undefined ? observations[0] || null : initialObservation
   )
+
+  useEffect(() => {
+    if (initialObservation === undefined) return
+    setActiveObservation(initialObservation)
+  }, [initialObservation])
 
   // Filter observations based on filter bar
   const filtered = useMemo(() => {
@@ -64,8 +74,9 @@ export const MapView: React.FC = () => {
     if (!mapContainerRef.current) return
 
     if (!mapInstanceRef.current) {
-      const initialLat = observations[0]?.latitude || 40.7306
-      const initialLng = observations[0]?.longitude || -73.9352
+      const mapStart = initialObservation === undefined ? observations[0] : initialObservation
+      const initialLat = mapStart?.latitude || 40.7306
+      const initialLng = mapStart?.longitude || -73.9352
 
       const map = L.map(mapContainerRef.current, {
         center: [initialLat, initialLng],
@@ -344,7 +355,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterSignal}
               onChange={(e) => setFilterSignal(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
+              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
             >
               <option value="all">All Signals ({observations.length})</option>
               <option value="investigate">🔴 Investigate Only</option>
@@ -358,7 +369,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterDateRange}
               onChange={(e) => setFilterDateRange(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
             >
               <option value="7d">Last 7 days</option>
               <option value="30d">Last 30 days</option>
@@ -376,7 +387,7 @@ export const MapView: React.FC = () => {
             <select
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer max-w-[170px] truncate"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer max-w-[170px] truncate"
             >
               <option value="all">All Basins</option>
               {uniqueLocations.map((loc) => (

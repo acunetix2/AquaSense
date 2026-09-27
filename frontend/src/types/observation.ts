@@ -1,4 +1,5 @@
 export type SignalType = 'normal' | 'watch' | 'investigate'
+export type AiAssessmentAlignment = 'agreed' | 'overridden' | 'not_applicable'
 
 export type WaterClarity = 'clear' | 'slightly_cloudy' | 'cloudy' | 'very_cloudy'
 export type NoticeableOdor = 'no' | 'yes' | 'unsure'
@@ -48,6 +49,7 @@ export interface AiTrail {
   prompt_version: string
   analysed_at?: string
   image_count: number
+  assessment_status?: 'assessed' | 'needs_better_photo' | 'questionnaire_only'
   reused_step4_analysis?: boolean
   inputs?: {
     site_name?: string
@@ -62,6 +64,21 @@ export interface AiTrail {
     urgency?: string
   }
   consistency_rule_hits?: string[]
+  observer_consistency_response?: {
+    action: 'kept_reported_answers' | 'not_recorded'
+    flagged_fields: string[]
+    recorded_at: string
+  }
+  review_events?: Array<{
+    action: 'verified' | 'flagged'
+    ai_assessment_alignment: AiAssessmentAlignment
+    reviewer_name: string
+    reviewer_user_id?: string | null
+    notes?: string | null
+    reviewed_at: string
+    ai_signal_at_review: string
+    ai_source: string
+  }>
 }
 
 export interface Observation {
@@ -125,6 +142,7 @@ export interface LikeState {
 
 export type ActiveView = 
   | 'landing'
+  | 'public-map'
   | 'auth'
   | 'signup'
   | 'home' 
