@@ -58,7 +58,7 @@
   --color-mist: #0a0d13;
 
   --color-slate-50: #12161f;
-  --color-slate-100: #171c26;
+  --color-slate-100: #1a2130;
   --color-slate-200: #232a37;
   --color-slate-300: #333c4c;
   --color-slate-400: #7d8899;
@@ -69,7 +69,7 @@
   --color-slate-900: #f1f5f9;
   --color-slate-950: #f8fafc;
 
-  --as-surface: #0e1117;
+  --as-surface: #141a26;
   --as-bg: #0a0d13;
 }
 
@@ -111,6 +111,15 @@
 
 /* Dark-on-dark borders (footer dividers etc.) must not flip light */
 .dark .border-slate-800 { border-color: #262e3c; }
+
+/* Card + input hairlines must stay visible above the dark surface */
+.dark .border-slate-100,
+.dark .border-slate-100\/80,
+.dark .border-slate-100\/90 { border-color: #262e3e; }
+.dark .border-slate-200,
+.dark .border-slate-200\/80,
+.dark .border-slate-200\/90,
+.dark .hover\:border-slate-200:hover { border-color: #313c50; }
 
 .dark {
   background-color: var(--as-bg);
