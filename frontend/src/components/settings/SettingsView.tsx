@@ -362,7 +362,6 @@ export const SettingsView: React.FC = () => {
                       Open Swagger UI
                     </a>
                   </div>
-                  <p className="text-[11px] text-slate-400 font-mono">Base URL: {API_BASE_URL}</p>
                 </div>
               </div>
             )}
