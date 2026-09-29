@@ -10,7 +10,7 @@ interface AiDecisionTrailProps {
 }
 
 const SOURCE_LABELS: Record<string, { label: string; tone: string }> = {
-  groq: { label: 'Groq vision model', tone: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+  groq: { label: 'AI vision model', tone: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
   step4_reuse: { label: 'Reused from review step', tone: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
   heuristic: { label: 'Rule-based fallback', tone: 'bg-slate-100 text-slate-600 border-slate-200' },
   questionnaire: { label: 'Questionnaire only', tone: 'bg-sky-50 text-sky-700 border-sky-200' },
@@ -96,7 +96,6 @@ export function AiDecisionTrail({ trail, flags = [], acknowledged = false }: AiD
             <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border ${source.tone}`}>
               {source.label}
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">{trail.model}</span>
           </div>
         </div>
       ),

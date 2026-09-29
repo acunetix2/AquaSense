@@ -1,6 +1,8 @@
 """
 Tests for the consistency-check service and the AI decision trail (PRD FR-06/FR-07).
 """
+import json
+
 from fastapi.testclient import TestClient
 
 from app.services.ai_service import _normalise
@@ -193,7 +195,8 @@ def test_create_reuses_step4_analysis_and_keeps_flags(client: TestClient) -> Non
     trail = data["ai_trail"]
     assert trail["reused_step4_analysis"] is True
     assert trail["source"] == "groq"
-    assert trail["model"] == "qwen/qwen3.8-27b"
+    assert trail["model"] == "vision-model"
+    assert "qwen/qwen3.8-27b" not in json.dumps(trail)
     assert trail["image_count"] == 2
     assert trail["consistency_rule_hits"] == ["water_clarity"]
     assert trail["observer_consistency_response"]["action"] == "kept_reported_answers"

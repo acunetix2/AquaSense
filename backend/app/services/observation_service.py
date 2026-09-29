@@ -65,6 +65,13 @@ class ObservationService:
         answers = payload.assessment_answers or {}
         precomputed = answers.get("ai_result") if isinstance(answers, dict) else None
 
+        # Strip vendor model ids from client-submitted Step4 meta before it
+        # is stored and echoed back with the observation.
+        if isinstance(precomputed, dict) and isinstance(precomputed.get("analysis_meta"), dict):
+            submitted_meta = precomputed["analysis_meta"]
+            if "/" in str(submitted_meta.get("model", "")):
+                submitted_meta["model"] = "vision-model"
+
         consistency_flags: list[dict] = []
         analysis_meta: dict | None = None
         reused_step4_analysis = False
@@ -209,9 +216,14 @@ class ObservationService:
 
         # AI decision trail – auditable record of how the signal was produced
         # (Agents.md §5: log whenever AI output influences a signal).
+        # Never store or expose vendor model ids in the trail — legacy
+        # sessions or hand-crafted payloads may still carry them.
+        trail_model = str(analysis_meta.get("model", "none"))
+        if "/" in trail_model:
+            trail_model = "vision-model"
         ai_trail = {
             "source": analysis_meta.get("source", "questionnaire"),
-            "model": analysis_meta.get("model", "none"),
+            "model": trail_model,
             "prompt_version": analysis_meta.get("prompt_version", "n/a"),
             "analysed_at": analysis_meta.get("analysed_at"),
             "image_count": analysis_meta.get("image_count", len(image_data_list)),

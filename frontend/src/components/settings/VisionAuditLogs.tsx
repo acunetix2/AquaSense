@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useApp } from '../../context/AppContext'
 
 const VISION_SOURCE_LABELS: Record<string, { label: string; className: string }> = {
-  groq: { label: 'Groq vision', className: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+  groq: { label: 'AI vision', className: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
   step4_reuse: { label: 'Reused (review step)', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
   heuristic: { label: 'Rule-based fallback', className: 'bg-slate-100 text-slate-600 border-slate-200' },
   questionnaire: { label: 'Questionnaire only', className: 'bg-sky-50 text-sky-700 border-sky-200' },
@@ -115,7 +115,7 @@ export const VisionAuditLogs: React.FC = () => {
 
                 <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
                   <span className="font-mono bg-white border border-slate-200 px-2 py-0.5 rounded-md truncate max-w-full">
-                    {trail.model}
+                    {trail.model?.includes('/') ? 'vision-model' : trail.model}
                   </span>
                   <span className="font-mono bg-white border border-slate-200 px-2 py-0.5 rounded-md truncate max-w-full">
                     {trail.prompt_version}

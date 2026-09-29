@@ -122,7 +122,9 @@ def _finish(
     answers = assessment_answers or {}
     meta = {
         "source": source,
-        "model": model,
+        # Vendor model ids (vendor/model-name) are internal — the decision
+        # trail and API responses only ever surface a generic label.
+        "model": "vision-model" if "/" in model else model,
         "prompt_version": _PROMPT_VERSION if source == "groq" else "n/a",
         "image_count": image_count,
         "assessment_status": result.get("assessment_status", "assessed"),
