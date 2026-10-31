@@ -42,7 +42,7 @@ export const PublicFooter: React.FC = () => {
                   {sites > 0 ? ` across ${sites} site${sites === 1 ? '' : 's'}` : ''} ·{` `}
                 </>
               )}
-              Built by Aventorgo LLC for INCEPTION 2026.
+              Built by Aventorgo for INCEPTION 2026.
             </p>
           </div>
 
@@ -105,7 +105,7 @@ export const PublicFooter: React.FC = () => {
         </div>
 
         <div className="mt-9 border-t border-slate-200 pt-5">
-          <dl className="grid gap-x-8 gap-y-1.5 text-xs text-slate-500 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="grid gap-x-8 gap-y-1.5 text-xs text-slate-500 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex gap-1.5">
               <dt className="text-slate-400">Vision</dt>
               <dd className="text-slate-600">AI vision model, confirmed by the observer</dd>
@@ -113,10 +113,6 @@ export const PublicFooter: React.FC = () => {
             <div className="flex gap-1.5">
               <dt className="text-slate-400">Prompt</dt>
               <dd className="text-slate-600">aquasense-vision-2026-09-v1</dd>
-            </div>
-            <div className="flex gap-1.5">
-              <dt className="text-slate-400">Stack</dt>
-              <dd className="text-slate-600">FastAPI · React · PostgreSQL</dd>
             </div>
             <div className="flex gap-1.5">
               <dt className="text-slate-400">Data</dt>

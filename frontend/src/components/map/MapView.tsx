@@ -217,7 +217,6 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
         const titleColor = dark ? '#f1f5f9' : '#0f172a'
         const subColor = dark ? '#94a0b4' : '#64748b'
         const bodyColor = dark ? '#cbd5e1' : '#334155'
-        const boxBg = dark ? '#161b24' : '#f8fafc'
         const boxBorder = dark ? '#262e3c' : '#e2e8f0'
         const divider = dark ? '#232a37' : '#f1f5f9'
         const nameColor = dark ? '#e2e8f0' : '#1e293b'
@@ -225,36 +224,34 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
         return `
         <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 240px; padding: 2px;">
           <!-- River Image -->
-          <div style="width: 100%; height: 95px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; position: relative;">
+          <div style="width: 100%; height: 95px; border-radius: 4px; overflow: hidden; margin-bottom: 8px; position: relative;">
             <img src="${obs.image_url}" alt="${obs.site_name}" style="width: 100%; height: 100%; object-fit: cover;" />
             <span style="
               position: absolute;
               top: 6px;
               left: 6px;
               padding: 2px 7px;
-              border-radius: 6px;
+              border-radius: 3px;
               font-size: 10px;
               font-weight: 700;
-              text-transform: uppercase;
               background: ${obs.signal === 'investigate' ? '#EF4444' : obs.signal === 'watch' ? '#F59E0B' : '#10B981'};
               color: white;
-              letter-spacing: 0.5px;
             ">
               ${obs.signal}
             </span>
           </div>
 
           <!-- Site Info -->
-          <div style="font-weight: 800; font-size: 14px; color: ${titleColor}; margin-bottom: 2px;">
+          <div style="font-weight: 700; font-size: 14px; color: ${titleColor}; margin-bottom: 2px;">
             ${obs.site_name}
           </div>
-          <div style="font-size: 11px; color: ${subColor}; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
-            <span>📍 ${obs.location_address || 'Regional Watershed'}</span>
+          <div style="font-size: 11px; color: ${subColor}; margin-bottom: 8px;">
+            ${obs.location_address || 'Regional watershed'}
           </div>
 
           <!-- AI Summary -->
-          <div style="font-size: 11px; color: ${bodyColor}; line-height: 1.4; margin-bottom: 8px; background: ${boxBg}; padding: 6px; border-radius: 6px; border: 1px solid ${boxBorder};">
-            "${obs.ai_summary.slice(0, 110)}..."
+          <div style="font-size: 11px; color: ${bodyColor}; line-height: 1.4; margin-bottom: 8px; border-left: 3px solid ${boxBorder}; padding-left: 8px;">
+            ${obs.ai_summary.slice(0, 110)}
           </div>
 
           <!-- Uploader Attribution in Popup -->
@@ -337,14 +334,14 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
       {/* Top Header & Filter Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-1">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span>Regional Watershed Map</span>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#0284C7] capitalize transition-colors">
-              {mapLayer === 'satellite' ? 'Satellite View' : 'Live Street Map'}
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-[-0.025em] flex items-center gap-2.5">
+            <span>Basin map</span>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-sm bg-slate-100 border border-slate-300 text-slate-600 capitalize">
+              {mapLayer === 'satellite' ? 'Satellite' : 'Streets'}
             </span>
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            High-contrast signal markers showing water conditions, uploader attribution, and evidence
+          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
+            Every marker is a community record — a photo, the observer's own answers, and the review it went through.
           </p>
         </div>
 
@@ -355,12 +352,12 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
             <select
               value={filterSignal}
               onChange={(e) => setFilterSignal(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
+              className="appearance-none pl-3 pr-8 py-2 bg-white rounded-md border border-slate-300 text-xs sm:text-sm font-semibold text-slate-700 hover:border-slate-400 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
             >
-              <option value="all">All Signals ({observations.length})</option>
-              <option value="investigate">🔴 Investigate Only</option>
-              <option value="watch">🟡 Watch Only</option>
-              <option value="normal">🟢 Normal Only</option>
+              <option value="all">All signals ({observations.length})</option>
+              <option value="investigate">Investigate only</option>
+              <option value="watch">Watch only</option>
+              <option value="normal">Normal only</option>
             </select>
           </div>
 
@@ -369,7 +366,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
             <select
               value={filterDateRange}
               onChange={(e) => setFilterDateRange(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-md border border-slate-300 text-xs sm:text-sm font-semibold text-slate-700 hover:border-slate-400 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer"
             >
               <option value="7d">Last 7 days</option>
               <option value="30d">Last 30 days</option>
@@ -387,7 +384,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
             <select
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
-              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs hover:border-slate-300 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer max-w-[170px] truncate"
+              className="appearance-none pl-8 pr-8 py-2 bg-white rounded-md border border-slate-300 text-xs sm:text-sm font-semibold text-slate-700 hover:border-slate-400 focus:ring-2 focus:ring-[#0284C7] focus:ring-offset-2 cursor-pointer max-w-[170px] truncate"
             >
               <option value="all">All Basins</option>
               {uniqueLocations.map((loc) => (
@@ -404,7 +401,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
 
           <button
             onClick={handleFitAll}
-            className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold shadow-xs cursor-pointer"
+            className="px-3 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-md text-xs font-semibold cursor-pointer"
             title="Reset map view to encompass all markers"
           >
             Reset View
@@ -415,56 +412,56 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
       {/* Main Grid: Leaflet Map (Left) + Selected River Card (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Map Container */}
-        <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col relative h-[520px] sm:h-[580px]">
+        <div className="lg:col-span-8 bg-white rounded-md border border-slate-300 overflow-hidden flex flex-col relative h-[520px] sm:h-[580px]">
           {/* Leaflet DOM container */}
           <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-          {/* Floating Map Layer Switcher (Streets vs Satellite) */}
-          <div className="absolute top-4 right-4 z-10 pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-slate-200/90 flex items-center gap-1">
+          {/* Map layer switcher (Streets vs Satellite) */}
+          <div className="absolute top-4 right-4 z-10 pointer-events-auto bg-white rounded-md p-1 border border-slate-300 flex items-center gap-1">
             <button
               type="button"
               onClick={() => setMapLayer('streets')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                 mapLayer === 'streets'
-                  ? 'bg-[#0284C7] text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
-              title="Switch to OpenStreetMap vector tiles"
+              title="Switch to street tiles"
             >
               <Layers size={14} />
-              <span>Street Map</span>
+              <span>Streets</span>
             </button>
             <button
               type="button"
               onClick={() => setMapLayer('satellite')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                 mapLayer === 'satellite'
-                  ? 'bg-[#0284C7] text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
-              title="Switch to Esri high-resolution satellite imagery"
+              title="Switch to satellite imagery"
             >
               <Globe size={14} />
               <span>Satellite</span>
             </button>
           </div>
 
-          {/* Map Legend Floating Tag */}
-          <div className="absolute bottom-4 left-4 z-10 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-lg border border-slate-200/90 text-xs space-y-1.5 pointer-events-auto">
-            <p className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">
-              Signal Analysis Legend
+          {/* Map legend */}
+          <div className="absolute bottom-4 left-4 z-10 bg-white px-3.5 py-2.5 rounded-md border border-slate-300 text-xs space-y-1.5 pointer-events-auto">
+            <p className="font-bold text-slate-800 text-[11px]">
+              What the markers mean
             </p>
             <div className="flex items-center gap-3 text-[11px] font-medium text-slate-600">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200" />
+                <span className="w-2.5 h-2.5 bg-emerald-500" />
                 Normal
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-200" />
+                <span className="w-2.5 h-2.5 bg-amber-500" />
                 Watch
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-rose-200" />
+                <span className="w-2.5 h-2.5 bg-rose-500" />
                 Investigate
               </span>
             </div>
@@ -474,10 +471,10 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
         {/* Selected River Sidebar Card */}
         <div className="lg:col-span-4 flex flex-col">
           {activeObservation ? (
-            <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 sm:p-6 flex flex-col justify-between h-full space-y-4">
+            <div className="bg-white rounded-md border border-slate-300 p-5 sm:p-6 flex flex-col justify-between h-full space-y-4">
               <div className="space-y-4">
                 {/* Photo Header */}
-                <div className="relative h-44 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
+                <div className="relative h-44 rounded-md overflow-hidden bg-slate-100 border border-slate-200">
                   <img
                     src={activeObservation.image_url}
                     alt={activeObservation.site_name}
@@ -486,7 +483,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
                   <div className="absolute top-3 right-3">
                     <SignalBadge signal={activeObservation.signal} size="md" />
                   </div>
-                  <div className="absolute bottom-3 left-3 right-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-white text-xs font-medium flex items-center gap-1.5 truncate">
+                  <div className="absolute bottom-0 inset-x-0 px-3 py-2 bg-navy-900 text-white text-xs font-medium flex items-center gap-1.5 truncate">
                     <MapPin size={13} className="text-teal-300 shrink-0" />
                     <span className="truncate">{activeObservation.location_address || activeObservation.site_name}</span>
                   </div>
@@ -505,16 +502,16 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
                 </div>
 
                 {/* AI Summary Quote */}
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                  <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                    "{activeObservation.ai_summary}"
+                <div className="border-l-4 border-slate-300 bg-slate-50 px-3.5 py-2.5">
+                  <p className="text-xs text-slate-700 leading-relaxed">
+                    {activeObservation.ai_summary}
                   </p>
                 </div>
 
                 {/* UPLOADER & ANALYST PROFILE SECTION */}
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/80 to-teal-50/30 border border-sky-100/80 space-y-2">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Uploaded By
+                <div className="p-3.5 rounded-md bg-slate-50 border border-slate-200 space-y-2">
+                  <p className="text-[11px] font-bold text-slate-500">
+                    Recorded by
                   </p>
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -527,7 +524,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
                             )}`
                           }
                           alt={activeObservation.observer_name || 'Observer'}
-                          className="w-9 h-9 rounded-full object-cover border border-white shadow-xs"
+                          className="w-9 h-9 rounded-full object-cover border border-white"
                         />
                         {activeObservation.status === 'verified' && (
                           <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border border-white flex items-center justify-center">
@@ -540,7 +537,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
                           {activeObservation.observer_name || 'Civic Observer'}
                         </p>
                         <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                          <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
+                          <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 bg-[#0284C7]">
                             <Droplets size={8} className="text-white" />
                           </span>
                           <span>{activeObservation.observer_role || 'Citizen Scientist'}</span>
@@ -589,19 +586,18 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
               <div className="pt-2 border-t border-slate-100 space-y-2">
                 <button
                   onClick={() => openObservationDetail(activeObservation)}
-                  className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-98"
+                  className="w-full py-2.5 px-4 rounded-md text-sm font-semibold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Inspect Full River Record</span>
+                  <span>Open full record</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-3xl border border-slate-200 p-8 text-center text-slate-400 flex flex-col items-center justify-center h-full">
-              <Layers size={36} className="text-slate-300 mb-2" />
-              <p className="text-sm font-semibold text-slate-600">No River Selected</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Click on any marker on the OpenStreetMap to inspect water quality signals and contributor details.
+            <div className="bg-white rounded-md border border-slate-300 p-6 text-slate-500 flex flex-col justify-center h-full">
+              <p className="text-sm font-bold text-slate-800">No record selected</p>
+              <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                Choose a marker to see its photo, the observer's answers and the review trail.
               </p>
             </div>
           )}
@@ -609,9 +605,9 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
       </div>
 
       {/* Stream List / Quick Switcher */}
-      <div className="bg-white rounded-2xl border border-slate-100 p-4">
-        <p className="text-xs font-semibold text-slate-600 mb-3">
-          Mapped River Segments ({filtered.length})
+      <div className="bg-white rounded-md border border-slate-300 p-4">
+        <p className="text-xs font-semibold text-slate-700 mb-3">
+          Mapped sites ({filtered.length})
         </p>
         {filtered.length === 0 ? (
           <EmptyState
@@ -634,10 +630,10 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
                 <button
                   key={obs.id}
                   onClick={() => handleSelectObservation(obs)}
-                  className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+                  className={`p-3 rounded-md border text-left flex items-center gap-3 transition-colors cursor-pointer ${
                     isSelected
-                      ? 'border-[#0284C7] bg-sky-50/70 shadow-xs'
-                      : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                      ? 'border-[#0284C7] bg-sky-50'
+                      : 'border-slate-200 hover:border-slate-400 hover:bg-slate-50'
                   }`}
                 >
                   <img

@@ -1,15 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Droplets,
-  Activity,
-  MapPin,
-  Camera,
-  Layers,
-  BarChart3,
-  ShieldCheck,
-  ExternalLink,
-  Globe2,
-} from 'lucide-react'
+import { Droplets } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
 import { isReviewerRole } from '../../types/roles'
@@ -17,175 +7,116 @@ import { InfoModal } from './InfoModal'
 
 type FooterModal = 'privacy' | 'qa' | null
 
+const linkClass =
+  'inline-block text-[13px] text-slate-400 hover:text-white underline-offset-4 hover:underline transition-colors cursor-pointer rounded focus:outline focus:outline-2 focus:outline-[#0284C7]'
+
+const headingClass = 'text-[13px] font-bold text-white'
+
 export const AppFooter: React.FC = () => {
-  const { setActiveView } = useApp()
+  const { setActiveView, observations } = useApp()
   const { user } = useAuth()
   const isReviewer = isReviewerRole(user?.role)
   const [modal, setModal] = useState<FooterModal>(null)
+  const go = (view: Parameters<typeof setActiveView>[0]) => () => setActiveView(view)
 
   return (
-    <footer className="w-full bg-slate-900 border-t border-slate-800 text-slate-400 text-xs mt-12 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
-          {/* Brand & Purpose */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
-                <Droplets size={18} />
-              </div>
-              <span className="font-extrabold text-white text-lg tracking-tight">AquaSense</span>
-              <span className="px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[10px] font-bold">
-                Watershed Network
+    <footer className="w-full bg-slate-900 border-t-2 border-[#0284C7] text-slate-400 text-xs mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid gap-9 lg:grid-cols-[1.5fr_1fr_1fr]">
+          <div className="max-w-sm">
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0284C7] text-white">
+                <Droplets size={17} aria-hidden="true" />
               </span>
+              <span className="text-base font-bold tracking-tight text-white">AquaSense</span>
             </div>
-
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm">
-              Empowering community scientists, certified hydrologists, and environmental stewards with real-time stream observation, water clarity analytics, and verified ecological intelligence.
+            <p className="mt-3 text-[13px] leading-relaxed text-slate-400">
+              A record of what freshwater looks like, kept by the people who live next to it. Each
+              entry carries a photo, a place, the observer's own answers and the review it went
+              through. None of it is a laboratory result.
             </p>
-
-            <div className="flex items-center gap-3 pt-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-medium">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Live Ingestion Online
-              </span>
-              <span className="text-[11px] text-slate-500">v2.4.0 • EPA / FHIR R4 Ready</span>
-            </div>
+            <p className="mt-4 text-xs leading-relaxed text-slate-500">
+              {observations.length > 0
+                ? `${observations.length.toLocaleString()} observation${observations.length === 1 ? '' : 's'} in this workspace · `
+                : ''}
+              Open data under CC-BY 4.0.
+            </p>
           </div>
 
-          {/* Quick Navigation */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Stream Platform</h4>
-            <ul className="space-y-2 text-xs">
+          <nav aria-label="Workspace">
+            <h3 className={headingClass}>Workspace</h3>
+            <ul className="mt-3 space-y-2">
               <li>
-                <button
-                  onClick={() => setActiveView('home')}
-                  className="hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <Globe2 size={13} className="text-sky-400" />
-                  <span>Public Stream Feed</span>
+                <button type="button" onClick={go('home')} className={linkClass}>
+                  Home
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => setActiveView('map')}
-                  className="hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <MapPin size={13} className="text-teal-400" />
-                  <span>Interactive Map & GIS</span>
+                <button type="button" onClick={go('map')} className={linkClass}>
+                  Basin map
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => setActiveView('capture')}
-                  className="hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <Camera size={13} className="text-amber-400" />
-                  <span>Submit Observation</span>
+                <button type="button" onClick={go('capture')} className={linkClass}>
+                  Record an observation
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => setActiveView('my-observations')}
-                  className="hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <Layers size={13} className="text-indigo-400" />
-                  <span>My Submissions</span>
+                <button type="button" onClick={go('my-observations')} className={linkClass}>
+                  My submissions
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => setActiveView('dashboard')}
-                  className="hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <BarChart3 size={13} className="text-emerald-400" />
-                  <span>Watershed Analytics</span>
+                <button type="button" onClick={go('dashboard')} className={linkClass}>
+                  Analytics
                 </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Ecological Signals & Clarity Standard */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Water Clarity Signals</h4>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0" />
-                <span className="text-slate-300 font-medium">Normal / Clear</span>
-                <span className="text-slate-500 text-[10px] ml-auto">&lt; 10 NTU</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0" />
-                <span className="text-slate-300 font-medium">Warning / Moderate</span>
-                <span className="text-slate-500 text-[10px] ml-auto">10 - 50 NTU</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-400 shrink-0" />
-                <span className="text-slate-300 font-medium">Alert / High Turbidity</span>
-                <span className="text-slate-500 text-[10px] ml-auto">&gt; 50 NTU</span>
-              </div>
-              <p className="text-[11px] text-slate-400 pt-1 leading-relaxed">
-                Field clarity grades use computer vision and secchi disc equivalence.
-              </p>
-            </div>
-          </div>
-
-          {/* Standards & Governance */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Standards & Open Data</h4>
-            <ul className="space-y-2 text-xs">
-              <li className="flex items-center gap-1.5 text-slate-300">
-                <ShieldCheck size={14} className="text-emerald-400" />
-                <span>Certified Limnologist Review</span>
-              </li>
-              <li className="flex items-center gap-1.5 text-slate-300">
-                <Activity size={14} className="text-sky-400" />
-                <span>HL7 / FHIR R4 Water Spec</span>
-              </li>
-              <li className="flex items-center gap-1.5 text-slate-300">
-                <ExternalLink size={14} className="text-teal-400" />
-                <span>OpenStreetMap Contributors</span>
               </li>
               {isReviewer && (
                 <li>
-                  <button
-                    onClick={() => setActiveView('reviewer-queue')}
-                    className="hover:text-white transition-colors cursor-pointer text-sky-400 flex items-center gap-1"
-                  >
-                    Reviewer Queue Panel →
+                  <button type="button" onClick={go('reviewer-queue')} className={linkClass}>
+                    Reviewer queue
                   </button>
                 </li>
               )}
             </ul>
+          </nav>
+
+          <div>
+            <h3 className={headingClass}>Reading the signals</h3>
+            <ul className="mt-3 space-y-2 text-[13px] text-slate-300">
+              <li className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 shrink-0 bg-emerald-400" aria-hidden="true" />
+                Normal — nothing unusual visible
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 shrink-0 bg-amber-400" aria-hidden="true" />
+                Watch — worth a second look
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 shrink-0 bg-rose-400" aria-hidden="true" />
+                Investigate — ask a reviewer
+              </li>
+            </ul>
+            <p className="mt-3 text-xs leading-relaxed text-slate-500">
+              A signal describes a photograph, not the water. Records can be exported as HL7 FHIR R4
+              observations for anyone who wants to work with them elsewhere.
+            </p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400">
-          <p>© {new Date().getFullYear()} Aventorgo LLC. All open data licensed under CC-BY 4.0.</p>
-          <div className="flex items-center gap-6">
-            <button
-              type="button"
-              onClick={() => setModal('privacy')}
-              className="hover:text-slate-300 cursor-pointer transition-colors"
-            >
+        <div className="mt-9 border-t border-slate-800 pt-5 flex flex-col gap-2 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Aventorgo</p>
+          <p className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <button type="button" onClick={() => setModal('privacy')} className={linkClass}>
               Privacy Notice
             </button>
-            <button
-              type="button"
-              onClick={() => setModal('qa')}
-              className="hover:text-slate-300 cursor-pointer transition-colors"
-            >
+            <button type="button" onClick={() => setModal('qa')} className={linkClass}>
               Quality Assurance
             </button>
-            <button
-              type="button"
-              onClick={() => setActiveView('api-docs')}
-              className="hover:text-slate-300 cursor-pointer transition-colors"
-            >
+            <button type="button" onClick={go('api-docs')} className={linkClass}>
               API Documentation
             </button>
-            <span className="text-slate-400">Aventorgo LLC</span>
-          </div>
+          </p>
         </div>
       </div>
 
@@ -196,7 +127,7 @@ export const AppFooter: React.FC = () => {
           information you provide (display name, role, optional affiliation).
         </p>
         <p>
-          Photos are stored in an AquaSense Supabase storage bucket and are linked to
+          Photos are stored in the AquaSense observation media bucket and are linked to
           your observation. Your email is never shown publicly and is only visible to
           certified reviewers for verification purposes.
         </p>
