@@ -974,7 +974,11 @@ export const ObservationDetail: React.FC = () => {
                     <span className="text-slate-400">{formatDate(rev.timestamp)}</span>
                   </div>
                   <p className="text-xs text-slate-700 font-medium">Action: {rev.action.toUpperCase()}</p>
-                  <p className="text-xs text-slate-600 italic">"{rev.notes}"</p>
+                  {rev.notes ? (
+                    <p className="text-xs text-slate-600 italic">"{rev.notes}"</p>
+                  ) : (
+                    <p className="text-xs text-slate-400">No reviewer note recorded.</p>
+                  )}
                 </div>
               ))}
             </div>

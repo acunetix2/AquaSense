@@ -50,6 +50,14 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
   }, [initialObservation])
 
   // Filter observations based on filter bar
+  const [nowAtMount] = useState(() => Date.now())
+  const dateCutoff = useMemo(() => {
+    if (filterDateRange === 'all') return null
+    const days = Number.parseInt(filterDateRange, 10)
+    if (!Number.isFinite(days)) return null
+    return nowAtMount - days * 86_400_000
+  }, [nowAtMount, filterDateRange])
+
   const filtered = useMemo(() => {
     return observations.filter((obs) => {
       if (filterSignal !== 'all' && obs.signal !== filterSignal) {
@@ -61,9 +69,14 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
       ) {
         return false
       }
+      if (dateCutoff !== null) {
+        const created = Date.parse(obs.created_at)
+        // An unreadable date stays visible rather than silently disappearing from the map.
+        if (!Number.isNaN(created) && created < dateCutoff) return false
+      }
       return true
     })
-  }, [observations, filterSignal, filterLocation])
+  }, [observations, filterSignal, filterLocation, dateCutoff])
 
   const uniqueLocations = useMemo(() => {
     return Array.from(new Set(observations.map((o) => o.site_name)))
@@ -619,6 +632,7 @@ export const MapView: React.FC<MapViewProps> = ({ initialObservation }) => {
             onAction={() => {
               setFilterSignal('all')
               setFilterLocation('all')
+              setFilterDateRange('all')
             }}
           />
         ) : (

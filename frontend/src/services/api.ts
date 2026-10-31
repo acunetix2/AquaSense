@@ -1,4 +1,4 @@
-import type { AiAssessmentAlignment, Observation, SignalType, ConsistencyFlag, AiTrail, ObservationComment, LikeState } from '../types/observation'
+import type { AiAssessmentAlignment, Observation, ReviewAction, SignalType, ConsistencyFlag, AiTrail, ObservationComment, LikeState } from '../types/observation'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
@@ -10,6 +10,15 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
   const imageUrls = Array.isArray(item.image_urls) && item.image_urls.length > 0
     ? (item.image_urls as string[])
     : (item.image_url ? [item.image_url as string] : [])
+
+  const trail = (item.ai_trail as AiTrail) || undefined
+  const reviewHistory: ReviewAction[] = (trail?.review_events ?? []).map((event, index) => ({
+    id: `${item.id}-review-${index}`,
+    reviewerName: event.reviewer_name,
+    action: event.action,
+    notes: event.notes ?? '',
+    timestamp: event.reviewed_at,
+  }))
 
   return {
     id: item.id as number,
@@ -31,7 +40,7 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
     key_evidence: (item.key_evidence as string[]) ?? [],
     suggested_steps: (item.suggested_steps as string[]) ?? [],
     consistency_flags: (item.consistency_flags as ConsistencyFlag[]) ?? [],
-    ai_trail: (item.ai_trail as AiTrail) || undefined,
+    ai_trail: trail,
     created_at: (item.created_at as string) ?? new Date().toISOString(),
     updated_at: (item.updated_at as string) || undefined,
     status: ((item.status as 'pending' | 'verified' | 'flagged') || 'pending'),
@@ -41,7 +50,7 @@ function adaptApiObservation(item: Record<string, unknown>): Observation {
     reviewer_notes: (item.reviewer_notes as string) || undefined,
     reviewed_by: (item.reviewed_by as string) || undefined,
     reviewed_at: (item.reviewed_at as string) || undefined,
-    review_history: [],
+    review_history: reviewHistory,
     // Observer / user profile fields
     user_id: (item.user_id as string) || undefined,
     observer_name: (item.observer_name as string) || undefined,

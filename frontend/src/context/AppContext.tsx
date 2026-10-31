@@ -136,7 +136,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedObservation, setSelectedObservation] = useState<Observation | null>(null)
 
   // Filter states
-  const [filterDateRange, setFilterDateRange] = useState<string>('30d')
+  const [filterDateRange, setFilterDateRange] = useState<string>('all')
   const [filterLocation, setFilterLocation] = useState<string>('all')
   const [filterSignal, setFilterSignal] = useState<string>('all')
 
@@ -186,7 +186,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       // Check if user navigated to a shared link
       const hash = window.location.hash
       const search = window.location.search
-      const match = hash.match(/#observation[-/](\w+)/) || search.match(/[?&]obs=(\w+)/)
+      const match = hash.match(/#observation[-/]([\w-]+)/) || search.match(/[?&]obs=([\w-]+)/)
       if (match && match[1]) {
         const targetId = match[1]
         const found = data.find((o) => String(o.id) === targetId)
@@ -258,7 +258,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const handleHash = () => {
       const hash = window.location.hash
       const search = window.location.search
-      const match = hash.match(/#observation[-/](\w+)/) || search.match(/[?&]obs=(\w+)/)
+      const match = hash.match(/#observation[-/]([\w-]+)/) || search.match(/[?&]obs=([\w-]+)/)
       if (match && match[1]) {
         const targetId = match[1]
         const found = observations.find((o) => String(o.id) === targetId)
