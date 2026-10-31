@@ -134,48 +134,45 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
   return (
     <article
       onClick={handleCardClick}
-      className="public-observation-card group rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer text-left relative"
+      className="public-observation-card group rounded-md overflow-hidden border border-slate-200 flex flex-col justify-between cursor-pointer text-left relative transition-colors"
     >
       {/* Stream Photo Container */}
-      <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
+      <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-200">
         {primaryImage ? (
           <img
             src={primaryImage}
             alt={obs.site_name}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover"
             onError={(e) => {
               e.currentTarget.style.display = 'none'
             }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-slate-200 via-sky-50 to-slate-100 flex items-center justify-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <div className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
             No image
           </div>
         )}
-
-        {/* Gradient Scrim for Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
 
         {/* Signal Badge Top Left */}
         <div className="absolute top-3 left-3 z-10">
           <SignalBadge signal={obs.signal} size="sm" />
         </div>
 
-        {/* Category Pill Top Right */}
+        {/* Category chip Top Right */}
         {showCategory && (
-          <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-slate-700 border border-slate-200 text-[11px] font-medium tracking-wide shadow-sm">
+          <div className="absolute top-3 right-3 z-10 rounded-sm bg-navy-900 px-2.5 py-1 text-[11px] font-bold text-white">
             {category}
           </div>
         )}
 
-        {/* Location Tag Bottom Left */}
-        <div className="absolute bottom-2.5 left-3 right-3 z-10 flex items-center justify-between text-slate-800 text-xs">
-          <div className="flex items-center gap-1.5 font-medium truncate drop-shadow-md bg-white/95 backdrop-blur-sm px-2 py-1 rounded-lg border border-slate-200">
-            <MapPin size={13} className="text-[#0284C7] shrink-0" />
+        {/* Solid caption bar — contrast without a scrim or frosted chip */}
+        <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-3 bg-navy-900 px-3 py-2 text-white text-xs">
+          <span className="flex items-center gap-1.5 font-medium truncate">
+            <MapPin size={13} className="shrink-0" aria-hidden="true" />
             <span className="truncate">{obs.location_address || obs.site_name}</span>
-          </div>
-          <span className="text-[11px] font-mono shrink-0 bg-white/95 border border-slate-200 px-1.5 py-0.5 rounded-sm backdrop-blur-sm text-slate-700 font-semibold">
-            {Math.round(obs.confidence * 100)}% conf
+          </span>
+          <span className="shrink-0 text-[11px] font-bold tabular-nums">
+            {Math.round(obs.confidence * 100)}% confidence
           </span>
         </div>
       </div>
@@ -206,7 +203,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
         </div>
 
         {/* UPLOADER & ANALYST INFO SECTION (Prominently displayed) */}
-        <div className="pt-3 border-t border-slate-100/90 space-y-2.5">
+        <div className="pt-3 border-t border-slate-200 space-y-2.5">
           <div className="flex items-center justify-between gap-3">
             {/* Contributor Profile (Clickable to view public profile) */}
             <div
@@ -215,7 +212,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
                 setShowProfileModal(true)
               }}
               title="Click to view observer public profile and stats"
-              className="flex items-center gap-2.5 min-w-0 p-1 -m-1 rounded-xl hover:bg-slate-100/80 transition-colors cursor-pointer group/prof"
+              className="flex items-center gap-2.5 min-w-0 p-1 -m-1 rounded-md hover:bg-slate-100 transition-colors cursor-pointer group/prof"
             >
               <div className="relative shrink-0">
                 <img
@@ -241,7 +238,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
                   </p>
                 </div>
                 <p className="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
-                  <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 rounded-full bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6]">
+                  <span className="shrink-0 inline-flex items-center justify-center w-3 h-3 bg-[#0284C7]">
                     <Droplets size={8} className="text-white" />
                   </span>
                   <span>{observerRole}</span>
@@ -268,10 +265,10 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
               type="button"
               onClick={handleToggleLike}
               aria-pressed={liked}
-              className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer active:scale-95 ${
+              className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-md border transition-colors cursor-pointer ${
                 liked
-                  ? 'bg-rose-50 text-rose-600 border-rose-200'
-                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                  ? 'bg-rose-50 text-rose-600 border-rose-300'
+                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
               }`}
             >
               <Heart size={12} className={liked ? 'fill-rose-500 text-rose-500' : 'text-slate-400'} />
@@ -281,7 +278,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
             <button
               type="button"
               onClick={handleCommentsClick}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               title="Open observation to read or add comments"
             >
               <MessageSquare size={12} className="text-slate-400" />
@@ -295,7 +292,7 @@ export const PublicObservationCard: React.FC<PublicObservationCardProps> = ({
               <span className="text-[11px] text-slate-400 truncate max-w-[180px]">
                 {observerLocation}
               </span>
-              <span className="inline-flex items-center gap-1 font-semibold text-[#0284C7] group-hover:translate-x-0.5 transition-transform text-xs">
+              <span className="inline-flex items-center gap-1 font-semibold text-[#0284C7] underline-offset-2 group-hover:underline transition-colors text-xs">
                 Inspect analysis
                 <ArrowRight size={13} />
               </span>

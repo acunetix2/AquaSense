@@ -47,8 +47,8 @@ export const LandingNavbar: React.FC = () => {
 
   return (
     <header
-      className={`public-nav sticky top-0 z-40 w-full transition-shadow duration-200 ${
-        scrolled ? 'shadow-lg border-b border-slate-200' : 'border-b border-slate-200'
+      className={`public-nav sticky top-0 z-40 w-full ${
+        scrolled ? 'border-b-2 border-slate-300' : 'border-b border-slate-200'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +59,7 @@ export const LandingNavbar: React.FC = () => {
             onClick={() => handleNavClick('landing')}
             className="flex items-center gap-3 focus:outline-none group cursor-pointer shrink-0"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 rounded-md bg-[#0284C7] flex items-center justify-center text-white">
               <Droplets size={22} className="stroke-[2.2]" />
             </div>
             <div className="text-left">
@@ -67,7 +67,7 @@ export const LandingNavbar: React.FC = () => {
                 Aqua<span className="text-[#0284C7]">Sense</span>
               </span>
               <span className="block text-[11px] text-slate-600 font-normal -mt-0.5 tracking-wide">
-                Freshwater Intelligence
+                Community freshwater records
               </span>
             </div>
           </button>
@@ -120,7 +120,7 @@ export const LandingNavbar: React.FC = () => {
             {isAuthenticated ? (
               <button
                 onClick={() => handleNavClick('home')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-md transition-all cursor-pointer active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
               >
                 <span>Go to App</span>
                 <ArrowRight size={15} />
@@ -128,7 +128,7 @@ export const LandingNavbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => handleNavClick('signup')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-md transition-all cursor-pointer active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
               >
                 <span>Get Started</span>
                 <ArrowRight size={15} />
@@ -140,7 +140,7 @@ export const LandingNavbar: React.FC = () => {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl cursor-pointer transition-colors"
+              className="p-2 text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded-md cursor-pointer transition-colors"
               aria-label="Toggle navigation"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -151,41 +151,41 @@ export const LandingNavbar: React.FC = () => {
 
       {/* ── Mobile Drawer ── */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-white/10 bg-[#071722] px-5 pt-4 pb-6 space-y-2 shadow-xl">
+        <div className="md:hidden border-t border-slate-200 bg-paper px-5 pt-4 pb-6 space-y-px">
           <button
             onClick={() => handleNavClick('landing')}
-            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-white/10 flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-slate-800 bg-white border border-slate-200 flex items-center gap-2"
           >
-            <Home size={17} className="text-[#1FB8A6]" />
+            <Home size={17} className="text-[#0284C7]" />
             Home
           </button>
           <button
             onClick={() => scrollToSection('how-it-works')}
-            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-white/10 flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 flex items-center gap-2"
           >
             <BarChart2 size={17} className="text-[#0284C7]" />
             Steps
           </button>
           <button
             onClick={() => scrollToSection('featured-rivers')}
-            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-white/10 flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 flex items-center gap-2"
           >
             <Waves size={17} className="text-[#0284C7]" />
             Rivers
           </button>
           <button
             onClick={() => handleNavClick('public-map')}
-            className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-white/10 flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 flex items-center gap-2"
           >
             <MapPin size={17} className="text-[#0284C7]" />
             Public Basin Map
           </button>
 
-          <div className="pt-3 border-t border-white/10">
+          <div className="pt-3 border-t border-slate-200">
             {isAuthenticated ? (
               <button
                 onClick={() => handleNavClick('home')}
-                className="w-full py-3 rounded-xl bg-cyan-300 text-slate-950 font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-md bg-[#0284C7] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Go to App Workspace ({user?.name})</span>
                 <ArrowRight size={15} />
@@ -193,7 +193,7 @@ export const LandingNavbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => handleNavClick('signup')}
-                className="w-full py-3 rounded-xl bg-cyan-300 text-slate-950 font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-md bg-[#0284C7] text-white font-bold text-sm text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Get Started — Sign In / Sign Up</span>
               </button>

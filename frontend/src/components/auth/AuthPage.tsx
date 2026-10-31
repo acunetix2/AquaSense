@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   Eye,
   EyeOff,
@@ -9,7 +8,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Droplets,
-  MapPin,
   ChevronLeft,
   ChevronRight,
   User,
@@ -136,14 +134,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
       setMode('reset-password')
     }
   }, [isPasswordRecovery])
-
-  // Auto-scroll showcase river images every 5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % SHOWCASE_RIVERS.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [])
 
   const validate = () => {
     const errs: Record<string, string> = {}
@@ -280,16 +270,16 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
   if (emailNeedsVerification) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-[#F8FAFC] p-6">
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-2xl p-8 sm:p-12 max-w-md w-full text-center space-y-6">
-          {/* Animated mail icon */}
+        <div className="bg-white rounded-md border border-slate-200 p-8 sm:p-10 max-w-md w-full text-center space-y-6">
+          {/* Flat brand block instead of a floating gradient tile */}
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center shadow-xl shadow-sky-900/15">
-              <Mail size={36} className="text-white" />
+            <div className="w-14 h-14 rounded-md bg-navy-900 flex items-center justify-center">
+              <Mail size={26} className="text-white" />
             </div>
           </div>
 
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Check Your Email
             </h1>
             <p className="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -299,7 +289,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-sky-50 border border-sky-100 text-left space-y-2">
+          <div className="p-4 bg-sky-50 border-l-4 border-[#0284C7] text-left space-y-2">
             <p className="text-xs font-bold text-slate-700">What to do next:</p>
             <ol className="text-xs text-slate-600 space-y-1 list-decimal list-inside">
               <li>Open your inbox for <span className="font-semibold">{verificationEmail}</span></li>
@@ -329,7 +319,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                   setResendLoading(false)
                 }
               }}
-              className="w-full py-3 rounded-xl text-sm font-bold text-[#0284C7] border border-[#0284C7]/30 hover:bg-sky-50 transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3 rounded-md text-sm font-bold text-[#0284C7] border border-[#0284C7] hover:bg-sky-50 transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {resendLoading ? (
                 <><div className="w-4 h-4 border-2 border-[#0284C7] border-t-transparent rounded-full animate-spin" /><span>Sending…</span></>
@@ -345,7 +335,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               clearVerificationNotice()
               showSignIn()
             }}
-            className="w-full py-3 rounded-xl font-bold text-sm text-white bg-[#0284C7] hover:bg-[#0369A1] shadow-md transition-colors cursor-pointer"
+            className="w-full py-3 rounded-md font-bold text-sm text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors cursor-pointer"
           >
             Back to Sign In
           </button>
@@ -362,7 +352,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] text-slate-900 selection:bg-[#0284C7] selection:text-white">
       
       {/* ══════════════ LEFT SIDE: FULL-PAGE FORM PANEL ══════════════ */}
-      <div className="w-full lg:w-[48%] xl:w-[44%] min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 relative z-10 bg-white border-r border-slate-200/80 shadow-[10px_0_30px_rgba(15,23,42,0.03)] text-left">
+      <div className="w-full lg:w-[48%] xl:w-[44%] min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 relative z-10 bg-white border-r border-slate-200 text-left">
         
         {/* Top: Brand Logo & Back to Home */}
         <div className="flex items-center justify-between">
@@ -371,15 +361,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
             onClick={() => setActiveView('landing')}
             className="inline-flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#1FB8A6] flex items-center justify-center text-white shadow-md shadow-sky-900/15 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 rounded-md bg-[#0284C7] flex items-center justify-center text-white">
               <Droplets size={22} className="stroke-[2.2]" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight text-[#0284C7] block leading-none">
+              <span className="text-xl font-bold tracking-tight text-[#0284C7] block leading-none">
                 AquaSense
               </span>
               <span className="text-[10px] text-slate-500 font-semibold tracking-wide">
-                Freshwater Intelligence
+                Community freshwater records
               </span>
             </div>
           </button>
@@ -399,16 +389,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
           
           {/* Header titles */}
           <div className="mb-8">
-            <div className="inline-flex px-3 py-1.5 rounded-full bg-gradient-to-r from-[#0284C7]/10 to-emerald-600/10 text-[#0284C7] text-xs font-semibold mb-4 border border-[#0284C7]/20">
-              <span>
-                {mode === 'forgot'
-                  ? 'Account Recovery'
-                  : mode === 'reset-password'
-                  ? 'Security Update'
-                  : 'Freshwater Watershed Network'}
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+            <p className="as-label text-[#0284C7] mb-3">
+              {mode === 'forgot'
+                ? 'Account recovery'
+                : mode === 'reset-password'
+                ? 'Choose a new password'
+                : 'Community freshwater records'}
+            </p>
+            <h1 className="text-[28px] sm:text-4xl font-bold tracking-[-0.025em] text-slate-900 leading-[1.15]">
               {mode === 'signin'
                 ? 'Welcome Back'
                 : mode === 'signup'
@@ -430,9 +418,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
           {/* Error Banner */}
           {(errors.form || authError) && (
-            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-3 shadow-sm">
-              <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                <AlertCircle size={14} className="text-red-600" />
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs flex items-start gap-3">
+              <div className="w-5 h-5 shrink-0 bg-red-600 flex items-center justify-center">
+                <AlertCircle size={14} className="text-white" />
               </div>
               <span className="font-medium">{errors.form || authError}</span>
             </div>
@@ -442,7 +430,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
           {mode === 'forgot' ? (
             <div className="space-y-4">
               {forgotSent ? (
-                <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 space-y-3">
+                <div className="p-5 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-900 space-y-3">
                   <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
                     <ShieldCheck size={18} className="text-emerald-600" />
                     <span>Password Reset Link Sent</span>
@@ -457,7 +445,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                     <button
                       type="button"
                       onClick={() => setForgotSent(false)}
-                      className="w-full py-2.5 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 transition-colors cursor-pointer"
+                      className="w-full py-2.5 rounded-md text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 transition-colors cursor-pointer"
                     >
                       Resend Link or Try Another Email
                     </button>
@@ -467,7 +455,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         showSignIn()
                         setForgotSent(false)
                       }}
-                      className="w-full py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-md text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <ArrowLeft size={13} />
                       <span>Back to Sign In</span>
@@ -490,7 +478,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                           setEmail(e.target.value)
                           if (errors.email) setErrors((prev) => ({ ...prev, email: '' }))
                         }}
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                           errors.email ? 'border-red-500 focus:ring-red-500/20' : ''
                         }`}
                       />
@@ -505,7 +493,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                   <button
                     type="submit"
                     disabled={forgotLoading}
-                    className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                    className="w-full h-12 rounded-md text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {forgotLoading ? (
                       <div className="flex items-center gap-2">
@@ -548,7 +536,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                       setNewPassword(e.target.value)
                       if (errors.newPassword) setErrors((prev) => ({ ...prev, newPassword: '' }))
                     }}
-                    className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                    className={`w-full pl-10 pr-11 py-2.5 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                       errors.newPassword ? 'border-red-500 focus:ring-red-500/20' : ''
                     }`}
                   />
@@ -581,7 +569,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                       setConfirmPassword(e.target.value)
                       if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }))
                     }}
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs sm:text-sm outline-none transition-all bg-slate-50/80 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                    className={`w-full pl-10 pr-4 py-2.5 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-slate-50 text-slate-900 placeholder-slate-400 border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                       errors.confirmPassword ? 'border-red-500 focus:ring-red-500/20' : ''
                     }`}
                   />
@@ -596,7 +584,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
               <button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-all shadow-md shadow-sky-900/10 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full h-12 rounded-md text-xs sm:text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
               >
                 {resetLoading ? (
                   <div className="flex items-center gap-2">
@@ -629,7 +617,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                   type="button"
                   onClick={handleGoogleSignIn}
                   disabled={oauthLoading}
-                  className="w-full py-3 px-4 rounded-xl border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold flex items-center justify-center gap-3 transition-all shadow-2xs active:scale-[0.99] cursor-pointer"
+                  className="w-full py-3 px-4 rounded-md border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold flex items-center justify-center gap-3 transition-colors cursor-pointer"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -669,7 +657,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                           setFullName(e.target.value)
                           if (errors.name) setErrors((prev) => ({ ...prev, name: '' }))
                         }}
-                        className={`w-full pl-11 pr-4 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                        className={`w-full pl-11 pr-4 py-3 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                           errors.name ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                         }`}
                       />
@@ -691,7 +679,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                     <button
                       type="button"
                       onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                      className="w-full py-3 px-4 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left flex items-center justify-between transition-all cursor-pointer text-xs sm:text-sm focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7]"
+                      className="w-full py-3 px-4 rounded-md border border-slate-300 bg-white hover:border-slate-400 text-left flex items-center justify-between transition-colors cursor-pointer text-xs sm:text-sm focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7]"
                     >
                       <div className="truncate min-w-0">
                         <span className="font-semibold text-slate-900 block truncate">{currentRoleObj.label}</span>
@@ -702,7 +690,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
                     {roleDropdownOpen && (
                       <div
-                        className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl z-50 py-1 max-h-56 overflow-y-auto"
+                        className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-300 rounded-md shadow-lg z-50 py-1 max-h-56 overflow-y-auto"
                         onMouseLeave={() => setRoleDropdownOpen(false)}
                       >
                         {ROLE_OPTIONS.map((opt) => (
@@ -744,7 +732,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setEmail(e.target.value)
                         if (errors.email) setErrors((prev) => ({ ...prev, email: '' }))
                       }}
-                      className={`w-full pl-11 pr-4 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                      className={`w-full pl-11 pr-4 py-3 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                         errors.email ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                       }`}
                     />
@@ -771,7 +759,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                         setPassword(e.target.value)
                         if (errors.password) setErrors((prev) => ({ ...prev, password: '' }))
                       }}
-                      className={`w-full pl-11 pr-11 py-3 rounded-lg border text-xs sm:text-sm outline-none transition-all bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-sky-50/30 focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
+                      className={`w-full pl-11 pr-11 py-3 rounded-md border text-xs sm:text-sm outline-none transition-colors bg-white text-slate-900 placeholder-slate-400 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-[#0284C7] focus:ring-2 focus:ring-[#0284C7]/20 ${
                         errors.password ? 'border-red-400 focus:ring-red-500/20 focus:border-red-400' : ''
                       }`}
                     />
@@ -821,7 +809,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-4 h-12 rounded-lg text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#0284C7] to-[#0369A1] hover:from-[#0369A1] hover:to-[#024B8C] transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:ring-2 focus:ring-[#0284C7]/40 focus:ring-offset-2"
+                  className="w-full mt-4 h-12 rounded-md text-sm font-bold text-white bg-[#0284C7] hover:bg-[#0369A1] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0284C7]"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -888,128 +876,86 @@ export const AuthPage: React.FC<AuthPageProps> = ({ initialMode = 'signin' }) =>
 
       </div>
 
-      {/* ══════════════ RIGHT SIDE: FULL-PAGE SCROLLING SHOWCASE ══════════════ */}
-      <div className="hidden lg:flex lg:w-[52%] xl:w-[56%] min-h-screen relative overflow-hidden bg-slate-950 text-left">
-        
-        {/* Dynamic Full-Bleed Slideshow Images */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeSlide}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="absolute inset-0 bg-cover bg-center pointer-events-none"
-            style={{
-              backgroundImage: `url('${currentRiver.image}')`,
-            }}
-          />
-        </AnimatePresence>
+      {/* ══════════════ RIGHT SIDE: SOLID NAVY SHOWCASE PANEL ══════════════ */}
+      <div className="hidden lg:flex lg:w-[52%] xl:w-[56%] min-h-screen flex-col justify-between gap-10 bg-navy-900 border-r-4 border-[#0284C7] text-white p-10 xl:p-14 text-left">
 
-        {/* Ambient Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/75 pointer-events-none" />
+        <p className="as-label text-[#63C5F5]">Community freshwater monitoring</p>
 
-        {/* Content Container spanning the entire height */}
-        <div className="relative z-10 w-full h-full flex flex-col justify-between p-10 xl:p-14">
-          
-          {/* Top Bar: Tagline & Carousel Arrows */}
-          <div className="flex items-center justify-between">
-            <div className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold flex items-center gap-2 shadow-xl">
-              <Droplets size={15} className="text-teal-300" />
-              <span className="tracking-wide text-sky-100">
-                {currentRiver.tag}
-              </span>
+        <div className="max-w-xl space-y-6">
+          <h2 className="text-4xl xl:text-[46px] font-bold leading-[1.06] tracking-[-0.035em]">
+            Your river, on the record.
+          </h2>
+          <p className="text-navy-100 text-base leading-relaxed">
+            Add a photo, answer four plain questions, then confirm what you saw. AquaSense keeps
+            the visible conditions you observed together with the place, the AI&apos;s reasoning and
+            any reviewer&apos;s judgement.
+          </p>
+
+          <figure className="rounded-md overflow-hidden border border-navy-700 bg-navy-800">
+            <div className="relative h-52 bg-navy-950">
+              <img
+                src={currentRiver.image}
+                alt={currentRiver.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
             </div>
+            <figcaption className="flex items-center justify-between gap-4 px-4 py-3">
+              <div className="min-w-0">
+                <p className="as-label text-[#63C5F5] truncate">{currentRiver.location}</p>
+                <p className="text-sm font-bold mt-1 truncate">{currentRiver.title}</p>
+                <p className="text-xs text-navy-100/80 mt-1 leading-relaxed">
+                  {currentRiver.highlight}
+                </p>
+              </div>
+              <span
+                className={`shrink-0 rounded-sm px-3 py-1.5 text-[11px] font-bold ${
+                  currentRiver.conditionType === 'dirty'
+                    ? 'bg-amber-500 text-navy-950'
+                    : 'bg-emerald-500 text-white'
+                }`}
+              >
+                {currentRiver.status}
+              </span>
+            </figcaption>
+          </figure>
 
-            <div className="flex items-center gap-1.5 bg-slate-950/60 backdrop-blur-md p-1.5 rounded-full border border-white/15 shadow-xl">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-xs text-navy-100/70 tabular-nums">
+              {activeSlide + 1} / {SHOWCASE_RIVERS.length} · {currentRiver.metric}
+            </p>
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setActiveSlide((prev) => (prev - 1 + SHOWCASE_RIVERS.length) % SHOWCASE_RIVERS.length)}
-                className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all cursor-pointer"
-                title="Previous River"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-navy-600 text-white hover:bg-navy-800 transition-colors cursor-pointer"
+                aria-label="Previous waterway"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 type="button"
                 onClick={() => setActiveSlide((prev) => (prev + 1) % SHOWCASE_RIVERS.length)}
-                className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all cursor-pointer"
-                title="Next River"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-navy-600 text-white hover:bg-navy-800 transition-colors cursor-pointer"
+                aria-label="Next waterway"
               >
                 <ChevronRight size={16} />
               </button>
             </div>
           </div>
-
-          {/* Center Quote / Heading */}
-          <div className="max-w-xl my-auto">
-            <span className="inline-flex px-3.5 py-1 rounded-full bg-teal-400/20 text-teal-300 text-xs font-semibold mb-4 border border-teal-300/30 backdrop-blur-xs">
-              Freshwater Watershed Intelligence Network
-            </span>
-            <h2 className="text-3xl xl:text-5xl font-extrabold text-white leading-tight drop-shadow-2xl">
-              Protecting rivers, streams and lakes through community observations.
-            </h2>
-            <p className="text-slate-200 text-sm xl:text-base mt-4 leading-relaxed font-normal drop-shadow">
-              Connecting field photos with automated computer vision checks, calibrated water quality signals, and community records — so meaningful changes are surfaced early and routed to expert review.
-            </p>
-          </div>
-
-          {/* Bottom Showcase Card with Active River Details & Indicators */}
-          <div className="space-y-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSlide}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.35 }}
-                className="p-5 rounded-2xl bg-slate-950/85 backdrop-blur-xl border border-white/20 text-white flex items-center justify-between shadow-2xl"
-              >
-                <div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-teal-300">
-                    <MapPin size={14} className="text-teal-400 shrink-0" />
-                    <span>{currentRiver.location}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-white mt-1">
-                    {currentRiver.title}
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-0.5 flex items-center gap-2">
-                    <span className={`font-semibold ${currentRiver.conditionType === 'dirty' ? 'text-rose-300' : 'text-emerald-300'}`}>
-                      {currentRiver.metric}
-                    </span>
-                    <span className="text-slate-500">•</span>
-                    <span className="text-slate-300">{currentRiver.highlight}</span>
-                  </p>
-                </div>
-
-                <div className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 ml-4 border ${
-                  currentRiver.conditionType === 'dirty'
-                    ? 'bg-rose-500/20 border-rose-500/40 text-rose-300'
-                    : 'bg-teal-400/20 border-teal-400/40 text-teal-300'
-                }`}>
-                  <ShieldCheck size={14} />
-                  <span>{currentRiver.status}</span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Slide Indicators */}
-            <div className="flex items-center justify-center gap-2">
-              {SHOWCASE_RIVERS.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setActiveSlide(index)}
-                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    activeSlide === index ? 'w-10 bg-teal-400' : 'w-2 bg-white/40 hover:bg-white/70'
-                  }`}
-                  aria-label={`Slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
         </div>
+
+        <ul className="max-w-xl space-y-2.5 text-sm text-navy-100">
+          {[
+            'A photo and four field questions — no ecological training needed.',
+            'You confirm every answer before the record is saved.',
+            'Signals describe visible conditions, never whether water is safe.',
+          ].map((line) => (
+            <li key={line} className="flex gap-2.5 leading-relaxed">
+              <span aria-hidden="true" className="mt-[7px] h-1.5 w-1.5 shrink-0 bg-[#0284C7]" />
+              <span>{line}</span>
+            </li>
+          ))}
+        </ul>
 
       </div>
 

@@ -3,6 +3,49 @@
 /* Class-based dark variant (html.dark) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ---------------------------------------------------------------------------
+ * Public-service campaign layer
+ *
+ * Tailwind v4 reads radius / shadow / font-weight utilities from these theme
+ * keys, so overriding them here retokenises every one of the ~600 hardcoded
+ * rounded-*, shadow-* and font-extrabold class names in the components without
+ * editing them. Depth comes from hairline rules and solid colour fields, not
+ * from soft corners, drop shadows, frosted glass or gradient text.
+ * --------------------------------------------------------------------------- */
+@theme {
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-2xl: 8px;
+  --radius-3xl: 10px;
+  --radius-4xl: 12px;
+
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: 0 1px 0 0 rgb(15 23 42 / 0.04);
+  --shadow-md: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --shadow-lg: 0 2px 6px -1px rgb(15 23 42 / 0.10);
+  --shadow-xl: 0 2px 8px -2px rgb(15 23 42 / 0.12);
+  --shadow-2xl: 0 2px 10px -2px rgb(15 23 42 / 0.14);
+  --shadow-inner: none;
+
+  --font-weight-extrabold: 700;
+  --font-weight-black: 700;
+
+  --color-navy-50: #eef4fa;
+  --color-navy-100: #d7e5f3;
+  --color-navy-600: #0b4a78;
+  --color-navy-700: #083c61;
+  --color-navy-800: #072f4c;
+  --color-navy-900: #06263d;
+  --color-navy-950: #041a2a;
+
+  --color-paper: #f4f6f8;
+  --color-ink: #10202f;
+}
+
 @layer base {
   :root {
     --color-deep-blue: #0284C7;
@@ -14,12 +57,6 @@
     --color-slate: #2F3A45;
     --color-mist: #F5F9FC;
     --color-surface-border: #E2E8F0;
-
-    /* Supabase-inspired spacing tokens */
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
   }
 
   html {
@@ -43,6 +80,58 @@
     font-weight: 600;
     letter-spacing: -0.01em;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * Generated-UI tells neutralised globally.
+ *
+ * Frosted glass and gradient-clipped headline text are the two most
+ * recognisable ones, and they appear across many components. Unlayered rules
+ * outrank every Tailwind utility regardless of order, so both are switched off
+ * here rather than by hunting ~50 class names.
+ * --------------------------------------------------------------------------- */
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+[class*="bg-clip-text"] {
+  background-image: none !important;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: inherit !important;
+}
+
+/* Campaign typography helpers: figures read as data, labels read as signage. */
+.as-figure {
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* The brand mark was rendered as a sky→teal gradient in twelve places (logo
+ * tiles, primary buttons, progress bars). One targeted rule flattens all of
+ * them; gradients carrying an opacity modifier (a tinted chip, not a brand
+ * surface) are deliberately left alone. */
+[class*="bg-gradient-to-"][class*="from-[#0284C7]"]:not([class*="from-[#0284C7]/"]) {
+  background-image: none;
+  background-color: #0284C7;
+}
+
+[class*="shadow-sky-9"] {
+  box-shadow: none;
+}
+
+.as-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.as-rule {
+  border-top: 2px solid currentColor;
 }
 
 /* ---------------------------------------------------------------------------
@@ -71,6 +160,11 @@
 
   --as-surface: #141a26;
   --as-bg: #0a0d13;
+
+  /* Campaign paper + ink are theme tokens too, so `bg-paper` / `text-ink`
+   * utilities flip with the theme instead of needing literal-hex remaps. */
+  --color-paper: #0f1420;
+  --color-ink: #e8eef7;
 }
 
 /* Solid + near-opaque white surfaces become the dark surface.
@@ -444,20 +538,43 @@
  * This scope gives public pages a bright, accessible feel while maintaining
  * cohesion with the main application design.
  * ------------------------------------------------------------------------- */
-.public-nav {
-  background: rgba(249, 250, 251, 0.96);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid #e2e8f0;
-}
-
+/* The public campaign is themed through these tokens. Hardcoding light hexes
+ * here instead would fight the `.dark` utility remaps below and leave a
+ * half-light / half-dark landing, so every public surface reads the vars. */
+.public-nav,
 .public-experience {
   --public-bg: #F9FAFB;
   --public-surface: #F9FAFB;
   --public-surface-raised: #ffffff;
+  --public-chip: #f8fafc;
+  --public-tint: #f1f5f9;
+  --public-fallback: #dce9f5;
   --public-line: #e2e8f0;
   --public-title: #1e293b;
   --public-copy: #64748b;
   --public-kicker: #0284C7;
+}
+
+.public-nav {
+  background: var(--public-bg);
+  border-bottom: 1px solid var(--public-line);
+}
+
+.dark .public-nav,
+.dark .public-experience {
+  --public-bg: #0a0d13;
+  --public-surface: #0f1420;
+  --public-surface-raised: #141a26;
+  --public-chip: #141a26;
+  --public-tint: #1a2130;
+  --public-fallback: #16273a;
+  --public-line: #2b3546;
+  --public-title: #f1f5f9;
+  --public-copy: #b3bdcd;
+  --public-kicker: #7dd3fc;
+}
+
+.public-experience {
   position: relative;
   isolation: isolate;
   margin: 0;
@@ -476,6 +593,12 @@
   margin-inline: auto;
 }
 
+/* Campaign hero breaks the centred column and runs edge to edge. */
+.public-experience > .public-hero-bleed {
+  width: 100%;
+  margin-inline: 0;
+}
+
 .public-hero::after,
 .public-cta::after {
   display: none;
@@ -487,8 +610,8 @@
 .public-section {
   padding: clamp(1.25rem, 3vw, 2.5rem);
   border: 1px solid var(--public-line);
-  border-radius: 2rem;
-  background: #F9FAFB;
+  border-radius: 8px;
+  background: var(--public-surface);
 }
 
 .public-title { color: var(--public-title); }
@@ -499,92 +622,73 @@
 .public-capability-card,
 .public-observation-card {
   border: 1px solid var(--public-line);
-  background: #F9FAFB;
+  background: var(--public-surface);
 }
 
 .public-waterway-card:hover,
 .public-capability-card:hover,
 .public-observation-card:hover {
-  border-color: #0284C7;
-  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.1);
+  border-color: var(--public-kicker);
 }
 
 .public-waterway-image-fallback {
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  background: var(--public-fallback);
 }
 
 .public-action-card {
   border-color: var(--public-line);
-  background: #F9FAFB;
+  background: var(--public-surface);
 }
 
 .public-action-card:hover {
-  border-color: #0284C7;
-  background: #f1f5f9;
+  border-color: var(--public-kicker);
+  background: var(--public-tint);
 }
 
-.public-experience .public-waterway-card .text-slate-900,
-.public-experience .public-capability-card .text-slate-900,
-.public-experience .public-observation-card .text-slate-900,
-.public-experience .public-footer .text-slate-800 { color: #1e293b; }
-
-.public-experience .public-waterway-card .text-slate-600,
-.public-experience .public-waterway-card .text-slate-500,
-.public-experience .public-capability-card .text-slate-500,
-.public-experience .public-observation-card .text-slate-600,
-.public-experience .public-observation-card .text-slate-500,
-.public-experience .public-observation-card .text-slate-400,
-.public-footer { color: #64748b; }
-
-.public-experience .public-waterway-card .border-slate-100,
-.public-experience .public-observation-card .border-slate-100,
-.public-experience .public-observation-card .border-slate-200,
-.public-footer { border-color: #e2e8f0; }
-
-.public-experience .public-observation-card .bg-white,
-.public-experience .public-observation-card .hover\:bg-slate-50:hover,
-.public-experience .public-observation-card .hover\:bg-slate-100\/80:hover {
-  background-color: #f8fafc;
+.public-footer {
+  color: var(--public-copy);
 }
 
-.public-dropdown label { color: #64748b; }
+.public-experience .public-observation-card .bg-white {
+  background-color: var(--public-chip);
+}
+
+.public-dropdown label { color: var(--public-copy); }
 .public-dropdown-button {
-  border-color: #e2e8f0 !important;
-  background: #F9FAFB !important;
-  color: #1e293b !important;
+  border-color: var(--public-line) !important;
+  background: var(--public-surface) !important;
+  color: var(--public-title) !important;
 }
-.public-dropdown-button:hover { border-color: #0284C7 !important; }
-.public-dropdown-button .text-slate-800 { color: #1e293b !important; }
+.public-dropdown-button:hover { border-color: var(--public-kicker) !important; }
+.public-dropdown-button .text-slate-800 { color: var(--public-title) !important; }
 .public-dropdown-button .text-slate-400 { color: #94a3b8 !important; }
 .public-dropdown > div:last-child {
-  border-color: #e2e8f0 !important;
-  background: #F9FAFB !important;
+  border-color: var(--public-line) !important;
+  background: var(--public-surface) !important;
 }
-.public-dropdown > div:last-child .text-slate-700 { color: #334155 !important; }
-.public-dropdown > div:last-child .hover\:bg-slate-50:hover { background: #f1f5f9 !important; }
+.public-dropdown > div:last-child .text-slate-700 { color: var(--public-copy) !important; }
+.public-dropdown > div:last-child .hover\:bg-slate-50:hover { background: var(--public-tint) !important; }
 
 .public-filter-tab {
-  border: 1px solid #e2e8f0;
-  background: #F9FAFB;
-  color: #64748b;
+  border: 1px solid var(--public-line);
+  background: var(--public-surface);
+  color: var(--public-copy);
 }
-.public-filter-tab:hover { background: #f1f5f9; color: #1e293b; }
+.public-filter-tab:hover { background: var(--public-tint); color: var(--public-title); }
 
 .public-secondary-cta {
-  color: #0284C7;
-  border: 1px solid #e2e8f0;
-  background: #F9FAFB;
+  color: var(--public-kicker);
+  border: 1px solid var(--public-line);
+  background: var(--public-surface);
 }
-.public-secondary-cta:hover { background: #e0f2fe; }
+.public-secondary-cta:hover { background: var(--public-tint); }
 
-.public-cta { border: 1px solid #e2e8f0; }
-.public-footer button { color: #64748b; }
-.public-footer button:hover { color: #1e293b; }
+.public-cta { border: 1px solid var(--public-line); }
 
 /* Keyboard visibility */
 .public-experience button:focus-visible,
 .public-nav button:focus-visible {
-  outline: 3px solid #0284C7;
+  outline: 3px solid var(--public-kicker);
   outline-offset: 3px;
 }
 
