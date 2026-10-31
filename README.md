@@ -4,7 +4,7 @@
 
 **AI-assisted citizen-science platform for observing freshwater conditions**
 
-[![Backend Tests](https://img.shields.io/badge/backend%20tests-86%20passing-2ea44f)](#tests--checks)
+[![Backend Tests](https://img.shields.io/badge/backend%20tests-89%20passing-2ea44f)](#tests--checks)
 [![TypeScript](https://img.shields.io/badge/tsc-clean-3178c6)](#tests--checks)
 [![Lint](https://img.shields.io/badge/oxlint-0%20errors-blue)](#tests--checks)
 [![License: CC BY 4.0](https://img.shields.io/badge/data%20license-CC--BY%204.0-lightgrey)](#license)
@@ -20,13 +20,34 @@ important cases.
 
 ---
 
+## 🌏 INCEPTION 2026
+
+Submitted to **INCEPTION 2026** — *"Building Resilient Communities Through
+Human-Centered Digital Innovation"*.
+
+**Subtem:** Sustainable Environment and Disaster Resilience — *teknologi untuk
+pelestarian lingkungan, pengelolaan sumber daya, dan kesiapsiagaan bencana.*
+
+AquaSense serves community resilience by turning scattered, non-expert field
+observations into a shared, reviewable record of freshwater conditions:
+
+| Resilience need | How AquaSense answers it |
+| --- | --- |
+| Early community awareness | Signal-coded basin map plus `flow_condition` (healthy / low / stagnant / **flooding**) captured on every observation |
+| Human-centered design | Plain-language copy, no ecological jargon, step-by-step capture wizard, mobile bottom-nav, staged loader, onboarding tour |
+| Trust in automated advice | Explainable AI decision trail, consistency check against what the observer reported, and a mandatory human confirmation at every step |
+| Resource management | Watershed analytics with per-location rollups, 14-day basin snapshots and trusted-source weighting |
+| Data that outlives the demo | Open observation licence, documented REST API, FHIR-compatible export, role-gated review audit log |
+
+---
+
 ## ✨ Features
 
 | Area | Highlights |
 | --- | --- |
 | **Landing** | Glassmorphism hero over freshwater photography, worldwide rivers & lakes explorer, recent public observations, capability cards |
 | **Auth** | Separate `/login` and `/signup` pages (no tab switcher) — Google sign-in, email/password, password recovery, email verification, reviewer role selection |
-| **Capture wizard** | GPS pin or global waterway picker, up to 3 field photos, odor/clarity/debris answers, AI-assisted consistency check — citizen always confirms the final answer; unusable photos are rejected for retake |
+| **Capture wizard** | Place search or one-tap GPS geolocation with reverse-geocoded address, up to 3 field photos, odor/clarity/debris/flow answers, AI-assisted consistency check — citizen always confirms the final answer; unusable photos are rejected for retake |
 | **Observation detail** | Photo evidence, AI decision trail (model, prompt version, rules fired, confidence, observer response, reviewer outcome), comments, likes, shares, per-observation analytics with cohort rank |
 | **Community feed** | For You / Trending ranking, category filters, inline likes, shareable links; silently revalidates on focus / visibility / 60s — no manual refresh |
 | **Basin map** | Interactive OpenStreetMap/Leaflet map with signal-coded markers and an observation inspector panel |
@@ -65,7 +86,7 @@ FastAPI  ── /api/v1 ──┬── auth / health
 - 📊 **Signals are informational** — no safety, health, or regulatory claims.
 - 🔒 **Backend owns validation and storage** — the frontend renders plain-language states and never invents data.
 
-See [Architecture.md](Architecture.md) for diagrams and service boundaries.
+See [designs/Architecture.md](designs/Architecture.md) for diagrams and service boundaries.
 
 ## 📁 Repository layout
 
@@ -89,10 +110,11 @@ AquaSense/
 │       ├── context/          # AppProvider (views/data), AuthProvider (Supabase)
 │       ├── services/         # api.ts (typed endpoints + cache)
 │       └── types/            # Observation, ActiveView, roles
-├── PRD.md                    # product requirements
-├── Architecture.md           # system design
-├── Design_System.md          # UI tokens and patterns
-└── Agents.md                 # contribution/agent guardrails
+└── designs/
+    ├── PRD.md                    # product requirements
+    ├── Architecture.md           # system design
+    ├── Design_System.md          # UI tokens and patterns
+    └── DESIGN SPECs.md           # screen-by-screen design specification
 ```
 
 ## 🧰 Stack
@@ -199,7 +221,7 @@ cd frontend && npx oxlint src                      # lint (keep new files at 0 e
 cd frontend && npm run build                       # typecheck + production build
 ```
 
-Current baseline: **86 backend tests passing**, `tsc` clean, oxlint 0 errors.
+Current baseline: **89 backend tests passing**, `tsc` clean, oxlint 0 errors.
 
 ## 🎨 Design system
 
@@ -220,14 +242,136 @@ Full token reference: [Design_System.md](Design_System.md).
 - Insights must be explainable and evidence-based; AI-influenced decisions are logged with metadata.
 - Personal data is minimized; reviewer-only fields stay server-protected.
 
-See [Agents.md](Agents.md) for the full working rules.
-
 ## 📚 Documentation
 
-- [PRD.md](PRD.md) — product requirements
-- [Architecture.md](Architecture.md) — system design
-- [Design_System.md](Design_System.md) — UI tokens and patterns
-- [Agents.md](Agents.md) — guardrails for contributors and agents
+- [designs/PRD.md](designs/PRD.md) — product requirements
+- [designs/Architecture.md](designs/Architecture.md) — system design
+- [designs/Design_System.md](designs/Design_System.md) — UI tokens and patterns
+- [designs/DESIGN SPECs.md](designs/DESIGN%20SPECs.md) — screen-by-screen design specification
+- **Swagger UI** — live API documentation served at `/docs` on the running backend
+
+## 🤖 AI Use Declaration
+
+AquaSense uses AI in two distinct ways. This declaration covers both.
+
+### 1. AI inside the product
+
+| Aspect | Detail |
+| --- | --- |
+| Provider | [Groq](https://groq.com) hosted vision model, called server-side from `backend/app/services/ai_service.py` |
+| Model id | `qwen/qwen3.8-27b` (configured as `_VISION_MODEL`; the public UI intentionally shows a generic **"AI vision model"** label instead of a vendor id) |
+| Input | Up to 3 observer-uploaded photos, plus the observer's own answers (odour, clarity, debris, flow) and a text description. No names, emails or credentials are sent in the prompt. |
+| Output | A structured assessment: visible-condition signal, `flow_condition`, turbidity/debris/odor indicators, confidence, and reasoning that is stored as an auditable decision trail. |
+| Human control | The AI **never** writes the final record. The observer confirms or corrects every AI-suggested answer in Step 4 before submission, and certified reviewers can verify or override afterwards. |
+| Abstention | If the photo cannot support a visual assessment — or no API key is configured — the service returns a flagged fallback and requests a clearer image rather than inventing a signal. |
+| Consistency layer | A separate deterministic, rule-based check ([`consistency_service.py`](backend/app/services/consistency_service.py)) compares the model's reading with what the observer reported and raises a discrepancy for confirmation. No ML in this layer. |
+| Hard limits | The model is asked to describe **visible conditions only**. It is never asked to, and must never be used to, conclude that water is safe, potable, or a health hazard. |
+| Transparency | Every AI-influenced observation exposes model type, prompt version, rules fired, confidence, observer response and reviewer outcome. Reviewer agreement / override rates are published on the AI evaluation dashboard as feedback evidence. |
+
+### 2. AI tools used to build the project
+
+Development-time assistance (code generation, refactoring, review and
+test writing) was used on this project, with a human author remaining
+responsible for every merged change, architecture decision and product
+guardrail. All generated code was read, tested and verified against the
+suite described in [Tests & checks](#-tests--checks) before commit.
+
+> 📌 Team: confirm and expand this subsection with the exact assistants and
+> versions used, and which parts they touched, before submission.
+
+### 3. What the data does **not** claim
+
+Observations are citizen-reported and AI-assisted. They are a starting point for
+community awareness and certified review — not regulatory measurement, not a
+laboratory result, and not a substitute for official water-quality monitoring.
+
+## 🧩 Third-Party Declaration
+
+Everything below is used under its stated licence. No proprietary code from
+third parties is presented as our own, and no third-party service output is
+presented as an AquaSense original.
+
+### Runtime services (hosted, free tiers)
+
+| Service | Used for |
+| --- | --- |
+| **Supabase Postgres** | Primary database (accessed async via `DATABASE_URL`) |
+| **Supabase Storage** | Observation photos, public bucket `aquasense-observations` |
+| **Supabase Auth** | Email/password and Google sign-in on the client |
+| **Groq API** | Vision model inference for image assessment |
+| **Render** | Backend (FastAPI) hosting |
+| **Vercel** | Frontend (React SPA) hosting |
+| **OpenStreetMap** + OSM/Carto tile servers | Basemap tiles on the public basin map |
+| **Esri ArcGIS Online** (`server.arcgisonline.com` World_Imagery) | Satellite tile layer on the observation map |
+| **Nominatim** (`nominatim.openstreetmap.org`) | Place search and reverse geocoding in the capture wizard |
+| **DiceBear 7.x** (`api.dicebear.com`) | Generated fallback avatars where a user has no picture |
+| **goQR.me API** (`api.qrserver.com`) | Share QR codes in the observation share/export modal |
+| **unpkg CDN** | Leaflet marker icon assets |
+| **Google Fonts** | DM Sans and Inter webfonts, loaded from `fonts.googleapis.com` |
+
+### Standards & vocabularies referenced
+
+The FHIR export maps observations onto the **HL7 FHIR R4 `Observation`**
+resource and references published code systems by URI only —
+`http://loinc.org` and `http://terminology.hl7.org` CodeSystems (see
+[`frontend/src/services/fhir.ts`](frontend/src/services/fhir.ts)). No HL7 or
+LOINC source code is bundled; LOINC terms are a registry of the Regenstrief
+Institute and HL7 FHIR specifications are used under HL7's terms.
+
+### Backend dependencies (`backend/requirements.txt`)
+
+| Package | Version | Purpose | Licence |
+| --- | --- | --- | --- |
+| FastAPI | 0.141.1 | Web framework / API layer | MIT |
+| Uvicorn[standard] | 0.53.0 | ASGI server | MIT |
+| SQLAlchemy | 2.0.54 | Async ORM | MIT |
+| Alembic | 1.20.0 | Database migrations | MIT |
+| asyncpg | 0.31.0 | Postgres driver | PostgreSQL License |
+| psycopg[binary] | 3.3.6 | Postgres driver (fallback) | PostgreSQL License |
+| pydantic-settings | 2.15.0 | Environment configuration | MIT |
+| email-validator | 2.3.0 | `EmailStr` validation | Python Software Foundation |
+| python-dotenv | 1.2.3 | Local `.env` loading | MIT |
+| python-multipart | 0.0.32 | Multipart/form-data uploads | MIT |
+| httpx | 0.28.1 | Outbound HTTP calls | BSD-3 |
+| groq | ≥1.7.0 | Groq API client SDK | Apache-2.0 |
+| supabase-py | ≥2.15.3 | Storage bucket access from the server | MIT |
+| pytest / pytest-asyncio / aiosqlite | 9.1.1 / 1.4.0 / 0.22.1 | Hermetic test suite (in-memory SQLite) | MIT / Apache-2.0 |
+
+### Frontend dependencies (`frontend/package.json`)
+
+| Package | Version | Purpose | Licence |
+| --- | --- | --- | --- |
+| React / React DOM | 19.2.x | UI runtime | MIT |
+| TypeScript | 6.0.x | Type checking | Apache-2.0 |
+| Vite | 8.3.x | Build tool and dev server | MIT |
+| Tailwind CSS | 4.3.x | Styling (CSS-first config) | MIT |
+| lucide-react | 1.48.x | Icon set | ISC |
+| framer-motion | 13.4.x | UI transitions | MIT |
+| Leaflet / react-leaflet | 1.9.4 / 5.0.x | Basin maps and markers | BSD-2 / Apache-2.0 |
+| @supabase/supabase-js | 2.117.x | Client auth + storage uploads | MIT |
+| @types/leaflet | 1.9.x | Leaflet typings (dev) | MIT |
+| oxlint | 1.81.x | Linting (dev) | MIT |
+
+### Third-party media
+
+| Asset | Source | Notes |
+| --- | --- | --- |
+| River and lake photographs in `frontend/public/images/` | Team-supplied local photography | Used as waterway showcase imagery |
+| Scenic water photographs referenced by URL | [Unsplash](https://unsplash.com) | Unsplash License (free use, attribution not required) — linked remotely, not redistributed |
+| `frontend/src/assets/hero.png` | Vite starter template | Unused leftover from the project scaffold — no third-party licence needed, safe to delete |
+
+If any photograph in `frontend/public/images/` was in fact sourced from a third
+party rather than taken by the team, swap the row above before submission —
+judges check provenance claims.
+
+## 👥 Contributors
+
+| Member | GitHub | Contribution |
+| --- | --- | --- |
+| Iddy Chesire | [@acunetix2](https://github.com/acunetix2) | Product direction, architecture, FastAPI backend (all routes, services, Alembic migrations, test suite), React frontend and design system, Supabase/Groq/Render/Vercel integration, documentation |
+
+> 📌 Add the remaining team members and split responsibilities before
+> submission — the jury requires each member's contribution to be documented.
 
 ## 📄 License
 
