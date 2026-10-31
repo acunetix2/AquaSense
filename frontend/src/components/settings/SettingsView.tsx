@@ -263,7 +263,7 @@ export const SettingsView: React.FC = () => {
                     information you provide (display name, role, optional affiliation).
                   </p>
                   <p className="text-sm text-slate-600 leading-relaxed">
-                    Photos are stored in an AquaSense Supabase storage bucket and are linked to
+                    Photos are stored in the AquaSense observation media bucket and are linked to
                     your observation. Your email is never shown publicly and is only visible to
                     certified reviewers for verification purposes.
                   </p>
@@ -311,7 +311,7 @@ export const SettingsView: React.FC = () => {
                       <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
                         AquaSense
                       </h3>
-                      <p className="text-xs text-slate-500">by Aventorgo LLC</p>
+                      <p className="text-xs text-slate-500">by Aventorgo</p>
                     </div>
                   </div>
                   <p className="text-sm text-slate-600 leading-relaxed">

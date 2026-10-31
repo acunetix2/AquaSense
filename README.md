@@ -375,4 +375,4 @@ judges check provenance claims.
 
 ## 📄 License
 
-Observation data: **CC-BY 4.0**. Source © Aventorgo LLC.
+Observation data: **CC-BY 4.0**. Source © Aventorgo.

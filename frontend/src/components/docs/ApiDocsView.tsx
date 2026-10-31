@@ -123,7 +123,7 @@ Content-Type: application/json
       {
         method: 'POST',
         path: '/observations/analyze-image',
-        desc: 'Analyse one photo with the Groq vision model. Response-only — nothing is persisted.',
+        desc: 'Analyse one photo with the AI vision model. Response-only — nothing is persisted.',
         example: `POST ${API_BASE}/observations/analyze-image
 Content-Type: application/json
 
@@ -210,7 +210,7 @@ Content-Type: application/json
   {
     title: 'Auth',
     icon: <KeyRound size={15} className="text-amber-500" />,
-    intro: 'Lightweight email/password identity for the demo app (Supabase Auth is used by the web client).',
+    intro: 'Lightweight email/password identity for the demo app.',
     endpoints: [
       {
         method: 'POST',

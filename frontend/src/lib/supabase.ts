@@ -26,13 +26,13 @@ export async function ensureObservationStorageBucket(): Promise<void> {
 
     if (createError) {
       throw new Error(
-        'The upload bucket is missing. Create a public Supabase Storage bucket named "aquasense-observations" in the project dashboard.'
+        'The upload bucket is missing. Create a public storage bucket named "aquasense-observations" in the project dashboard.'
       )
     }
     return
   }
 
-  throw new Error('Supabase Storage is not configured for observation uploads.')
+  throw new Error('Observation photo storage is not configured.')
 }
 
 export async function uploadObservationFiles(files: File[]): Promise<string[]> {

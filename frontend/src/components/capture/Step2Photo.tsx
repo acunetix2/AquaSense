@@ -117,7 +117,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
         setRotation(0)
         setFlipped(false)
       } catch (err: any) {
-        setErrorMsg(err?.message || 'Image upload failed. Please verify Supabase storage is configured.')
+        setErrorMsg(err?.message || 'Image upload failed. Check your connection and try again.')
       }
     }
 
@@ -611,7 +611,7 @@ export const Step2Photo: React.FC<Step2PhotoProps> = ({
             </p>
             <p className="text-xs text-slate-500 mt-0.5">
               {imageUrls.length > 1
-                ? 'All images will be analyzed simultaneously by the Groq vision model to provide comprehensive environmental validation.'
+                ? 'All photos are assessed together by the AI vision model, so the readings for each angle are compared before you confirm them.'
                 : 'You can proceed or attach up to 2 additional angles for higher precision.'}
             </p>
           </div>
